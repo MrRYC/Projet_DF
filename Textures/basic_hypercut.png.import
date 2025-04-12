@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c88vxlormygns"
-path="res://.godot/imported/basic_hook.png-de37c979d406e21d20da5a4122439cfe.ctex"
+uid="uid://d1fdvcd83lx6f"
+path="res://.godot/imported/basic_hypercut.png-8b27a621ea46b3c70bd75feabfb95e7e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://card_texture/basic_hook.png"
-dest_files=["res://.godot/imported/basic_hook.png-de37c979d406e21d20da5a4122439cfe.ctex"]
+source_file="res://Textures/basic_hypercut.png"
+dest_files=["res://.godot/imported/basic_hypercut.png-8b27a621ea46b3c70bd75feabfb95e7e.ctex"]
 
 [params]
 

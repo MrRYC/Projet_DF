@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://corno2d5twfao"
-path="res://.godot/imported/basic_direct.png-a20d98c16580a22bbff600b414c71acc.ctex"
+uid="uid://c88vxlormygns"
+path="res://.godot/imported/basic_hook.png-e2340aa9dca8bf74149d0d7be7c24715.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://card_texture/basic_direct.png"
-dest_files=["res://.godot/imported/basic_direct.png-a20d98c16580a22bbff600b414c71acc.ctex"]
+source_file="res://Textures/basic_hook.png"
+dest_files=["res://.godot/imported/basic_hook.png-e2340aa9dca8bf74149d0d7be7c24715.ctex"]
 
 [params]
 

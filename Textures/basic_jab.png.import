@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1fdvcd83lx6f"
-path="res://.godot/imported/basic_hypercut.png-4a74f67344a6812a8712a242cbea0c13.ctex"
+uid="uid://bjlljqqtcnl2g"
+path="res://.godot/imported/basic_jab.png-717488cb3a733d163bcd4f7bebd0ba51.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://card_texture/basic_hypercut.png"
-dest_files=["res://.godot/imported/basic_hypercut.png-4a74f67344a6812a8712a242cbea0c13.ctex"]
+source_file="res://Textures/basic_jab.png"
+dest_files=["res://.godot/imported/basic_jab.png-717488cb3a733d163bcd4f7bebd0ba51.ctex"]
 
 [params]
 
