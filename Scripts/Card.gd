@@ -3,7 +3,9 @@ extends Node2D
 signal hovered
 signal hovered_off
 
-var starting_position
+#variables du script
+var starting_position #position de départ de la carte utilisée dans la funct update_hand_positions du script PlayerHand
+#var card_type
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

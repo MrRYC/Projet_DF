@@ -1,15 +1,24 @@
 extends Node2D
 
+#constantes
 const COLLISION_MASK_CARD = 1
+const DEFAULT_CARD_MOVE_SPEED = 0.1
 
+#variables de référence vers un autre Node
+var player_hand_ref
+var input_manager_ref
+
+#variables du script
 var screen_size
 var card_being_dragged
 var is_hovering_on_card
-var player_hand_reference
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
-	player_hand_reference = $"../PlayerHand"
+	player_hand_ref = $"../PlayerHand"
+	input_manager_ref = $"../InputManager"
+	
+	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
 
 func _process(delta: float) -> void:
 	if card_being_dragged:
@@ -17,43 +26,26 @@ func _process(delta: float) -> void:
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x,0,screen_size.x),
 			clamp(mouse_pos.y,0,screen_size.y))
 
-func _input(event):
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				var card = is_a_card_selected()
-				if card:
-					start_drag(card)
-			else:
-				if card_being_dragged:
-					finish_drag()
-
 func start_drag(card):
 	card_being_dragged = card
 	card.scale = Vector2(1,1)
 
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
-	player_hand_reference.add_card_to_hand(card_being_dragged)
+	
+	var was_played = is_card_played(card_being_dragged)
+	
+	#Zone pour Test if si une carte est jouée
+	#if was_played:
+		#player_hand_ref.remove_card_from_hand(card_being_dragged)
+		#discard_pile_ref.add_to_discard(card_being_dragged)
+	#elif is_defense_phase:
+	#else:
+	#Sinon la carte est reposée à son emplacement de départ
+	#player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+	
+	player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	card_being_dragged = null
-	
-func connect_card_signals(card):
-	card.connect("hovered", on_hovered_over_card)
-	card.connect("hovered_off", on_hovered_off_card)
-	
-func on_hovered_over_card(card):
-	if !is_hovering_on_card:
-		is_hovering_on_card = true
-		highlight_card(card,true)
-	
-func on_hovered_off_card(card):
-	if !card_being_dragged:
-		highlight_card(card,false)
-		
-		var new_card_hovered = is_a_card_selected()
-		if new_card_hovered:
-			highlight_card(new_card_hovered, true)
-		else:
-			is_hovering_on_card = false
 
 func highlight_card(card, hovered):
 	if hovered:
@@ -77,6 +69,10 @@ func is_a_card_selected():
 		return get_upfront_card(result)
 	return null
 
+func is_card_played(card):
+	var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
+	return card.position.y < play_zone_y
+	
 func get_upfront_card(cards):
 	var highest_z_card = cards[0].collider.get_parent()
 	var highest_z_index = highest_z_card.z_index
@@ -87,3 +83,30 @@ func get_upfront_card(cards):
 			highest_z_card = current_card
 			highest_z_index = current_card.z_index
 	return highest_z_card
+
+###########################################################################
+#                           CONNEXION DES SIGNAUX                         #
+###########################################################################
+
+func connect_card_signals(card):
+	card.connect("hovered", on_hovered_over_card)
+	card.connect("hovered_off", on_hovered_off_card)
+	
+func connect_left_mouse_released_signal():
+	if card_being_dragged:
+		finish_drag()
+	
+func on_hovered_over_card(card):
+	if !is_hovering_on_card:
+		is_hovering_on_card = true
+		highlight_card(card,true)
+	
+func on_hovered_off_card(card):
+	if !card_being_dragged:
+		highlight_card(card,false)
+		
+		var new_card_hovered = is_a_card_selected()
+		if new_card_hovered:
+			highlight_card(new_card_hovered, true)
+		else:
+			is_hovering_on_card = false
