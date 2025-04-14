@@ -139,11 +139,11 @@ text = "Attack Phase"
 position = Vector2(1350, 650)
 script = ExtResource("9_4drky")
 
-[node name="OpponentArea2D" type="Area2D" parent="Opponent" groups=["Opponent"]]
+[node name="Area2D" type="Area2D" parent="Opponent" groups=["Opponent"]]
 collision_layer = 2
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Opponent/OpponentArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Opponent/Area2D"]
 position = Vector2(1, 1)
 shape = SubResource("CapsuleShape2D_gyqbi")
 

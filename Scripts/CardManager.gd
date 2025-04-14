@@ -2,11 +2,14 @@ extends Node2D
 
 #constantes
 const COLLISION_MASK_CARD = 1
+const ENEMY_COLLISION_MASK = 1
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 #variables de référence vers un autre Node
 var player_hand_ref
 var input_manager_ref
+var discard_pile_ref
+var opponent_ref
 
 #variables du script
 var screen_size
@@ -17,6 +20,8 @@ func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	player_hand_ref = $"../PlayerHand"
 	input_manager_ref = $"../InputManager"
+	discard_pile_ref = $"../DiscardPile"
+	opponent_ref = $"../Opponent"
 	
 	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
 
@@ -33,18 +38,16 @@ func start_drag(card):
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	
-	var was_played = is_card_played(card_being_dragged)
+	#var card_is_played = is_card_played(card_being_dragged)
+	var card_played = is_a_card_played(card_being_dragged)
 	
-	#Zone pour Test if si une carte est jouée
-	#if was_played:
-		#player_hand_ref.remove_card_from_hand(card_being_dragged)
-		#discard_pile_ref.add_to_discard(card_being_dragged)
-	#elif is_defense_phase:
-	#else:
-	#Sinon la carte est reposée à son emplacement de départ
-	#player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+	if card_played:
+		apply_card_effect(card_being_dragged, opponent_ref)
+		player_hand_ref.remove_card_from_hand(card_being_dragged)
+		discard_pile_ref.add_card_to_discard(card_being_dragged)
+	else:
+		player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	
-	player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	card_being_dragged = null
 
 func highlight_card(card, hovered):
@@ -69,10 +72,27 @@ func is_a_card_selected():
 		return get_upfront_card(result)
 	return null
 
-func is_card_played(card):
-	var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
-	return card.position.y < play_zone_y
+func is_a_card_played(card):
+	#var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
+	#return card.position.y < play_zone_y
+	var space_state = get_world_2d().direct_space_state
+	var parameters = PhysicsPointQueryParameters2D.new()
 	
+	parameters.position = card.get_global_position() # CHANGEMENT ICI
+	parameters.collide_with_areas = true
+	
+	var results = space_state.intersect_point(parameters)
+
+	for result in results:
+		if result.collider.is_in_group("Opponent"):
+			print(">>> Carte jouée sur ennemi détectée : ", result.collider.name)
+			return result.collider
+	return null
+
+func apply_card_effect(card, opponent):
+	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
+	opponent.take_damage(attack)
+
 func get_upfront_card(cards):
 	var highest_z_card = cards[0].collider.get_parent()
 	var highest_z_index = highest_z_card.z_index

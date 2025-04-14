@@ -1,9 +1,7 @@
 extends Node
 
 #signaux
-signal attack_phase_signal
 signal defense_phase_signal
-signal end_phase_signal
 
 #constantes
 
@@ -21,6 +19,8 @@ var is_attack_phase = true
 var is_defensive_phase = false
 var is_end_phase = false
 var current_phase = "Attack Phase"
+var start_hand_size = 4 #main de départ maximum
+var max_hand_size
 var nb_turn = 1
 var player_health = 0
 
@@ -31,10 +31,12 @@ func _ready() -> void:
 	player_hand_ref = $"../PlayerHand"
 	deck_pile_ref = $"../DeckPile"
 	discard_pile_ref = $"../DiscardPile"
-	discard_pile_label_ref = $"../DiscardPile/DiscardCardCountLabel"
 	player_health_label_ref = $"../UserInterface/PlayerHealthLabel"
 	
-	attack_phase_signal.emit(current_phase, nb_turn)
+	max_hand_size = start_hand_size
+	
+	for i in range(start_hand_size):
+		deck_pile_ref.draw_card()
 	
 	#Player Health equals to all the players cards (deck + hand + discard)
 	count_player_card_in_game()
@@ -53,11 +55,10 @@ func _on_phase_button_pressed() -> void:
 		$"../UserInterface/TurnLabel".text = "Turn " + str(nb_turn)
 
 func new_turn():
-	deck_pile_ref.new_turn()
+	deck_pile_ref.new_turn(max_hand_size)
 
 func end_turn():
 	player_hand_ref.discard_hand()
-	discard_pile_label_ref.text = str(discard_pile_ref.player_discard.size())
 
 func count_player_card_in_game():
 	player_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
@@ -67,32 +68,22 @@ func attack_phase():
 	phase_button_ref.text = current_phase
 	is_attack_phase = true
 	is_end_phase = false
-	
-	attack_phase_signal.emit(current_phase, nb_turn)
 
 func defensive_phase():
 	current_phase = "Defensive Phase"
 	phase_button_ref.text = current_phase
 	is_defensive_phase = true
 	is_attack_phase = false
-
-	#Defausser carte manuellement
-	#Jouer les cartes defaussée dans l'ordre
 	defense_phase_signal.emit(current_phase, nb_turn)
 
 func end_phase():
-	#defausse des cartes en main
-	#tirage de x nouvelles cartes
-		#si la pioche est vide, on melange la discard dans la pioche
 	current_phase = "End Phase"
 	phase_button_ref.text = current_phase
 	is_end_phase = true
 	is_defensive_phase = false
-	
-	end_phase_signal.emit(current_phase, nb_turn)
 
-func attack_phase_calculator(attack_card, opponent):
-	pass
-
-func defense_phase_calculator(defense_effect, attacker, base_damage):
-	pass
+#func attack_phase_calculator(attack_card, opponent):
+	#pass
+#
+#func defense_phase_calculator(defense_effect, attacker, base_damage):
+	#pass

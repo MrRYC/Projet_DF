@@ -5,15 +5,13 @@ signal left_mouse_released
 
 #constantes
 const COLLISION_MASK_CARD = 1
-const COLLISION_MASK_DECK = 4
+const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
 
 #variables de référence vers autre Node
 var card_manager_ref
-var deck_ref
 
 func _ready() -> void:
 	card_manager_ref = $"../CardManager"
-	deck_ref = $"../Deck"
 
 func _input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:

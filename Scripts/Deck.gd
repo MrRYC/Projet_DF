@@ -11,10 +11,10 @@ var player_hand_ref
 var discard_pile_ref
 
 #variables du script
-var max_hand_size = 4 #main de départ maximum
+
 
 #variable du deck du joueur
-var player_deck = ["Jab_Card", "Jab_Card", "Direct_Card", "Direct_Card", "Hook_Card", "Hypercut_Card"]
+var player_deck = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Direct_Card", "Direct_Card", "Hook_Card", "Hook_Card", "Hypercut_Card"]
 
 
 # Called when the node enters the scene tree for the first time.
@@ -27,9 +27,6 @@ func _ready() -> void:
 	card_db_ref = preload("res://Scripts/CardDB.gd")
 	
 	$DeckCardCountLabel.text = str(player_deck.size())
-	
-	for i in range(max_hand_size):
-		draw_card()
 
 func draw_card():
 	var card_drawn_name = player_deck[0] #Tirage de la première carte du deck
@@ -38,6 +35,7 @@ func draw_card():
 	$DeckCardCountLabel.text = str(player_deck.size())
 	var card_scene = load(CARD_SCENE_PATH)
 	var new_card = card_scene.instantiate()
+	new_card.card_name = card_drawn_name
 	
 	#gestion des images des cartes
 	var card_image_path = str("res://Assets/CardDB/" + card_drawn_name + ".png")
@@ -50,20 +48,17 @@ func draw_card():
 	new_card.get_node("Attack").text = str(card_data[2])
 	
 	card_manager_ref.add_child(new_card)
-	new_card.name = "Card"
+	new_card.name = new_card.card_name
 	player_hand_ref.add_card_to_hand(new_card, DRAW_SPEED)
 	
 	#lancement de l'animation de la carte lors de la pioche
 	new_card.get_node("CardFlipAnimation").play("card_flip")
 
-func new_turn():
-	#if player_deck.size() < max_hand_size:
-		#discard_pile_ref.reshuffle_discard()
-		#player_deck.shuffle()
-		#$DeckCardCountLabel.text = str(player_deck.size())
+func new_turn(new_hand_size):
+	if player_deck.size() < new_hand_size:
+		discard_pile_ref.reshuffle_discard()
+		player_deck.shuffle()
+		$DeckCardCountLabel.text = str(player_deck.size())
 	
-	for i in range(1):
-		if player_deck.size() > 0:
-			draw_card()
-		else:
-			print("Deck vide, pas assez de cartes à piocher")
+	for i in range(new_hand_size):
+		draw_card()

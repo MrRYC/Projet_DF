@@ -12,6 +12,7 @@ var discard_pile_ref
 var player_hand = []
 var MAX_HAND_SIZE = 3
 var center_screen_x
+var battle_timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -26,9 +27,18 @@ func add_card_to_hand(card, speed):
 	else:
 		animate_card_to_position(card, card.starting_position, DEFAULT_CARD_MOVE_SPEED)
 
+func remove_card_from_hand(card):
+	if card in player_hand:
+		player_hand.erase(card)
+		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
+		print("Carte retirée de la main :", card.card_name)
+	else:
+		print("Tentative de retirer une carte absente :", card)
+
 func discard_hand():
 	for card in player_hand:
 		discard_pile_ref.add_card_to_discard(card)
+		
 	player_hand.clear()
 
 func update_hand_positions(speed):
