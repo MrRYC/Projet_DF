@@ -38,6 +38,19 @@ func update_hand_positions(speed):
 		card.starting_position = new_position
 		animate_card_to_position(card, new_position, speed)
 
+func get_drop_index(mouse_pos_x):
+	for i in range(player_hand.size()):
+		var card_x = calculate_card_position(i)
+		if mouse_pos_x < card_x + CARD_WIDTH / 2:
+			return i
+	return player_hand.size()
+
+func move_card_to_index(card, target_index):
+	if card in player_hand:
+		player_hand.erase(card)
+		player_hand.insert(target_index, card)
+		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
+
 func calculate_card_position(index):
 	var total_width = (player_hand.size() - 1) * CARD_WIDTH
 	var x_offset = center_screen_x + index * CARD_WIDTH - total_width / 2

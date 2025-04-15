@@ -7,7 +7,7 @@
 radius = 104.0
 height = 356.0
 
-[node name="Opponent" type="Node2D"]
+[node name="Opponent" type="Node2D" groups=["Opponent"]]
 position = Vector2(1350, 650)
 script = ExtResource("1_kivkk")
 

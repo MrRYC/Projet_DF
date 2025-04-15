@@ -251,9 +251,9 @@ texture = ExtResource("2_yguq7")
 position = Vector2(0, 54)
 texture = ExtResource("3_lot17")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="CardArea2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CardArea2D"]
 shape = SubResource("RectangleShape2D_nx35t")
 
 [node name="Name" type="RichTextLabel" parent="."]
@@ -290,5 +290,5 @@ libraries = {
 "": SubResource("AnimationLibrary_c5yfh")
 }
 
-[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
-[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
+[connection signal="mouse_entered" from="CardArea2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="CardArea2D" to="." method="_on_area_2d_mouse_exited"]

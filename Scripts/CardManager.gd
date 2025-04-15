@@ -32,7 +32,7 @@ func start_drag(card):
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	
-	var opponent_targeted = is_a_opponent_targeted(card_being_dragged)
+	var opponent_targeted = is_a_card_played(card_being_dragged)
 	
 	if card_being_dragged.is_in_combat:
 		card_being_dragged.is_in_combat = false
@@ -46,8 +46,12 @@ func finish_drag():
 		combat_zone_resize(card_being_dragged)
 		player_hand_ref.remove_card_from_hand(card_being_dragged)
 		combat_zone_ref.add_card_to_combat_zone(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
-	else:
-		player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+	else :
+		var mouse_x = get_global_mouse_position().x
+		var new_index = player_hand_ref.get_drop_index(mouse_x)
+		player_hand_ref.move_card_to_index(card_being_dragged, new_index)
+	#else:
+		#player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	
 	card_being_dragged = null
 
@@ -75,7 +79,7 @@ func is_a_card_selected():
 		return get_upfront_card(result)
 	return null
 
-func is_a_opponent_targeted(card):
+func is_a_card_played(card):
 	#var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
 	#return card.position.y < play_zone_y
 	var space_state = get_world_2d().direct_space_state
@@ -88,8 +92,20 @@ func is_a_opponent_targeted(card):
 
 	for result in results:
 		if result.collider.is_in_group("Opponent"):
-			#print(">>> Carte jouée sur ennemi détectée : ", result.collider.name)
 			return result.collider
+	return null
+
+func get_card_under_cursor():
+	var space_state = get_world_2d().direct_space_state
+	var params = PhysicsPointQueryParameters2D.new()
+	params.position = get_global_mouse_position()
+	params.collide_with_areas = true
+
+	var results = space_state.intersect_point(params)
+	for result in results:
+		var collider = result.collider
+		if collider.is_in_group("HandofCards") and collider != card_being_dragged:
+			return collider.get_parent()
 	return null
 
 func get_upfront_card(cards):

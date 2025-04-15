@@ -39,6 +39,7 @@ func execute_actions():
 	for  i in range(combat_zone.size()):
 		var card = combat_zone[i]
 		apply_card_effect(card, card.target)
+		#animation de la carte avant disparition --> explosion 
 		discard_pile_ref.add_card_to_discard(card)
 	
 	combat_zone.clear()
