@@ -4,38 +4,28 @@ extends Node
 signal defense_phase_signal
 
 #constantes
+const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables de référence vers un autre Node
-var phase_button_ref
-var card_manager_ref
-var player_hand_ref
-var deck_pile_ref
-var discard_pile_ref
-var discard_pile_label_ref
-var player_health_label_ref
+@onready var phase_button_ref = $"../UserInterface/PhaseButton"
+@onready var card_manager_ref = $"../CardManager"
+@onready var player_hand_ref = $"../PlayerHand"
+@onready var deck_pile_ref = $"../DeckPile"
+@onready var discard_pile_ref = $"../DiscardPile"
+@onready var player_health_label_ref = $"../UserInterface/PlayerHealthLabel"
 
 #variables du script
 var is_attack_phase = true
 var is_defensive_phase = false
 var is_end_phase = false
 var current_phase = "Attack Phase"
-var start_hand_size = 4 #main de départ maximum
-var max_hand_size
+var max_hand_size = START_HAND_SIZE
 var nb_turn = 1
 var player_health = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	phase_button_ref = $"../UserInterface/PhaseButton"
-	card_manager_ref = $"../CardManager"
-	player_hand_ref = $"../PlayerHand"
-	deck_pile_ref = $"../DeckPile"
-	discard_pile_ref = $"../DiscardPile"
-	player_health_label_ref = $"../UserInterface/PlayerHealthLabel"
-	
-	max_hand_size = start_hand_size
-	
-	for i in range(start_hand_size):
+	for i in range(START_HAND_SIZE):
 		deck_pile_ref.draw_card()
 	
 	#Player Health equals to all the players cards (deck + hand + discard)
@@ -51,11 +41,11 @@ func _on_phase_button_pressed() -> void:
 		end_turn()
 		new_turn()
 		attack_phase()
-		nb_turn += 1
-		$"../UserInterface/TurnLabel".text = "Turn " + str(nb_turn)
 
 func new_turn():
 	deck_pile_ref.new_turn(max_hand_size)
+	nb_turn += 1
+	$"../UserInterface/TurnLabel".text = "Turn " + str(nb_turn)
 
 func end_turn():
 	player_hand_ref.discard_hand()

@@ -5,10 +5,10 @@ const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 const DRAW_SPEED = 0.5
 
 #variables de référence vers un autre Node
-var card_db_ref
-var card_manager_ref
-var player_hand_ref
-var discard_pile_ref
+@onready var card_manager_ref = $"../CardManager"
+@onready var player_hand_ref = $"../PlayerHand"
+@onready var discard_pile_ref = $"../DiscardPile"
+@onready var card_db_ref = preload("res://Scripts/CardDB.gd")
 
 #variables du script
 
@@ -20,19 +20,13 @@ var player_deck = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Direct_Card"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player_deck.shuffle()
-	
-	card_manager_ref = $"../CardManager"
-	player_hand_ref = $"../PlayerHand"
-	discard_pile_ref = $"../DiscardPile"
-	card_db_ref = preload("res://Scripts/CardDB.gd")
-	
-	$DeckCardCountLabel.text = str(player_deck.size())
+	update_label(player_deck.size())
 
 func draw_card():
 	var card_drawn_name = player_deck[0] #Tirage de la première carte du deck
 	player_deck.erase(card_drawn_name) #Retrait de la carte du deck
 	
-	$DeckCardCountLabel.text = str(player_deck.size())
+	update_label(player_deck.size())
 	var card_scene = load(CARD_SCENE_PATH)
 	var new_card = card_scene.instantiate()
 	new_card.card_name = card_drawn_name
@@ -58,7 +52,10 @@ func new_turn(new_hand_size):
 	if player_deck.size() < new_hand_size:
 		discard_pile_ref.reshuffle_discard()
 		player_deck.shuffle()
-		$DeckCardCountLabel.text = str(player_deck.size())
+		update_label(player_deck.size())
 	
 	for i in range(new_hand_size):
 		draw_card()
+
+func update_label(count_cards_in_deck : int):
+	$DeckCardCountLabel.text = str(count_cards_in_deck)

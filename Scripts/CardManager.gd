@@ -6,10 +6,10 @@ const ENEMY_COLLISION_MASK = 1
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 #variables de référence vers un autre Node
-var player_hand_ref
-var input_manager_ref
-var discard_pile_ref
-var opponent_ref
+@onready var player_hand_ref = $"../PlayerHand"
+@onready var input_manager_ref = $"../InputManager"
+@onready var discard_pile_ref = $"../DiscardPile"
+@onready var opponent_ref = $"../Opponent"
 
 #variables du script
 var screen_size
@@ -18,11 +18,6 @@ var is_hovering_on_card
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
-	player_hand_ref = $"../PlayerHand"
-	input_manager_ref = $"../InputManager"
-	discard_pile_ref = $"../DiscardPile"
-	opponent_ref = $"../Opponent"
-	
 	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
 
 func _process(delta: float) -> void:

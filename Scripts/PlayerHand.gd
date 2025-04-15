@@ -6,19 +6,12 @@ const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 #variables de référence vers autre Node
-var discard_pile_ref
+@onready var discard_pile_ref = $"../DiscardPile"
 
 #variables du script
+@onready var center_screen_x = get_viewport().size.x / 2
 var player_hand = []
-var MAX_HAND_SIZE = 3
-var center_screen_x
 var battle_timer
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	discard_pile_ref = $"../DiscardPile"
-	
-	center_screen_x = get_viewport().size.x / 2
 
 func add_card_to_hand(card, speed):
 	if card not in player_hand:

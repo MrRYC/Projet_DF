@@ -8,10 +8,7 @@ const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
 
 #variables de référence vers autre Node
-var card_manager_ref
-
-func _ready() -> void:
-	card_manager_ref = $"../CardManager"
+@onready var card_manager_ref = $"../CardManager"
 
 func _input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
