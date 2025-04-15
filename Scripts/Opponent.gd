@@ -1,11 +1,14 @@
 extends Node2D
 
 var max_health = 50
-var current_health = 50
+var current_health = max_health
+
+func _ready():
+	$OpponentHealthLabel.text = str(current_health, " / ", max_health)
 
 func take_damage(amount):
 	current_health -= amount
-	print("Ennemi prend", amount, "dégâts. HP restants :", current_health)
+	$OpponentHealthLabel.text = str(current_health, " / ", max_health)
 	if current_health <= 0:
 		die()
 

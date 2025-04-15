@@ -9,6 +9,7 @@ size = Vector2(160, 240)
 
 [sub_resource type="Animation" id="Animation_if2w2"]
 length = 0.001
+step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -93,6 +94,30 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector2(0.1, 1)]
 }
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("CardBackImage:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 54)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("CardFrontImage:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 55)]
+}
 
 [sub_resource type="Animation" id="Animation_smd1n"]
 resource_name = "card_flip"
@@ -143,7 +168,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(1, 1), Vector2(0.1, 1), Vector2(1, 1)]
+"values": [Vector2(0.1, 0.55), Vector2(0.1, 0.55), Vector2(1, 1)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -176,10 +201,34 @@ tracks/6/path = NodePath("CardFrontImage:scale")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(0.1, 1), Vector2(1, 1)]
+"values": [Vector2(0.1, 0.55), Vector2(0.1, 0.55), Vector2(1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("CardBackImage:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 10), Vector2(0, 25), Vector2(0, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("CardFrontImage:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 10), Vector2(0, 25), Vector2(0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_c5yfh"]
@@ -189,15 +238,17 @@ _data = {
 }
 
 [node name="Card" type="Node2D"]
-position = Vector2(150, 890)
+position = Vector2(150, 950)
 script = ExtResource("1_0nb81")
 
 [node name="CardFrontImage" type="Sprite2D" parent="."]
 z_index = -1
+position = Vector2(0, 55)
 scale = Vector2(0.1, 1)
 texture = ExtResource("2_yguq7")
 
 [node name="CardBackImage" type="Sprite2D" parent="."]
+position = Vector2(0, 54)
 texture = ExtResource("3_lot17")
 
 [node name="Area2D" type="Area2D" parent="."]

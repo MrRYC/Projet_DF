@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3vs7n1efdpym"]
+
+[ext_resource type="Script" path="res://Scripts/Opponent.gd" id="1_kivkk"]
+[ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://Assets/Opponents/Opponent_1.png" id="2_fav6y"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
+radius = 104.0
+height = 356.0
+
+[node name="Opponent" type="Node2D"]
+position = Vector2(1350, 650)
+script = ExtResource("1_kivkk")
+
+[node name="OpponentArea2D" type="Area2D" parent="." groups=["Opponent"]]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OpponentArea2D"]
+position = Vector2(1, 1)
+shape = SubResource("CapsuleShape2D_gyqbi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.372084, 0.372083)
+texture = ExtResource("2_fav6y")
+
+[node name="OpponentHealthLabel" type="RichTextLabel" parent="."]
+offset_left = -25.0
+offset_top = 170.0
+offset_right = 35.0
+offset_bottom = 196.0
+scale = Vector2(1.2, 1.2)
+text = "x / x"

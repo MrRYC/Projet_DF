@@ -7,6 +7,8 @@ signal hovered_off
 var starting_position #position de départ de la carte utilisée dans la funct update_hand_positions du script PlayerHand
 var card_name
 #var card_type
+var is_in_combat = false
+var target
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

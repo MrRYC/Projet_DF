@@ -7,9 +7,8 @@ const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 #variables de référence vers un autre Node
 @onready var player_hand_ref = $"../PlayerHand"
+@onready var combat_zone_ref = $"../CombatZone"
 @onready var input_manager_ref = $"../InputManager"
-@onready var discard_pile_ref = $"../DiscardPile"
-@onready var opponent_ref = $"../Opponent"
 
 #variables du script
 var screen_size
@@ -33,25 +32,34 @@ func start_drag(card):
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	
-	#var card_is_played = is_card_played(card_being_dragged)
-	var card_played = is_a_card_played(card_being_dragged)
+	var opponent_targeted = is_a_opponent_targeted(card_being_dragged)
 	
-	if card_played:
-		apply_card_effect(card_being_dragged, opponent_ref)
+	if card_being_dragged.is_in_combat:
+		card_being_dragged.is_in_combat = false
+		card_being_dragged.target = null
+		standard_card_resize(card_being_dragged)
+		combat_zone_ref.remove_card_from_combat_zone(card_being_dragged)
+		player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+	elif opponent_targeted:
+		card_being_dragged.target = opponent_targeted
+		card_being_dragged.is_in_combat = true
+		combat_zone_resize(card_being_dragged)
 		player_hand_ref.remove_card_from_hand(card_being_dragged)
-		discard_pile_ref.add_card_to_discard(card_being_dragged)
+		combat_zone_ref.add_card_to_combat_zone(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	else:
 		player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
 	
 	card_being_dragged = null
 
 func highlight_card(card, hovered):
+	if card.is_in_combat:
+		return
+	
 	if hovered:
 		card.scale = Vector2(1.05,1.05)
 		card.z_index = 2
 	else:
-		card.scale = Vector2(1,1)
-		card.z_index = 1
+		standard_card_resize(card)
 
 func is_a_card_selected():
 	var space_state = get_world_2d().direct_space_state
@@ -67,7 +75,7 @@ func is_a_card_selected():
 		return get_upfront_card(result)
 	return null
 
-func is_a_card_played(card):
+func is_a_opponent_targeted(card):
 	#var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
 	#return card.position.y < play_zone_y
 	var space_state = get_world_2d().direct_space_state
@@ -80,13 +88,9 @@ func is_a_card_played(card):
 
 	for result in results:
 		if result.collider.is_in_group("Opponent"):
-			print(">>> Carte jouée sur ennemi détectée : ", result.collider.name)
+			#print(">>> Carte jouée sur ennemi détectée : ", result.collider.name)
 			return result.collider
 	return null
-
-func apply_card_effect(card, opponent):
-	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
-	opponent.take_damage(attack)
 
 func get_upfront_card(cards):
 	var highest_z_card = cards[0].collider.get_parent()
@@ -99,6 +103,14 @@ func get_upfront_card(cards):
 			highest_z_index = current_card.z_index
 	return highest_z_card
 
+func combat_zone_resize(card):
+	card.scale = Vector2(0.6, 0.6)
+	card.z_index = 0 # en combat, tu veux qu’elles ne soient pas au-dessus des cartes en main
+
+func standard_card_resize(card):
+	card.scale = Vector2(1, 1)
+	card.z_index = 1
+	
 ###########################################################################
 #                           CONNEXION DES SIGNAUX                         #
 ###########################################################################

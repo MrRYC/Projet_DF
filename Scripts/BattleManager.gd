@@ -8,11 +8,10 @@ const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables de référence vers un autre Node
 @onready var phase_button_ref = $"../UserInterface/PhaseButton"
-@onready var card_manager_ref = $"../CardManager"
 @onready var player_hand_ref = $"../PlayerHand"
 @onready var deck_pile_ref = $"../DeckPile"
 @onready var discard_pile_ref = $"../DiscardPile"
-@onready var player_health_label_ref = $"../UserInterface/PlayerHealthLabel"
+@onready var combat_zone_ref = $"../CombatZone"
 
 #variables du script
 var is_attack_phase = true
@@ -21,7 +20,8 @@ var is_end_phase = false
 var current_phase = "Attack Phase"
 var max_hand_size = START_HAND_SIZE
 var nb_turn = 1
-var player_health = 0
+var player_max_health
+var current_player_health
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -30,10 +30,12 @@ func _ready() -> void:
 	
 	#Player Health equals to all the players cards (deck + hand + discard)
 	count_player_card_in_game()
-	player_health_label_ref.text = str(player_health)
+	player_max_health = current_player_health
+	$"../UserInterface/PlayerHealthLabel".text = str(current_player_health, " / ", player_max_health)
 
 func _on_phase_button_pressed() -> void:
 	if is_attack_phase == true:
+		combat_zone_ref.execute_actions()
 		defensive_phase()
 	elif is_defensive_phase == true:
 		end_phase()
@@ -51,7 +53,7 @@ func end_turn():
 	player_hand_ref.discard_hand()
 
 func count_player_card_in_game():
-	player_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
+	current_player_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
 
 func attack_phase():
 	current_phase = "Attack Phase"

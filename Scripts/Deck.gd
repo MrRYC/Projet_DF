@@ -14,7 +14,7 @@ const DRAW_SPEED = 0.5
 
 
 #variable du deck du joueur
-var player_deck = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Direct_Card", "Direct_Card", "Hook_Card", "Hook_Card", "Hypercut_Card"]
+var player_deck = ["Jab_Card", "Jab_Card", "Jab_Card", "Direct_Card", "Direct_Card", "Hook_Card", "Hypercut_Card"]
 
 
 # Called when the node enters the scene tree for the first time.

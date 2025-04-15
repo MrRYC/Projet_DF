@@ -11,7 +11,6 @@ const DEFAULT_CARD_MOVE_SPEED = 0.1
 #variables du script
 @onready var center_screen_x = get_viewport().size.x / 2
 var player_hand = []
-var battle_timer
 
 func add_card_to_hand(card, speed):
 	if card not in player_hand:
@@ -24,9 +23,6 @@ func remove_card_from_hand(card):
 	if card in player_hand:
 		player_hand.erase(card)
 		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
-		print("Carte retirée de la main :", card.card_name)
-	else:
-		print("Tentative de retirer une carte absente :", card)
 
 func discard_hand():
 	for card in player_hand:
