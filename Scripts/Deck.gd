@@ -22,6 +22,11 @@ func _ready() -> void:
 	player_deck.shuffle()
 	update_label(player_deck.size())
 
+
+###########################################################################
+#                              DECK MANAGEMENT                            #
+###########################################################################
+	
 func draw_card():
 	var card_drawn_name = player_deck[0] #Tirage de la première carte du deck
 	player_deck.erase(card_drawn_name) #Retrait de la carte du deck

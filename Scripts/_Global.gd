@@ -1,3 +1,3 @@
 extends Node
 
-#var current_phase
+const DEFAULT_CARD_MOVE_SPEED = 0.1

@@ -2,13 +2,18 @@ extends Node2D
 
 #constantes
 const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
-const DISCARD_SPEED = 0.5
+const DISCARD_SPEED = Global.DEFAULT_CARD_MOVE_SPEED*2
 
 #variables de référence vers un autre Node
 @onready var deck_pile_ref = $"../DeckPile"
 
 #variables génériques
 var player_discard = []
+
+
+###########################################################################
+#                            DISCARD MANAGEMENT                           #
+###########################################################################
 
 func add_card_to_discard(card):
 	player_discard.append(card.card_name)

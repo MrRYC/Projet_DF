@@ -138,4 +138,5 @@ text = "Attack Phase"
 [node name="CombatZone" type="Node2D" parent="."]
 script = ExtResource("10_65qkc")
 
+[connection signal="defense_phase_signal" from="BattleManager" to="CardManager" method="_on_battle_manager_defense_phase_signal"]
 [connection signal="pressed" from="UserInterface/PhaseButton" to="BattleManager" method="_on_phase_button_pressed"]

@@ -3,17 +3,18 @@ extends Node2D
 #constantes
 const COLLISION_MASK_CARD = 1
 const ENEMY_COLLISION_MASK = 1
-const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 #variables de référence vers un autre Node
 @onready var player_hand_ref = $"../PlayerHand"
 @onready var combat_zone_ref = $"../CombatZone"
+@onready var discard_pile_ref = $"../DiscardPile"
 @onready var input_manager_ref = $"../InputManager"
 
 #variables du script
 var screen_size
 var card_being_dragged
 var is_hovering_on_card
+var defense_phase
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -31,29 +32,57 @@ func start_drag(card):
 
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
-	
+
 	var opponent_targeted = is_a_card_played(card_being_dragged)
+	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 850)
+	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	if card_being_dragged.is_in_combat:
-		card_being_dragged.is_in_combat = false
-		card_being_dragged.target = null
-		standard_card_resize(card_being_dragged)
-		combat_zone_ref.remove_card_from_combat_zone(card_being_dragged)
-		player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
-	elif opponent_targeted:
-		card_being_dragged.target = opponent_targeted
-		card_being_dragged.is_in_combat = true
-		combat_zone_resize(card_being_dragged)
-		player_hand_ref.remove_card_from_hand(card_being_dragged)
-		combat_zone_ref.add_card_to_combat_zone(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
-	else :
+	print(card_being_dragged.position)
+	print(player_hand_min_zone)
+	print(player_hand_max_zone)
+	
+	if opponent_targeted:
+		send_card_to_combat_zone(card_being_dragged, opponent_targeted)
+	elif card_being_dragged.is_in_combat:
+		return_card_to_hand(card_being_dragged)
+	#elif defense_phase:
+		#send_card_to_discard(card_being_dragged)
+	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
 		var new_index = player_hand_ref.get_drop_index(mouse_x)
 		player_hand_ref.move_card_to_index(card_being_dragged, new_index)
-	#else:
-		#player_hand_ref.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+	elif !is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
+		return_card_to_hand(card_being_dragged)
 	
 	card_being_dragged = null
+
+###########################################################################
+#                              CARDS MOVEMENT                             #
+###########################################################################
+
+func return_card_to_hand(card):
+	card.is_in_combat = false
+	card.target = null
+	standard_card_resize(card)
+	combat_zone_ref.remove_card_from_combat_zone(card)
+	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
+
+func send_card_to_combat_zone(card, opponent):
+	card.target = opponent
+	card.is_in_combat = true
+	combat_zone_resize(card)
+	player_hand_ref.remove_card_from_hand(card)
+	combat_zone_ref.add_card_to_combat_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	
+func send_card_to_discard(card):
+	card.is_in_combat = false
+	card.target = null
+	player_hand_ref.remove_card_from_hand(card)
+	discard_pile_ref.add_card_to_discard(card)
+
+###########################################################################
+#                            CARDS MANAGEMENT                             #
+###########################################################################
 
 func highlight_card(card, hovered):
 	if card.is_in_combat:
@@ -95,6 +124,9 @@ func is_a_card_played(card):
 			return result.collider
 	return null
 
+func is_in_bounds(pos: Vector2, min: Vector2, max: Vector2) -> bool:
+	return pos.x >= min.x and pos.x <= max.x and pos.y >= min.y and pos.y <= max.y
+
 func get_card_under_cursor():
 	var space_state = get_world_2d().direct_space_state
 	var params = PhysicsPointQueryParameters2D.new()
@@ -128,7 +160,7 @@ func standard_card_resize(card):
 	card.z_index = 1
 	
 ###########################################################################
-#                           CONNEXION DES SIGNAUX                         #
+#                             SIGNAL CONNEXION                            #
 ###########################################################################
 
 func connect_card_signals(card):
@@ -153,3 +185,8 @@ func on_hovered_off_card(card):
 			highlight_card(new_card_hovered, true)
 		else:
 			is_hovering_on_card = false
+
+func _on_battle_manager_defense_phase_signal():
+	if card_being_dragged:
+		defense_phase = true
+		finish_drag() 
