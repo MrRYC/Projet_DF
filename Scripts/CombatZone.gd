@@ -1,7 +1,7 @@
 extends Node2D
 
 #constantes
-const COMBAT_ZONE_X_POSITION = 150
+const COMBAT_ZONE_X_POSITION = 125
 
 #variables de référence
 @onready var card_manager_ref = $"../CardManager"
@@ -32,15 +32,37 @@ func remove_card_from_combat_zone(card):
 func execute_actions():
 	for  i in range(combat_zone.size()):
 		var card = combat_zone[i]
-		apply_card_effect(card, card.target)
+		apply_combat_zone_effect(card, card.target)
 		#animation de la carte avant disparition --> explosion 
 		discard_pile_ref.add_card_to_discard(card)
 	
 	combat_zone.clear()
 
-func apply_card_effect(card, opponent):
+func apply_combat_zone_effect(card, opponent):
 	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
 	opponent_ref.take_damage(attack)
+	
+func apply_defensive_effect(card, target):
+	var type = card.effects["type"]
+	var value = card.effects["value"]
+	#var endurance_cost = card.effects["endurance_cost"]
+	
+	for effect in card.effects:
+		match type:
+			"damage":
+				target.take_damage(value)
+			"buff":
+				# Appliquer un buff au joueur
+				pass
+				#player.apply_buff(value)
+			"debuff":
+				target.apply_debuff(value)
+			"regen":
+				pass
+				#player.restore_endurance(value)
+		
+		# Gérer l'endurance après l'effet
+		#player.reduce_endurance(effect.endurance_cost)
 
 ###########################################################################
 #                              CARDS POSITION                             #
@@ -53,7 +75,7 @@ func update_combat_zone_positions(speed):
 		var card = combat_zone[i]
 		card.starting_position = new_position
 		animate_card_to_position(card, new_position, speed)
-		combat_zone_y_position += 100
+		combat_zone_y_position += 121
 
 func animate_card_to_position(card, new_position, speed):
 	var tween = get_tree().create_tween()

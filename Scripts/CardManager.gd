@@ -12,15 +12,14 @@ const ENEMY_COLLISION_MASK = 1
 
 #variables du script
 var screen_size
-var card_being_dragged
-var is_hovering_on_card
-var defense_phase
+var card_being_dragged = false
+var is_hovering_on_card = false
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if card_being_dragged:
 		var mouse_pos = get_global_mouse_position()
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x,0,screen_size.x),
@@ -37,16 +36,10 @@ func finish_drag():
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 850)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	print(card_being_dragged.position)
-	print(player_hand_min_zone)
-	print(player_hand_max_zone)
-	
 	if opponent_targeted:
 		send_card_to_combat_zone(card_being_dragged, opponent_targeted)
 	elif card_being_dragged.is_in_combat:
 		return_card_to_hand(card_being_dragged)
-	#elif defense_phase:
-		#send_card_to_discard(card_being_dragged)
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
 		var new_index = player_hand_ref.get_drop_index(mouse_x)
@@ -124,8 +117,8 @@ func is_a_card_played(card):
 			return result.collider
 	return null
 
-func is_in_bounds(pos: Vector2, min: Vector2, max: Vector2) -> bool:
-	return pos.x >= min.x and pos.x <= max.x and pos.y >= min.y and pos.y <= max.y
+func is_in_bounds(pos: Vector2, x_min: Vector2, x_max: Vector2) -> bool:
+	return pos.x >= x_min.x and pos.x <= x_max.x and pos.y >= x_min.y and pos.y <= x_max.y
 
 func get_card_under_cursor():
 	var space_state = get_world_2d().direct_space_state
@@ -152,8 +145,8 @@ func get_upfront_card(cards):
 	return highest_z_card
 
 func combat_zone_resize(card):
-	card.scale = Vector2(0.6, 0.6)
-	card.z_index = 0 # en combat, tu veux qu’elles ne soient pas au-dessus des cartes en main
+	card.scale = Vector2(0.5, 0.5)
+	card.z_index = 0
 
 func standard_card_resize(card):
 	card.scale = Vector2(1, 1)
@@ -186,7 +179,9 @@ func on_hovered_off_card(card):
 		else:
 			is_hovering_on_card = false
 
-func _on_battle_manager_defense_phase_signal():
-	if card_being_dragged:
-		defense_phase = true
-		finish_drag() 
+func _on_refresh_combat_zone_button_pressed():
+	var combat_zone = combat_zone_ref.combat_zone
+	if combat_zone.size() > 0:
+		var combat_zone_copy = combat_zone.duplicate()
+		for card in combat_zone_copy:
+			return_card_to_hand(card)

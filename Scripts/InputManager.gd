@@ -9,10 +9,12 @@ const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
 
 #variables de référence vers autre Node
 @onready var card_manager_ref = $"../CardManager"
+@onready var player_hand_ref = $"../PlayerHand"
 
 #variables du script
 var left_mouse
 var right_mouse
+var is_defensive_phase = false
 
 func _input(event):
 	left_mouse = false
@@ -39,14 +41,34 @@ func raycast_at_cursor():
 	var result = space_state.intersect_point(parameters)
 
 	if result.size() > 0:
-		var result_collision_mask = result[0].collider.collision_mask
-		if result_collision_mask == COLLISION_MASK_CARD: #test le clic sur les cartes (COLLISION_MASK_CARD = 1)
-			var card_found = result[0].collider.get_parent()
-			if card_found.is_in_combat && right_mouse: 
-				card_manager_ref.return_card_to_hand(card_found)
-			elif card_found.is_in_combat && left_mouse: 
-				return
-			elif card_found && left_mouse:
+		var collider = result[0].collider
+		var card_found = collider.get_parent()
+
+		# CLIC GAUCHE
+		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
+			if card_found:
 				card_manager_ref.start_drag(card_found)
-		elif result_collision_mask == COLLISION_MASK_PILE: #test le clic sur les cartes (COLLISION_MASK_PILE = 4)
-			print("Je clique sur une pile")
+
+		# CLIC DROIT
+		elif collider.collision_mask == COLLISION_MASK_CARD and right_mouse:
+			if card_found.is_in_combat:
+				card_manager_ref.return_card_to_hand(card_found)
+			elif is_defensive_phase:
+				player_hand_ref.add_card_to_discard(card_found)
+
+		# CLIC GAUCHE sur pile = détail
+		elif collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
+			print("J'affiche le détail des cartes dans cette pile")
+
+###########################################################################
+#                             SIGNAL CONNEXION                            #
+###########################################################################
+
+func _on_battle_manager_attack_phase_signal():
+	is_defensive_phase = false
+
+func _on_battle_manager_defense_phase_signal():
+	is_defensive_phase = true
+	
+func _on_battle_manager_end_phase_signal():
+	is_defensive_phase = false

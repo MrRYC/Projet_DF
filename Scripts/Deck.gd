@@ -32,9 +32,10 @@ func draw_card():
 	player_deck.erase(card_drawn_name) #Retrait de la carte du deck
 	
 	update_label(player_deck.size())
+	
 	var card_scene = load(CARD_SCENE_PATH)
 	var new_card = card_scene.instantiate()
-	new_card.card_name = card_drawn_name
+	new_card.card_name = card_drawn_name #conservation du nom de la carte dans une variable afin de le relier au nom de l'image correspondante après un reshuffle de la discard dans le deck
 	
 	#gestion des images des cartes
 	var card_image_path = str("res://Assets/CardDB/" + card_drawn_name + ".png")
@@ -42,12 +43,9 @@ func draw_card():
 	
 	#gestion des valeurs Name, Cost et Attack des cartes
 	var card_data = card_db_ref.CARDS[card_drawn_name]
-	new_card.get_node("Name").text = card_data[0]
-	new_card.get_node("Cost").text = str(card_data[1])
-	new_card.get_node("Attack").text = str(card_data[2])
+	new_card.setup_card(card_data)
 	
 	card_manager_ref.add_child(new_card)
-	new_card.name = new_card.card_name
 	player_hand_ref.add_card_to_hand(new_card, DRAW_SPEED)
 	
 	#lancement de l'animation de la carte lors de la pioche

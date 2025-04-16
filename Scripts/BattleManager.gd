@@ -1,7 +1,9 @@
 extends Node
 
 #signaux
+signal attack_phase_signal
 signal defense_phase_signal
+signal end_phase_signal
 
 #constantes
 const START_HAND_SIZE = 4 #main de départ maximum
@@ -35,13 +37,17 @@ func _ready() -> void:
 
 func _on_phase_button_pressed() -> void:
 	if is_attack_phase == true:
+		emit_signal("defense_phase_signal")
 		combat_zone_ref.execute_actions()
+		#await que les animations finissent
 		defensive_phase()
 	elif is_defensive_phase == true:
-		emit_signal("defense_phase_signal")
+		emit_signal("end_phase_signal")
+		#await que les animations finissent
+		execute_defensive_actions()
 		end_phase()
 	else:
-		end_turn()
+		emit_signal("attack_phase_signal")
 		new_turn()
 		attack_phase()
 
@@ -57,9 +63,6 @@ func new_turn():
 	deck_pile_ref.new_turn(update_max_hand_size())
 	nb_turn += 1
 	$"../UserInterface/TurnLabel".text = "Turn " + str(nb_turn)
-
-func end_turn():
-	player_hand_ref.discard_hand()
 
 ###########################################################################
 #                            PLAYER MANAGEMENT                            #
@@ -77,6 +80,14 @@ func count_player_card_in_game():
 #
 #func defense_phase_calculator(defense_effect, attacker, base_damage):
 	#pass
+
+func execute_defensive_actions():
+	var tmp = player_hand_ref.player_hand.size()
+	if player_hand_ref.player_hand.size()>0:
+		for card in range(player_hand_ref.player_hand.size()):
+			print(card)
+			player_hand_ref.add_card_to_discard(card)
+			print("carte supprimée")
 
 ###########################################################################
 #                            PHASES MANAGEMENT                            #
