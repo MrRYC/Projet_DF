@@ -20,8 +20,8 @@ var action_zone = []
 
 func add_card_to_action_zone(card, speed):
 	if card not in action_zone:
-		#action_zone.insert(0,card)
-		action_zone.append(card)
+		print(card.starting_position, " ", card.position, " ", card.card_name)
+		action_zone.insert(0,card)
 		card_manager_ref.update_card_size(card,false)
 		update_action_zone_positions(speed)
 
@@ -43,8 +43,9 @@ func refresh_action_zone():
 
 func execute_offensive_actions():
 	var max_actions = action_zone.size()
-	for  i in range(max_actions):
-		var card = action_zone[i]
+	var action_zone_copy = action_zone.duplicate()
+	action_zone_copy.reverse()
+	for card in action_zone_copy:
 		var signal_status = send_animation_signal(max_actions,action_zone.size())
 		await wait_before_action(card, card.animation_time,signal_status)
 		apply_offensive_effect(card, card.target)
@@ -53,20 +54,16 @@ func execute_offensive_actions():
 
 func execute_defensive_actions():
 	if player_hand_ref.player_hand.size()>0:
-		var hand_copy = player_hand_ref.player_hand.duplicate()
-		
-		#Trier les cartes par leur position X
-		hand_copy.sort_custom(func(a, b): return a.position.x < b.position.x)
-	
+		var hand_copy = player_hand_ref.player_hand.duplicate()		
 		for card in hand_copy:
 			add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
 			player_hand_ref.remove_card_from_hand(card)
 
 	if action_zone.size() > 0:
-		var action_zone_copy = action_zone.duplicate()
 		var max_actions = action_zone.size()
+		var action_zone_copy = action_zone.duplicate()
+		action_zone_copy.reverse()
 		for card in action_zone_copy:
-			print("Défausse de :", card.card_name)
 			var signal_status = send_animation_signal(max_actions,action_zone_copy.size())
 			await wait_before_action(card, card.animation_time,signal_status)
 			##apply_defensive_effect(card, card.target)
