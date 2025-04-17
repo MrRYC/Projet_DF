@@ -278,9 +278,9 @@ text = "0"
 
 [node name="Attack" type="RichTextLabel" parent="."]
 modulate = Color(1, 1, 1, 0)
-offset_left = -9.0
+offset_left = -14.0
 offset_top = 61.0
-offset_right = 31.0
+offset_right = 26.0
 offset_bottom = 101.0
 scale = Vector2(2, 2)
 text = "0"

@@ -9,15 +9,19 @@ const ENEMY_COLLISION_MASK = 1
 @onready var action_zone_ref = $"../ActionZone"
 @onready var discard_pile_ref = $"../DiscardPile"
 @onready var input_manager_ref = $"../InputManager"
+@onready var battle_manager_ref = $"../BattleManager"
 
 #variables du script
 var screen_size
 var card_being_dragged = false
 var is_hovering_on_card = false
+var is_defense_phase = false
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
+	battle_manager_ref.connect("defense_phase_signal",connect_defense_phase_signal)
+	battle_manager_ref.connect("attack_phase_signal",connect_attack_phase_signal)
 
 func _process(_delta: float) -> void:
 	if card_being_dragged:
@@ -27,7 +31,7 @@ func _process(_delta: float) -> void:
 
 func start_drag(card):
 	card_being_dragged = card
-	card.scale = Vector2(1,1)
+	card.scale = Vector2(1,1) 
 
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
@@ -36,7 +40,7 @@ func finish_drag():
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	if opponent_targeted:
+	if opponent_targeted && !is_defense_phase:
 		send_card_to_action_zone(card_being_dragged, opponent_targeted)
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
@@ -166,7 +170,13 @@ func force_global_hover_check():
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
 	card.connect("hovered_off", on_hovered_off_card)
-	
+
+func connect_defense_phase_signal():
+	is_defense_phase = true
+
+func connect_attack_phase_signal():
+	is_defense_phase = false
+
 func connect_left_mouse_released_signal():
 	if card_being_dragged:
 		finish_drag()
