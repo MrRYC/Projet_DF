@@ -12,10 +12,8 @@ const DRAW_SPEED = 0.5
 
 #variables du script
 
-
 #variable du deck du joueur
 var player_deck = ["Jab_Card", "Jab_Card", "Jab_Card", "Direct_Card", "Direct_Card", "Hook_Card", "Hypercut_Card"]
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -47,6 +45,8 @@ func draw_card():
 	
 	card_manager_ref.add_child(new_card)
 	player_hand_ref.add_card_to_hand(new_card, DRAW_SPEED)
+	
+	#print(new_card.card_name ," ", new_card.cost ," ", new_card.attack ," ", new_card.animation_time)
 	
 	#lancement de l'animation de la carte lors de la pioche
 	new_card.get_node("CardFlipAnimation").play("card_flip")

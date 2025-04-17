@@ -3,53 +3,51 @@ extends Node
 #signaux
 signal attack_phase_signal
 signal defense_phase_signal
-signal end_phase_signal
 
 #constantes
 const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables de référence vers un autre Node
-@onready var phase_button_ref = $"../UserInterface/PhaseButton"
 @onready var player_hand_ref = $"../PlayerHand"
 @onready var deck_pile_ref = $"../DeckPile"
 @onready var discard_pile_ref = $"../DiscardPile"
-@onready var combat_zone_ref = $"../CombatZone"
+@onready var action_zone_ref = $"../ActionZone"
+@onready var user_interface_ref = $"../UserInterface"
 
 #variables du script
 var is_attack_phase = true
 var is_defensive_phase = false
-var is_end_phase = false
 var current_phase = "Attack Phase"
 var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 1
 var player_max_health
-var current_player_health
+var player_current_health
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	action_zone_ref.animation_finished.connect(_on_animation_end)
+	
 	for i in range(START_HAND_SIZE):
 		deck_pile_ref.draw_card()
 	
 	#Player Health equals to all the players cards (deck + hand + discard)
 	count_player_card_in_game()
-	player_max_health = current_player_health
-	$"../UserInterface/PlayerHealthLabel".text = str(current_player_health, " / ", player_max_health)
+	player_max_health = player_current_health
+	update_player_health(player_current_health,player_max_health)
 
 func _on_phase_button_pressed() -> void:
+	user_interface_ref.animation_in_progress(true)
+
 	if is_attack_phase == true:
-		emit_signal("defense_phase_signal")
-		combat_zone_ref.execute_actions()
+		action_zone_ref.execute_offensive_actions()
 		#await que les animations finissent
 		defensive_phase()
-	elif is_defensive_phase == true:
-		emit_signal("end_phase_signal")
-		#await que les animations finissent
-		execute_defensive_actions()
-		end_phase()
 	else:
-		emit_signal("attack_phase_signal")
-		new_turn()
-		attack_phase()
+		action_zone_ref.execute_defensive_actions()
+		#await que les animations finissent
+		#new_turn()
+
+	user_interface_ref.update_refresh_button(is_attack_phase)
 
 ###########################################################################
 #                             TURN MANAGEMENT                             #
@@ -60,34 +58,20 @@ func update_max_hand_size():
 	return new_hand_max_size
 
 func new_turn():
+	attack_phase()
 	deck_pile_ref.new_turn(update_max_hand_size())
 	nb_turn += 1
-	$"../UserInterface/TurnLabel".text = "Turn " + str(nb_turn)
+	user_interface_ref.turn_update(nb_turn)
 
 ###########################################################################
 #                            PLAYER MANAGEMENT                            #
 ###########################################################################
 
 func count_player_card_in_game():
-	current_player_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
-
-###########################################################################
-#                            DAMAGE MANAGEMENT                            #
-###########################################################################
-
-#func attack_phase_calculator(attack_card, opponent):
-	#pass
-#
-#func defense_phase_calculator(defense_effect, attacker, base_damage):
-	#pass
-
-func execute_defensive_actions():
-	var tmp = player_hand_ref.player_hand.size()
-	if player_hand_ref.player_hand.size()>0:
-		for card in range(player_hand_ref.player_hand.size()):
-			print(card)
-			player_hand_ref.add_card_to_discard(card)
-			print("carte supprimée")
+	player_current_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
+	
+func update_player_health(current_health,max_health):
+	user_interface_ref.player_health_update(current_health,max_health)
 
 ###########################################################################
 #                            PHASES MANAGEMENT                            #
@@ -95,19 +79,24 @@ func execute_defensive_actions():
 
 func attack_phase():
 	current_phase = "Attack Phase"
-	phase_button_ref.text = current_phase
+	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = true
-	is_end_phase = false
+	is_defensive_phase = false
+	emit_signal("attack_phase_signal")
 
 func defensive_phase():
 	current_phase = "Defensive Phase"
-	phase_button_ref.text = current_phase
-	is_defensive_phase = true
+	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = false
-	defense_phase_signal.emit(current_phase, nb_turn)
+	is_defensive_phase = true
+	emit_signal("defense_phase_signal")
+	#defense_phase_signal.emit(current_phase, nb_turn)
 
-func end_phase():
-	current_phase = "End Phase"
-	phase_button_ref.text = current_phase
-	is_end_phase = true
-	is_defensive_phase = false
+###########################################################################
+#                             SIGNAL CONNEXION                            #
+###########################################################################
+
+func _on_animation_end(ended):
+	if ended:
+		print("animations terminées")
+		user_interface_ref.animation_in_progress(false)

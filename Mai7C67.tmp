@@ -160,13 +160,11 @@ offset_right = 176.0
 offset_bottom = 69.0
 text = "Refresh"
 
-[node name="FightingTimer" type="Timer" parent="UserInterface"]
-one_shot = true
-
 [node name="Opponent" parent="." instance=ExtResource("9_j143v")]
 position = Vector2(1285, 636)
 
 [connection signal="attack_phase_signal" from="BattleManager" to="InputManager" method="_on_battle_manager_attack_phase_signal"]
 [connection signal="defense_phase_signal" from="BattleManager" to="InputManager" method="_on_battle_manager_defense_phase_signal"]
+[connection signal="end_phase_signal" from="BattleManager" to="InputManager" method="_on_battle_manager_end_phase_signal"]
 [connection signal="pressed" from="UserInterface/PhaseButton" to="BattleManager" method="_on_phase_button_pressed"]
 [connection signal="pressed" from="UserInterface/RefreshActionZoneButton" to="ActionZone" method="_on_refresh_action_zone_button_pressed"]

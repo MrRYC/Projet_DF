@@ -6,7 +6,7 @@ const ENEMY_COLLISION_MASK = 1
 
 #variables de référence vers un autre Node
 @onready var player_hand_ref = $"../PlayerHand"
-@onready var combat_zone_ref = $"../CombatZone"
+@onready var action_zone_ref = $"../ActionZone"
 @onready var discard_pile_ref = $"../DiscardPile"
 @onready var input_manager_ref = $"../InputManager"
 
@@ -37,8 +37,8 @@ func finish_drag():
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
 	if opponent_targeted:
-		send_card_to_combat_zone(card_being_dragged, opponent_targeted)
-	elif card_being_dragged.is_in_combat:
+		send_card_to_action_zone(card_being_dragged, opponent_targeted)
+	elif card_being_dragged.is_in_action_zone:
 		return_card_to_hand(card_being_dragged)
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
@@ -54,21 +54,19 @@ func finish_drag():
 ###########################################################################
 
 func return_card_to_hand(card):
-	card.is_in_combat = false
+	card.is_in_action_zone = false
 	card.target = null
-	standard_card_resize(card)
-	combat_zone_ref.remove_card_from_combat_zone(card)
+	action_zone_ref.remove_card_from_action_zone(card)
 	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
 
-func send_card_to_combat_zone(card, opponent):
+func send_card_to_action_zone(card, opponent):
 	card.target = opponent
-	card.is_in_combat = true
-	combat_zone_resize(card)
+	card.is_in_action_zone = true
 	player_hand_ref.remove_card_from_hand(card)
-	combat_zone_ref.add_card_to_combat_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
 	
 func send_card_to_discard(card):
-	card.is_in_combat = false
+	card.is_in_action_zone = false
 	card.target = null
 	player_hand_ref.remove_card_from_hand(card)
 	discard_pile_ref.add_card_to_discard(card)
@@ -78,14 +76,21 @@ func send_card_to_discard(card):
 ###########################################################################
 
 func highlight_card(card, hovered):
-	if card.is_in_combat:
+	if card.is_in_action_zone:
 		return
-	
-	if hovered:
+	elif hovered:
 		card.scale = Vector2(1.05,1.05)
 		card.z_index = 2
 	else:
-		standard_card_resize(card)
+		update_card_size(card,true)
+
+func update_card_size(card, standard_size):
+	if standard_size:
+		card.scale = Vector2(1, 1)
+		card.z_index = 1
+	else:
+		card.scale = Vector2(0.5, 0.5)
+		card.z_index = 1
 
 func is_a_card_selected():
 	var space_state = get_world_2d().direct_space_state
@@ -143,14 +148,6 @@ func get_upfront_card(cards):
 			highest_z_card = current_card
 			highest_z_index = current_card.z_index
 	return highest_z_card
-
-func combat_zone_resize(card):
-	card.scale = Vector2(0.5, 0.5)
-	card.z_index = 0
-
-func standard_card_resize(card):
-	card.scale = Vector2(1, 1)
-	card.z_index = 1
 	
 ###########################################################################
 #                             SIGNAL CONNEXION                            #
@@ -172,16 +169,9 @@ func on_hovered_over_card(card):
 func on_hovered_off_card(card):
 	if !card_being_dragged:
 		highlight_card(card,false)
-		
-		var new_card_hovered = is_a_card_selected()
-		if new_card_hovered:
-			highlight_card(new_card_hovered, true)
-		else:
-			is_hovering_on_card = false
-
-func _on_refresh_combat_zone_button_pressed():
-	var combat_zone = combat_zone_ref.combat_zone
-	if combat_zone.size() > 0:
-		var combat_zone_copy = combat_zone.duplicate()
-		for card in combat_zone_copy:
-			return_card_to_hand(card)
+	
+	var new_card_hovered = is_a_card_selected()
+	if new_card_hovered:
+		highlight_card(new_card_hovered, true)
+	else:
+		is_hovering_on_card = false
