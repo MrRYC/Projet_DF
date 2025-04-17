@@ -33,6 +33,7 @@ func add_card_to_discard(card):
 	if card in player_hand:
 		remove_card_from_hand(card)
 		discard_pile_ref.add_card_to_discard(card)
+		update_hand_positions(Global.DEFAULT_CARD_MOVE_SPEED)
 
 ###########################################################################
 #                           PLAYER HAND POSITION                          #

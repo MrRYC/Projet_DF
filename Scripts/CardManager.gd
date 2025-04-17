@@ -33,13 +33,11 @@ func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 
 	var opponent_targeted = is_a_card_played(card_being_dragged)
-	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 850)
+	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
 	if opponent_targeted:
 		send_card_to_action_zone(card_being_dragged, opponent_targeted)
-	elif card_being_dragged.is_in_action_zone:
-		return_card_to_hand(card_being_dragged)
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
 		var new_index = player_hand_ref.get_drop_index(mouse_x)
@@ -122,8 +120,14 @@ func is_a_card_played(card):
 			return result.collider
 	return null
 
-func is_in_bounds(pos: Vector2, x_min: Vector2, x_max: Vector2) -> bool:
-	return pos.x >= x_min.x and pos.x <= x_max.x and pos.y >= x_min.y and pos.y <= x_max.y
+#On récupère la taille dynamique de la main du joueur
+func is_in_bounds(pos: Vector2, pos_min: Vector2, pos_max: Vector2) -> bool:
+	var offset_x_left = pos_min.x - 100
+	var offset_x_right = pos_max.x + 75
+	var offset_x_up = pos_min.y+ - 75
+	var offset_x_down = pos_max.y + 75
+
+	return pos.x >= offset_x_left and pos.x <= offset_x_right and pos.y >= offset_x_up  and pos.y <= offset_x_down
 
 func get_card_under_cursor():
 	var space_state = get_world_2d().direct_space_state
@@ -149,10 +153,16 @@ func get_upfront_card(cards):
 			highest_z_index = current_card.z_index
 	return highest_z_card
 	
+func force_global_hover_check():
+	var new_card_hovered = is_a_card_selected()
+	if new_card_hovered:
+		on_hovered_over_card(new_card_hovered)
+
 ###########################################################################
 #                             SIGNAL CONNEXION                            #
 ###########################################################################
 
+#coonexion via get_parent().connect_card_signals(self) de Card
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
 	card.connect("hovered_off", on_hovered_off_card)

@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/Discard.gd" id="6_x6f8x"]
 [ext_resource type="Script" path="res://Scripts/BattleManager.gd" id="7_ralk2"]
 [ext_resource type="Texture2D" uid="uid://b4hfvayhylgoh" path="res://Assets/Background.jpg" id="8_vtuuf"]
-[ext_resource type="Script" path="res://UI.gd" id="9_3uw2j"]
+[ext_resource type="Script" path="res://Scripts/UI.gd" id="9_3uw2j"]
 [ext_resource type="PackedScene" uid="uid://b3vs7n1efdpym" path="res://Scenes/Opponent.tscn" id="9_j143v"]
 [ext_resource type="Script" path="res://Scripts/ActionZone.gd" id="10_65qkc"]
 

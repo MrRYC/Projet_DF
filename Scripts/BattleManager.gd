@@ -16,7 +16,6 @@ const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables du script
 var is_attack_phase = true
-var is_defensive_phase = false
 var current_phase = "Attack Phase"
 var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 1
@@ -36,16 +35,15 @@ func _ready() -> void:
 	update_player_health(player_current_health,player_max_health)
 
 func _on_phase_button_pressed() -> void:
-	user_interface_ref.animation_in_progress(true)
-
 	if is_attack_phase == true:
+		if action_zone_ref.action_zone.size() > 0:
+			user_interface_ref.animation_in_progress(true)
 		action_zone_ref.execute_offensive_actions()
-		#await que les animations finissent
 		defensive_phase()
 	else:
-		action_zone_ref.execute_defensive_actions()
-		#await que les animations finissent
-		#new_turn()
+		user_interface_ref.animation_in_progress(true)
+		await action_zone_ref.execute_defensive_actions()
+		new_turn()
 
 	user_interface_ref.update_refresh_button(is_attack_phase)
 
@@ -81,14 +79,12 @@ func attack_phase():
 	current_phase = "Attack Phase"
 	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = true
-	is_defensive_phase = false
 	emit_signal("attack_phase_signal")
 
 func defensive_phase():
 	current_phase = "Defensive Phase"
 	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = false
-	is_defensive_phase = true
 	emit_signal("defense_phase_signal")
 	#defense_phase_signal.emit(current_phase, nb_turn)
 
@@ -98,5 +94,4 @@ func defensive_phase():
 
 func _on_animation_end(ended):
 	if ended:
-		print("animations terminées")
 		user_interface_ref.animation_in_progress(false)

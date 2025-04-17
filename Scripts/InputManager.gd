@@ -48,8 +48,6 @@ func raycast_at_cursor():
 		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
 			if card_found.is_in_action_zone && !is_defensive_phase:
 				card_manager_ref.return_card_to_hand(card_found)
-			elif card_found && is_defensive_phase:
-				print("je dois pouvoir ordonner mes cartes en main")
 			elif card_found:
 				card_manager_ref.start_drag(card_found)
 
@@ -73,6 +71,3 @@ func _on_battle_manager_attack_phase_signal():
 
 func _on_battle_manager_defense_phase_signal():
 	is_defensive_phase = true
-	
-func _on_battle_manager_end_phase_signal():
-	is_defensive_phase = false

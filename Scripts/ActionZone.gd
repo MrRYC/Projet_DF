@@ -20,7 +20,6 @@ var action_zone = []
 
 func add_card_to_action_zone(card, speed):
 	if card not in action_zone:
-		print(card.starting_position, " ", card.position, " ", card.card_name)
 		action_zone.insert(0,card)
 		card_manager_ref.update_card_size(card,false)
 		update_action_zone_positions(speed)
@@ -34,21 +33,19 @@ func remove_card_from_action_zone(card):
 func refresh_action_zone():
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
-		player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
-		remove_card_from_action_zone(card)
+		card_manager_ref.return_card_to_hand(card)
 
 ###########################################################################
 #                            ACTIONS EXECUTION                            #
 ###########################################################################
 
 func execute_offensive_actions():
-	var max_actions = action_zone.size()
 	var action_zone_copy = action_zone.duplicate()
 	action_zone_copy.reverse()
-	for card in action_zone_copy:
-		var signal_status = send_animation_signal(max_actions,action_zone.size())
-		await wait_before_action(card, card.animation_time,signal_status)
-		apply_offensive_effect(card, card.target)
+	for i in range(action_zone_copy.size()):
+		var signal_status = send_animation_signal(i,action_zone_copy.size())
+		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
+		apply_offensive_effect(action_zone_copy[i], action_zone_copy[i].target)
 		
 	action_zone.clear()
 
@@ -60,17 +57,16 @@ func execute_defensive_actions():
 			player_hand_ref.remove_card_from_hand(card)
 
 	if action_zone.size() > 0:
-		var max_actions = action_zone.size()
 		var action_zone_copy = action_zone.duplicate()
 		action_zone_copy.reverse()
-		for card in action_zone_copy:
-			var signal_status = send_animation_signal(max_actions,action_zone_copy.size())
-			await wait_before_action(card, card.animation_time,signal_status)
+		for i in range(action_zone_copy.size()):
+			var signal_status = send_animation_signal(i,action_zone_copy.size())
+			await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
 			##apply_defensive_effect(card, card.target)
 			
 	action_zone.clear()
 
-func apply_offensive_effect(card, opponent):
+func apply_offensive_effect(card, target): #target à définir
 	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
 	opponent_ref.take_damage(attack)
 	
@@ -99,14 +95,14 @@ func apply_defensive_effect(card, target):
 func wait_before_action(card, time, signal_status):
 	await get_tree().create_timer(time).timeout
 	discard_pile_ref.add_card_to_discard(card)
-
+	
 	if signal_status:
 		animation_finished.emit(true)
 	else:
 		animation_finished.emit(false)
 
-func send_animation_signal(max_actions, current_actions):
-	if max_actions >= current_actions:
+func send_animation_signal(current_actions, max_actions):
+	if max_actions - 1 == current_actions:
 		return true
 	else:
 		return false
