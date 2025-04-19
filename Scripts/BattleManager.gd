@@ -1,9 +1,8 @@
 extends Node
 
-#signaux
+#signaux captés par InputManager
 signal attack_phase_signal
 signal defense_phase_signal
-signal animation_finished(ended)
 
 #constantes
 const START_HAND_SIZE = 4 #main de départ maximum
@@ -26,8 +25,6 @@ var player_current_health
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	animation_finished.connect(_on_animation_end)
-	
 	for i in range(START_HAND_SIZE):
 		deck_pile_ref.draw_card()
 	
@@ -39,16 +36,16 @@ func _ready() -> void:
 func _on_phase_button_pressed() -> void:
 	if is_attack_phase == true:
 		if action_zone_ref.action_zone.size() > 0:
-			user_interface_ref.animation_in_progress(true)
-		execute_offensive_actions()
+			user_interface_ref.enable_phase_button(false)
+		await execute_offensive_actions()
 		defensive_phase()
 	else:
-		user_interface_ref.animation_in_progress(true)
+		user_interface_ref.enable_phase_button(false)
 		await execute_defensive_actions()
 		new_turn()
-
-	user_interface_ref.update_refresh_button(is_attack_phase)
-
+		
+	user_interface_ref.enable_phase_button(true)
+	
 ###########################################################################
 #                             TURN MANAGEMENT                             #
 ###########################################################################
@@ -81,13 +78,13 @@ func attack_phase():
 	current_phase = "Attack Phase"
 	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = true
-	emit_signal("attack_phase_signal")
+	emit_signal("attack_phase_signal") #signal sent 
 
 func defensive_phase():
 	current_phase = "Defensive Phase"
 	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = false
-	emit_signal("defense_phase_signal")
+	emit_signal("defense_phase_signal") #signal sent
 	#defense_phase_signal.emit(current_phase, nb_turn)
 
 ###########################################################################
@@ -98,8 +95,7 @@ func execute_offensive_actions():
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
 	for i in range(action_zone_copy.size()):
-		var signal_status = send_animation_signal(i,action_zone_copy.size())
-		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
+		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time)
 		apply_offensive_effect(action_zone_copy[i], action_zone_copy[i].target)
 		
 	action_zone_ref.action_zone.clear()
@@ -115,8 +111,7 @@ func execute_defensive_actions():
 		var action_zone_copy = action_zone_ref.action_zone.duplicate()
 		action_zone_copy.reverse()
 		for i in range(action_zone_copy.size()):
-			var signal_status = send_animation_signal(i,action_zone_copy.size())
-			await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
+			await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time)
 			##apply_defensive_effect(card, card.target)
 			
 	action_zone_ref.action_zone.clear()
@@ -147,31 +142,20 @@ func apply_defensive_effect(card, target):
 		# Gérer l'endurance après l'effet
 		#player.reduce_endurance(effect.endurance_cost)
 
-func wait_before_action(card, time, signal_status):
+func wait_before_action(card, time):
+	#détermination de la vitesse de l'animation Fade In
+	var fade_in_animation = card.get_node("CardFadeInAnimation")
+	var speed
+	if time == 1.5:
+		speed = 1.4
+	elif time == 1.2:
+		speed = 1.7
+	elif time == 1:
+		speed = 2
 	
 	#lancement de l'animation de la carte lors de la pioche
-	var fade_in_animation = card.get_node("CardFadeInAnimation")
+	fade_in_animation.speed_scale = speed
 	fade_in_animation.play("fade_to_black")
-	
 	await get_tree().create_timer(time).timeout
-	
+
 	discard_pile_ref.add_card_to_discard(card)
-	
-	if signal_status:
-		animation_finished.emit(true)
-	else:
-		animation_finished.emit(false)
-
-func send_animation_signal(current_actions, max_actions):
-	if max_actions - 1 == current_actions:
-		return true
-	else:
-		return false
-
-###########################################################################
-#                             SIGNAL CONNEXION                            #
-###########################################################################
-
-func _on_animation_end(ended):
-	if ended:
-		user_interface_ref.animation_in_progress(false)
