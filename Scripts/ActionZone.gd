@@ -1,15 +1,10 @@
 extends Node2D
 
-signal animation_finished(ended)
-
 #constantes
 const action_ZONE_X_POSITION = 125
 
 #variables de référence
 @onready var card_manager_ref = $"../CardManager"
-@onready var discard_pile_ref = $"../DiscardPile"
-@onready var opponent_ref = $"../Opponent"
-@onready var player_hand_ref = $"../PlayerHand"
 
 #variables du script
 var action_zone = []
@@ -34,78 +29,6 @@ func refresh_action_zone():
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
 		card_manager_ref.return_card_to_hand(card)
-
-###########################################################################
-#                            ACTIONS EXECUTION                            #
-###########################################################################
-
-func execute_offensive_actions():
-	var action_zone_copy = action_zone.duplicate()
-	action_zone_copy.reverse()
-	for i in range(action_zone_copy.size()):
-		var signal_status = send_animation_signal(i,action_zone_copy.size())
-		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
-		apply_offensive_effect(action_zone_copy[i], action_zone_copy[i].target)
-		
-	action_zone.clear()
-
-func execute_defensive_actions():
-	if player_hand_ref.player_hand.size()>0:
-		var hand_copy = player_hand_ref.player_hand.duplicate()		
-		for card in hand_copy:
-			add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
-			player_hand_ref.remove_card_from_hand(card)
-
-	if action_zone.size() > 0:
-		var action_zone_copy = action_zone.duplicate()
-		action_zone_copy.reverse()
-		for i in range(action_zone_copy.size()):
-			var signal_status = send_animation_signal(i,action_zone_copy.size())
-			await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time,signal_status)
-			##apply_defensive_effect(card, card.target)
-			
-	action_zone.clear()
-
-func apply_offensive_effect(card, target): #target à définir
-	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
-	opponent_ref.take_damage(attack)
-	
-func apply_defensive_effect(card, target):
-	var type = card.effects["type"]
-	var value = card.effects["value"]
-	#var endurance_cost = card.effects["endurance_cost"]
-	
-	for effect in card.effects:
-		match type:
-			"damage":
-				target.take_damage(value)
-			"buff":
-				# Appliquer un buff au joueur
-				pass
-				#player.apply_buff(value)
-			"debuff":
-				target.apply_debuff(value)
-			"regen":
-				pass
-				#player.restore_endurance(value)
-		
-		# Gérer l'endurance après l'effet
-		#player.reduce_endurance(effect.endurance_cost)
-
-func wait_before_action(card, time, signal_status):
-	await get_tree().create_timer(time).timeout
-	discard_pile_ref.add_card_to_discard(card)
-	
-	if signal_status:
-		animation_finished.emit(true)
-	else:
-		animation_finished.emit(false)
-
-func send_animation_signal(current_actions, max_actions):
-	if max_actions - 1 == current_actions:
-		return true
-	else:
-		return false
 
 ###########################################################################
 #                              CARDS POSITION                             #

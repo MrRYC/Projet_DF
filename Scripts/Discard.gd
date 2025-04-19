@@ -10,7 +10,6 @@ const DISCARD_SPEED = Global.DEFAULT_CARD_MOVE_SPEED*2
 #variables génériques
 var player_discard = []
 
-
 ###########################################################################
 #                            DISCARD MANAGEMENT                           #
 ###########################################################################

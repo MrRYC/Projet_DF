@@ -3,7 +3,7 @@ const CARDS = {# Name, Cost, Attack, animation, Slots, Effects
 		"name" = "Jab",
 		"cost" = 1,
 		"attack" = 5,
-		"animation_time" = 0.5,
+		"animation_time" = 1.0,
 		"slots" = 0,
 		"effects" = {} #effects : type, value (bonus or malus) and cost or regen point
 	}, 
@@ -11,7 +11,7 @@ const CARDS = {# Name, Cost, Attack, animation, Slots, Effects
 		"name" = "Direct",
 		"cost" = 2,
 		"attack" = 10,
-		"animation_time" = 0.5,
+		"animation_time" = 1.0,
 		"slots" = 1,
 		"effects" = {"type": "block", "value": 1, "endurance_cost": 10}
 	}, 
@@ -19,7 +19,7 @@ const CARDS = {# Name, Cost, Attack, animation, Slots, Effects
 		"name" = "Hook",
 		"cost" = 3,
 		"attack" = 15,
-		"animation_time" = 1.0,
+		"animation_time" = 1.2,
 		"slots" = 0,
 		"effects" = {}
 	}, 
