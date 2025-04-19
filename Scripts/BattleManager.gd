@@ -148,7 +148,13 @@ func apply_defensive_effect(card, target):
 		#player.reduce_endurance(effect.endurance_cost)
 
 func wait_before_action(card, time, signal_status):
+	
+	#lancement de l'animation de la carte lors de la pioche
+	var fade_in_animation = card.get_node("CardFadeInAnimation")
+	fade_in_animation.play("fade_to_black")
+	
 	await get_tree().create_timer(time).timeout
+	
 	discard_pile_ref.add_card_to_discard(card)
 	
 	if signal_status:

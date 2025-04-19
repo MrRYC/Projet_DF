@@ -48,7 +48,7 @@ func draw_card():
 	#print(new_card.card_name ," ", new_card.cost ," ", new_card.attack ," ", new_card.animation_time)
 	
 	#lancement de l'animation de la carte lors de la pioche
-	new_card.get_node("CardFlipAnimation").play("card_flip")
+	new_card.get_node("CardDrawFlipAnimation").play("card_flip")
 
 func new_turn(new_hand_size):
 	if player_deck.size() < new_hand_size:
