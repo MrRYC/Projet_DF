@@ -20,6 +20,7 @@ var is_attack_phase = true
 var current_phase = "Attack Phase"
 var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 1
+var is_action_zone_empty = false
 var player_max_health
 var player_current_health
 
@@ -94,15 +95,20 @@ func defensive_phase():
 func execute_offensive_actions():
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
+	
 	for i in range(action_zone_copy.size()):
+		if i == action_zone_copy.size()-1:
+			is_action_zone_empty = true
+		
 		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time)
 		apply_offensive_effect(action_zone_copy[i], action_zone_copy[i].target)
-		
+	
+	is_action_zone_empty = false
 	action_zone_ref.action_zone.clear()
 
 func execute_defensive_actions():
 	if player_hand_ref.player_hand.size()>0:
-		var hand_copy = player_hand_ref.player_hand.duplicate()		
+		var hand_copy = player_hand_ref.player_hand.duplicate()
 		for card in hand_copy:
 			action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
 			player_hand_ref.remove_card_from_hand(card)
@@ -118,7 +124,8 @@ func execute_defensive_actions():
 
 func apply_offensive_effect(card, target): #target à définir
 	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
-	opponent_ref.take_damage(attack)
+
+	opponent_ref.take_damage(attack,is_action_zone_empty)
 	
 func apply_defensive_effect(card, target):
 	var type = card.effects["type"]

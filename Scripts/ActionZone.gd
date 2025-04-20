@@ -16,12 +16,14 @@ var action_zone = []
 func add_card_to_action_zone(card, speed):
 	if card not in action_zone:
 		action_zone.insert(0,card)
+		card.is_in_action_zone = true
 		card_manager_ref.update_card_size(card,false)
 		update_action_zone_positions(speed)
 
 func remove_card_from_action_zone(card):
 	if card in action_zone:
 		action_zone.erase(card)
+		card.is_in_action_zone = false
 		card_manager_ref.update_card_size(card,true)
 		update_action_zone_positions(Global.DEFAULT_CARD_MOVE_SPEED)
 

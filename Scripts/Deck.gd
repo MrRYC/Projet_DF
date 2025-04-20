@@ -50,6 +50,12 @@ func draw_card():
 	#lancement de l'animation de la carte lors de la pioche
 	new_card.get_node("CardDrawFlipAnimation").play("card_flip")
 
+#put back card in hand or action zone in deck
+#func put_card_in_deck ():
+	#for card in ???:
+		#card.is_in_action_zone = false
+		#...
+
 func new_turn(new_hand_size):
 	if player_deck.size() < new_hand_size:
 		discard_pile_ref.reshuffle_discard()
