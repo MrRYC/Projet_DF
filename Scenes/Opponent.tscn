@@ -1,19 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://b3vs7n1efdpym"]
 
-[ext_resource type="Script" path="res://Scripts/Opponent.gd" id="1_kivkk"]
-[ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://Assets/Opponents/Opponent_1.png" id="2_fav6y"]
+[ext_resource type="Script" path="res://scripts/entities/Opponent.gd" id="1_kivkk"]
+[ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_fav6y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
-radius = 104.0
-height = 356.0
+radius = 116.0
+height = 352.0
 
 [node name="Opponent" type="Node2D" groups=["Opponent"]]
-position = Vector2(1350, 650)
 script = ExtResource("1_kivkk")
 
 [node name="OpponentArea2D" type="Area2D" parent="." groups=["Opponent"]]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 4
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OpponentArea2D"]
 position = Vector2(1, 1)
@@ -23,7 +22,7 @@ shape = SubResource("CapsuleShape2D_gyqbi")
 scale = Vector2(0.372084, 0.372083)
 texture = ExtResource("2_fav6y")
 
-[node name="OpponentHealthLabel" type="RichTextLabel" parent="."]
+[node name="HealthLabel" type="RichTextLabel" parent="."]
 offset_left = -25.0
 offset_top = 170.0
 offset_right = 35.0

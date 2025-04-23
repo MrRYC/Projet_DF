@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1fdvcd83lx6f"
-path="res://.godot/imported/Hypercut_Card.png-84a67db2bd7a5d1117e326e79081b3bb.ctex"
+uid="uid://su31nwdnhwny"
+path="res://.godot/imported/Deck.png-b623c3c19209b6a6ff9c71b1d4c03f12.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardDB/Hypercut_Card.png"
-dest_files=["res://.godot/imported/Hypercut_Card.png-84a67db2bd7a5d1117e326e79081b3bb.ctex"]
+source_file="res://assets/resources/Deck.png"
+dest_files=["res://.godot/imported/Deck.png-b623c3c19209b6a6ff9c71b1d4c03f12.ctex"]
 
 [params]
 

@@ -15,7 +15,7 @@ var player_discard = []
 ###########################################################################
 
 func add_card_to_discard(card):
-	player_discard.append(card.card_name)
+	player_discard.append(card.id)
 	card.queue_free()
 	update_label(player_discard.size())
 	

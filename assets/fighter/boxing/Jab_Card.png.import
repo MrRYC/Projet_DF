@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4hfvayhylgoh"
-path="res://.godot/imported/Background.jpg-e53c948bbfe9996c99cd309802213d2d.ctex"
+uid="uid://bjlljqqtcnl2g"
+path="res://.godot/imported/Jab_Card.png-a0329d6c930225695922a9512012c060.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Background.jpg"
-dest_files=["res://.godot/imported/Background.jpg-e53c948bbfe9996c99cd309802213d2d.ctex"]
+source_file="res://assets/fighter/boxing/Jab_Card.png"
+dest_files=["res://.godot/imported/Jab_Card.png-a0329d6c930225695922a9512012c060.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bp0iolkl4cl8r"
-path="res://.godot/imported/Opponent_2.png-fc6c0c8bba8339abbedc15e8b5ec1ace.ctex"
+uid="uid://d1fdvcd83lx6f"
+path="res://.godot/imported/Uppercut_Card.png-1771d88f736fa1d3a50afdf2f2b4abee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Opponents/Opponent_2.png"
-dest_files=["res://.godot/imported/Opponent_2.png-fc6c0c8bba8339abbedc15e8b5ec1ace.ctex"]
+source_file="res://assets/fighter/boxing/Uppercut_Card.png"
+dest_files=["res://.godot/imported/Uppercut_Card.png-1771d88f736fa1d3a50afdf2f2b4abee.ctex"]
 
 [params]
 

@@ -124,7 +124,6 @@ func execute_defensive_actions():
 
 func apply_offensive_effect(card, target): #target à définir
 	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
-
 	opponent_ref.take_damage(attack,is_action_zone_empty)
 	
 func apply_defensive_effect(card, target):

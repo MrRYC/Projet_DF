@@ -4,7 +4,7 @@ var max_health = 50
 var current_health = max_health
 
 func _ready():
-	$OpponentHealthLabel.text = str(current_health, " / ", max_health)
+	$HealthLabel.text = str(current_health, " / ", max_health)
 
 func take_damage(amount,is_action_zone_empty):
 	#var overkill = false
@@ -14,7 +14,7 @@ func take_damage(amount,is_action_zone_empty):
 		current_health = 0
 		#overkill = true
 
-	$OpponentHealthLabel.text = str(current_health, " / ", max_health)
+	$HealthLabel.text = str(current_health, " / ", max_health)
 	
 	if current_health <= 0 && is_action_zone_empty:
 		die()

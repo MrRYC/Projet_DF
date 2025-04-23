@@ -1,20 +1,17 @@
 [gd_scene load_steps=16 format=3 uid="uid://d151fl7ycfam2"]
 
-[ext_resource type="Script" path="res://Scripts/InputManager.gd" id="1_kdgm2"]
-[ext_resource type="Script" path="res://Scripts/CardManager.gd" id="2_b2kfh"]
-[ext_resource type="Script" path="res://Scripts/PlayerHand.gd" id="3_o0gpq"]
-[ext_resource type="Script" path="res://Scripts/Deck.gd" id="4_07t4f"]
-[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://Assets/Deck.png" id="5_73sli"]
-[ext_resource type="Script" path="res://Scripts/Discard.gd" id="6_x6f8x"]
-[ext_resource type="Script" path="res://Scripts/BattleManager.gd" id="7_ralk2"]
-[ext_resource type="Texture2D" uid="uid://b4hfvayhylgoh" path="res://Assets/Background.jpg" id="8_vtuuf"]
-[ext_resource type="Script" path="res://Scripts/UI.gd" id="9_3uw2j"]
-[ext_resource type="PackedScene" uid="uid://b3vs7n1efdpym" path="res://Scenes/Opponent.tscn" id="9_j143v"]
-[ext_resource type="Script" path="res://Scripts/ActionZone.gd" id="10_65qkc"]
-
-[sub_resource type="GDScript" id="GDScript_gr66l"]
-script/source = "extends Node2D
-"
+[ext_resource type="Script" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
+[ext_resource type="Script" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
+[ext_resource type="Script" path="res://scripts/area/PlayerHand.gd" id="3_o0gpq"]
+[ext_resource type="Script" path="res://scripts/area/Deck.gd" id="4_07t4f"]
+[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/Deck.png" id="5_73sli"]
+[ext_resource type="Script" path="res://scripts/area/Discard.gd" id="6_x6f8x"]
+[ext_resource type="Script" path="res://scripts/manager/BattleManager.gd" id="7_ralk2"]
+[ext_resource type="PackedScene" uid="uid://b5vr8mxis5frn" path="res://scenes/ui/CardTargetSelector.tscn" id="8_jvf5h"]
+[ext_resource type="Texture2D" uid="uid://b4hfvayhylgoh" path="res://assets/resources/Background.jpg" id="8_vtuuf"]
+[ext_resource type="Script" path="res://scripts/ui/UI.gd" id="9_3uw2j"]
+[ext_resource type="PackedScene" uid="uid://b3vs7n1efdpym" path="res://scenes/Opponent.tscn" id="9_j143v"]
+[ext_resource type="Script" path="res://scripts/area/ActionZone.gd" id="10_65qkc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
 size = Vector2(106, 158)
@@ -26,7 +23,6 @@ size = Vector2(104, 155)
 bg_color = Color(0.622903, 0.0662068, 0.261057, 1)
 
 [node name="Main" type="Node2D"]
-script = SubResource("GDScript_gr66l")
 
 [node name="InputManager" type="Node2D" parent="."]
 script = ExtResource("1_kdgm2")
@@ -92,6 +88,8 @@ offset_right = 48.0
 offset_bottom = 41.0
 scale = Vector2(2, 2)
 text = "0"
+
+[node name="CardTargetSelector" parent="." instance=ExtResource("8_jvf5h")]
 
 [node name="BattleManager" type="Node" parent="."]
 script = ExtResource("7_ralk2")

@@ -1,5 +1,9 @@
 extends Node2D
 
+#signaux émis à CardTargetSelector
+signal aim_started
+signal aim_ended
+
 #constantes
 const COLLISION_MASK_CARD = 1
 const ENEMY_COLLISION_MASK = 1
@@ -31,10 +35,12 @@ func _process(_delta: float) -> void:
 
 func start_drag(card):
 	card_being_dragged = card
-	card.scale = Vector2(1,1) 
+	card.scale = Vector2(1,1)
+	aim_started.emit(card)
 
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
+	aim_ended.emit(card_being_dragged)
 
 	var opponent_targeted = is_a_card_played(card_being_dragged)
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
@@ -109,8 +115,6 @@ func is_a_card_selected():
 	return null
 
 func is_a_card_played(card):
-	#var play_zone_y = 600 # par exemple si la carte est relâchée assez haut dans l’écran
-	#return card.position.y < play_zone_y
 	var space_state = get_world_2d().direct_space_state
 	var parameters = PhysicsPointQueryParameters2D.new()
 	
@@ -133,19 +137,6 @@ func is_in_bounds(pos: Vector2, pos_min: Vector2, pos_max: Vector2) -> bool:
 
 	return pos.x >= offset_x_left and pos.x <= offset_x_right and pos.y >= offset_x_up  and pos.y <= offset_x_down
 
-func get_card_under_cursor():
-	var space_state = get_world_2d().direct_space_state
-	var params = PhysicsPointQueryParameters2D.new()
-	params.position = get_global_mouse_position()
-	params.collide_with_areas = true
-
-	var results = space_state.intersect_point(params)
-	for result in results:
-		var collider = result.collider
-		if collider.is_in_group("HandofCards") and collider != card_being_dragged:
-			return collider.get_parent()
-	return null
-
 func get_upfront_card(cards):
 	var highest_z_card = cards[0].collider.get_parent()
 	var highest_z_index = highest_z_card.z_index
@@ -156,11 +147,6 @@ func get_upfront_card(cards):
 			highest_z_card = current_card
 			highest_z_index = current_card.z_index
 	return highest_z_card
-	
-func force_global_hover_check():
-	var new_card_hovered = is_a_card_selected()
-	if new_card_hovered:
-		on_hovered_over_card(new_card_hovered)
 
 ###########################################################################
 #                             SIGNAL CONNEXION                            #

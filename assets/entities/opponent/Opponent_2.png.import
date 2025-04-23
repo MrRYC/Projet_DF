@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c88vxlormygns"
-path="res://.godot/imported/Hook_Card.png-662bc1c0419efcd8bcad1291b875a831.ctex"
+uid="uid://bp0iolkl4cl8r"
+path="res://.godot/imported/Opponent_2.png-3f2a3420499d121f89bb48476e8db52a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardDB/Hook_Card.png"
-dest_files=["res://.godot/imported/Hook_Card.png-662bc1c0419efcd8bcad1291b875a831.ctex"]
+source_file="res://assets/entities/opponent/Opponent_2.png"
+dest_files=["res://.godot/imported/Opponent_2.png-3f2a3420499d121f89bb48476e8db52a.ctex"]
 
 [params]
 
