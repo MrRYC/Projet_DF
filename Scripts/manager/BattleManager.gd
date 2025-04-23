@@ -1,9 +1,5 @@
 extends Node
 
-#signaux captés par InputManager
-signal attack_phase_signal
-signal defense_phase_signal
-
 #constantes
 const START_HAND_SIZE = 4 #main de départ maximum
 
@@ -13,39 +9,31 @@ const START_HAND_SIZE = 4 #main de départ maximum
 @onready var discard_pile_ref = $"../DiscardPile"
 @onready var action_zone_ref = $"../ActionZone"
 @onready var opponent_ref = $"../Opponent"
-@onready var user_interface_ref = $"../UserInterface"
 
 #variables du script
 var is_attack_phase = true
-var current_phase = "Attack Phase"
 var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 1
 var is_action_zone_empty = false
-var player_max_health
 var player_current_health
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	for i in range(START_HAND_SIZE):
 		deck_pile_ref.draw_card()
-	
-	#Player Health equals to all the players cards (deck + hand + discard)
-	count_player_card_in_game()
-	player_max_health = player_current_health
-	update_player_health(player_current_health,player_max_health)
 
 func _on_phase_button_pressed() -> void:
 	if is_attack_phase == true:
 		if action_zone_ref.action_zone.size() > 0:
-			user_interface_ref.enable_phase_button(false)
+			EventBus.combat_in_progress.emit(false)
 		await execute_offensive_actions()
 		defensive_phase()
 	else:
-		user_interface_ref.enable_phase_button(false)
+		EventBus.combat_in_progress.emit(false)
 		await execute_defensive_actions()
 		new_turn()
 		
-	user_interface_ref.enable_phase_button(true)
+	EventBus.combat_in_progress.emit(true)
 	
 ###########################################################################
 #                             TURN MANAGEMENT                             #
@@ -57,36 +45,24 @@ func update_max_hand_size():
 
 func new_turn():
 	attack_phase()
+	discard_pile_ref.shuffle_back_discard()
 	deck_pile_ref.new_turn(update_max_hand_size())
 	nb_turn += 1
-	user_interface_ref.turn_update(nb_turn)
-
-###########################################################################
-#                            PLAYER MANAGEMENT                            #
-###########################################################################
-
-func count_player_card_in_game():
-	player_current_health = deck_pile_ref.player_deck.size() + player_hand_ref.player_hand.size() + discard_pile_ref.player_discard.size()
-	
-func update_player_health(current_health,max_health):
-	user_interface_ref.player_health_update(current_health,max_health)
+	EventBus.turn_increased.emit(nb_turn)
 
 ###########################################################################
 #                            PHASES MANAGEMENT                            #
 ###########################################################################
 
 func attack_phase():
-	current_phase = "Attack Phase"
-	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = true
-	emit_signal("attack_phase_signal") #signal sent 
+	EventBus.attack_phase_signal.emit()
+	EventBus.combat_phase_changed.emit("Attack Phase")
 
 func defensive_phase():
-	current_phase = "Defensive Phase"
-	user_interface_ref.update_phase_button(current_phase)
 	is_attack_phase = false
-	emit_signal("defense_phase_signal") #signal sent
-	#defense_phase_signal.emit(current_phase, nb_turn)
+	EventBus.defense_phase_signal.emit()
+	EventBus.combat_phase_changed.emit("Defensive Phase")
 
 ###########################################################################
 #                            BATTLE EXECUTION                             #

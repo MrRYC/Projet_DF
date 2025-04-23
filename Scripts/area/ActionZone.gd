@@ -50,7 +50,7 @@ func animate_card_to_position(card, new_position, speed):
 	tween.tween_property(card, "position", new_position, speed)
 
 ###########################################################################
-#                             SIGNAL CONNEXION                            #
+#                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
 func _on_refresh_action_zone_button_pressed():

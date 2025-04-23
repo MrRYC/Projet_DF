@@ -1,9 +1,5 @@
 extends Node2D
 
-#signaux émis à CardTargetSelector
-signal aim_started
-signal aim_ended
-
 #constantes
 const COLLISION_MASK_CARD = 1
 const ENEMY_COLLISION_MASK = 1
@@ -12,8 +8,6 @@ const ENEMY_COLLISION_MASK = 1
 @onready var player_hand_ref = $"../PlayerHand"
 @onready var action_zone_ref = $"../ActionZone"
 @onready var discard_pile_ref = $"../DiscardPile"
-@onready var input_manager_ref = $"../InputManager"
-@onready var battle_manager_ref = $"../BattleManager"
 
 #variables du script
 var screen_size
@@ -23,9 +17,11 @@ var is_defense_phase = false
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
-	input_manager_ref.connect("left_mouse_released", connect_left_mouse_released_signal)
-	battle_manager_ref.connect("defense_phase_signal",connect_defense_phase_signal)
-	battle_manager_ref.connect("attack_phase_signal",connect_attack_phase_signal)
+	EventBus.left_mouse_released.connect(_on_left_mouse_released)
+	EventBus.attack_phase_signal.connect(_on_attack_phase_detected)
+	EventBus.defense_phase_signal.connect(_on_defense_phase_detected)
+	EventBus.hovered.connect(_on_hovered_over_card)
+	EventBus.hovered_off.connect(_on_hovered_off_card)
 
 func _process(_delta: float) -> void:
 	if card_being_dragged:
@@ -36,11 +32,11 @@ func _process(_delta: float) -> void:
 func start_drag(card):
 	card_being_dragged = card
 	card.scale = Vector2(1,1)
-	aim_started.emit(card)
+	EventBus.aim_started.emit(card)
 
 func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
-	aim_ended.emit(card_being_dragged)
+	EventBus.aim_ended.emit(card_being_dragged)
 
 	var opponent_targeted = is_a_card_played(card_being_dragged)
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
@@ -149,30 +145,25 @@ func get_upfront_card(cards):
 	return highest_z_card
 
 ###########################################################################
-#                             SIGNAL CONNEXION                            #
+#                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-#coonexion via get_parent().connect_card_signals(self) de Card
-func connect_card_signals(card):
-	card.connect("hovered", on_hovered_over_card)
-	card.connect("hovered_off", on_hovered_off_card)
-
-func connect_defense_phase_signal():
-	is_defense_phase = true
-
-func connect_attack_phase_signal():
+func _on_attack_phase_detected():
 	is_defense_phase = false
 
-func connect_left_mouse_released_signal():
+func _on_defense_phase_detected():
+	is_defense_phase = true
+
+func _on_left_mouse_released():
 	if card_being_dragged:
 		finish_drag()
 	
-func on_hovered_over_card(card):
+func _on_hovered_over_card(card):
 	if !is_hovering_on_card:
 		is_hovering_on_card = true
 		highlight_card(card,true)
 	
-func on_hovered_off_card(card):
+func _on_hovered_off_card(card):
 	if !card_being_dragged:
 		highlight_card(card,false)
 	

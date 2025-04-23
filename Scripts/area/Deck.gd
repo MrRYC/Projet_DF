@@ -7,7 +7,6 @@ const DRAW_SPEED = 0.5
 #variables de référence vers un autre Node
 @onready var card_manager_ref = $"../CardManager"
 @onready var player_hand_ref = $"../PlayerHand"
-@onready var discard_pile_ref = $"../DiscardPile"
 @onready var card_db_ref = preload("res://scripts/resources/CardDB.gd")
 
 #variables du script
@@ -56,12 +55,14 @@ func draw_card():
 
 func new_turn(new_hand_size):
 	if player_deck.size() < new_hand_size:
-		discard_pile_ref.reshuffle_discard()
-		player_deck.shuffle()
+		shuffle()
 		update_label(player_deck.size())
 	
 	for i in range(new_hand_size):
 		draw_card()
+
+func shuffle():
+	player_deck.shuffle()
 
 func update_label(count_cards_in_deck : int):
 	$DeckCardCountLabel.text = str(count_cards_in_deck)

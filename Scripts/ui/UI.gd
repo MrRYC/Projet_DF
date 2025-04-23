@@ -1,22 +1,27 @@
-extends Node
+extends Node 
 
-func turn_update(turn):
+func _ready() -> void:
+	EventBus.turn_increased.connect(_on_turn_increased)
+	EventBus.combat_phase_changed.connect(_on_combat_phase_changed)
+	EventBus.combat_in_progress.connect(_on_combat_in_progress)
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_turn_increased(turn):
 	$TurnLabel.text = str("Turn ",turn)
-	
-func player_health_update(current_health,max_health):
-	$PlayerHealthLabel.text = str(current_health, " / ", max_health)
 
-func update_phase_button(current_phase):
+func _on_combat_phase_changed(current_phase):
+	if current_phase == "Attack Phase":
+		$RefreshActionZoneButton.disabled = false
+	else:
+		$RefreshActionZoneButton.disabled = true
+	
 	$PhaseButton.text = current_phase
 
-func enable_phase_button(is_phase_ended):
+func _on_combat_in_progress(is_phase_ended):
 	if !is_phase_ended:
 		$PhaseButton.disabled = true
 	else:
 		$PhaseButton.disabled = false
-
-func update_refresh_button(is_attack_phase):
-	if is_attack_phase:
-		$RefreshActionZoneButton.disabled = false
-	else:
-		$RefreshActionZoneButton.disabled = true

@@ -1,8 +1,5 @@
 extends Node2D
 
-signal left_mouse_clicked
-signal left_mouse_released
-
 #constantes
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
@@ -16,17 +13,21 @@ var left_mouse
 var right_mouse
 var is_defensive_phase = false
 
+func _ready() -> void:
+	EventBus.attack_phase_signal.connect(_on_attack_phase_detected)
+	EventBus.defense_phase_signal.connect(_on_defense_phase_detected)
+
 func _input(event):
 	left_mouse = false
 	right_mouse = false
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			emit_signal("left_mouse_clicked")
+			EventBus.emit_signal("left_mouse_clicked")
 			left_mouse = true
 			raycast_at_cursor()
 		else:
-			emit_signal("left_mouse_released")
+			EventBus.emit_signal("left_mouse_released")
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:
@@ -63,11 +64,11 @@ func raycast_at_cursor():
 			print("J'affiche le détail des cartes dans cette pile")
 
 ###########################################################################
-#                             SIGNAL CONNEXION                            #
+#                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_battle_manager_attack_phase_signal():
+func _on_attack_phase_detected():
 	is_defensive_phase = false
 
-func _on_battle_manager_defense_phase_signal():
+func _on_defense_phase_detected():
 	is_defensive_phase = true

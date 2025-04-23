@@ -19,13 +19,16 @@ func add_card_to_discard(card):
 	card.queue_free()
 	update_label(player_discard.size())
 	
-func reshuffle_discard():
+func shuffle_back_discard():
 	if player_discard.size() == 0:
 		return
 	
 	deck_pile_ref.player_deck += player_discard
-	player_discard.clear()
+	clear()
 	update_label(0)
+	
+func clear():
+	player_discard.clear()
 
 func update_label(count_cards_in_discard : int):
 	$DiscardCardCountLabel.text = str(count_cards_in_discard)
