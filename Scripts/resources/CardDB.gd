@@ -1,38 +1,38 @@
 const CARDS = {
 	"Jab_Card":{
 		"name" = "Jab",
-		"endurance_cost" = 1,
-		"attack" = 5,
-		"reach" = "single_enemy",
 		"animation_time" = 1.0,
+		"attack" = 1,
+		"usage_number" = -1,
+		"reach" = "single_enemy",
 		"slots" = 0,
-		"effects" = {} #effects : type, value (bonus or malus) and cost or regen point
+		"flip_effect" = {} #effects : name, animation_time, nombre d'usage, side_effect(bonus/malus)
 	}, 
-	"Direct_Card":{
-		"name" = "Direct",
-		"endurance_cost" = 2,
-		"attack" = 10,
-		"reach" = "single_enemy",
+	"Cross_Card":{
+		"name" = "Cross",
 		"animation_time" = 1.0,
+		"attack" = 1,
+		"usage_number" = -1,
+		"reach" = "single_enemy",
 		"slots" = 1,
-		"effects" = {"type": "block", "value": 1, "endurance_cost": 10, "reach" : "self"}
+		"flip_effect" = {"name" : "Block", "animation_time": 0.5, "usage_number": -1, "side_effect" : "none"}
 	}, 
 	"Hook_Card":{
 		"name" = "Hook",
-		"endurance_cost" = 3,
-		"attack" = 15,
-		"reach" = "all_enemy",
 		"animation_time" = 1.2,
+		"attack" = 2,
+		"usage_number" = -1,
+		"reach" = "single_enemy",
 		"slots" = 0,
-		"effects" = {}
+		"flip_effect" = {"name" : "Dodge", "animation_time": 0.6, "usage_number": 2, "side_effect" : "wound"} #replace wound par inactivate after usage_number
 	}, 
 	"Uppercut_Card":{
 		"name" = "Uppercut",
-		"endurance_cost" = 4,
-		"attack" = 25,
-		"reach" = "single_enemy",
 		"animation_time" = 1.5,
+		"attack" = 3,
+		"usage_number" = -1,
+		"reach" = "single_enemy",
 		"slots" = 0,
-		"effects" = {}
+		"flip_effect" = {"name" : "Breath", "animation_time": 1.0, "usage_number": 1, "side_effect" : "banish"}
 	}
 }

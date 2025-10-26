@@ -4,22 +4,27 @@ extends Node2D
 const COLLISION_MASK_CARD = 1
 const ENEMY_COLLISION_MASK = 1
 
+#chargement de la base de données des cartes
+@onready var card_db_ref = preload("res://scripts/resources/CardDB.gd")
+
 #variables de référence vers un autre Node
-@onready var player_hand_ref = $"../PlayerHand"
-@onready var action_zone_ref = $"../ActionZone"
-@onready var discard_pile_ref = $"../DiscardPile"
+@onready var player_hand_ref: Node2D = $"../PlayerHand"
+@onready var action_zone_ref: Node2D = $"../ActionZone"
+@onready var deck_pile_ref: Node2D = $"../Piles/DeckPile"
+@onready var wound_pile_ref: Node2D = $"../Piles/WoundPile"
+@onready var discard_pile_ref: Node2D = $"../Piles/DiscardPile"
+@onready var banish_pile_ref: Node2D = $"../Piles/BanishPile"
 
 #variables du script
 var screen_size
-var card_being_dragged = false
-var is_hovering_on_card = false
-var is_defense_phase = false
+var card_being_dragged
+var is_hovering_on_card : bool = false
+var is_end_of_turn : bool = false
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
+	
 	EventBus.left_mouse_released.connect(_on_left_mouse_released)
-	EventBus.attack_phase_signal.connect(_on_attack_phase_detected)
-	EventBus.defense_phase_signal.connect(_on_defense_phase_detected)
 	EventBus.hovered.connect(_on_hovered_over_card)
 	EventBus.hovered_off.connect(_on_hovered_off_card)
 
@@ -28,6 +33,21 @@ func _process(_delta: float) -> void:
 		var mouse_pos = get_global_mouse_position()
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x,0,screen_size.x),
 			clamp(mouse_pos.y,0,screen_size.y))
+
+###########################################################################
+#                             TURN MANAGEMENT                             #
+###########################################################################
+
+func new_turn(max_hand_size):
+	if player_hand_ref.player_hand.size() > 0:
+		for card in player_hand_ref.player_hand.duplicate():
+			send_card_to_discard(card)
+
+	deck_pile_ref.new_turn(max_hand_size)
+
+###########################################################################
+#                              CARDS MOVEMENT                             #
+###########################################################################
 
 func start_drag(card):
 	card_being_dragged = card
@@ -42,7 +62,7 @@ func finish_drag():
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	if opponent_targeted && !is_defense_phase:
+	if opponent_targeted:
 		send_card_to_action_zone(card_being_dragged, opponent_targeted)
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
@@ -52,11 +72,7 @@ func finish_drag():
 		return_card_to_hand(card_being_dragged)
 	
 	card_being_dragged = null
-
-###########################################################################
-#                              CARDS MOVEMENT                             #
-###########################################################################
-
+	
 func return_card_to_hand(card):
 	card.is_in_action_zone = false
 	card.target = null
@@ -68,16 +84,47 @@ func send_card_to_action_zone(card, opponent):
 	card.is_in_action_zone = true
 	player_hand_ref.remove_card_from_hand(card)
 	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+
+func send_card_to(card, pile):
+	if pile == "discard":
+		send_card_to_discard(card)
+	elif pile == "banish":
+		send_card_to_banish(card)
+	elif pile == "wound":
+		send_card_to_wound(card)
 	
 func send_card_to_discard(card):
 	card.is_in_action_zone = false
 	card.target = null
 	player_hand_ref.remove_card_from_hand(card)
-	discard_pile_ref.add_card_to_discard(card)
+	discard_pile_ref.add_card_to_pile(card)
+
+func send_card_to_banish(card):
+	card.is_in_action_zone = false
+	card.target = null
+	player_hand_ref.remove_card_from_hand(card)
+	banish_pile_ref.add_card_to_pile(card)
+	
+func send_card_to_wound(card):
+	card.is_in_action_zone = false
+	card.target = null
+	player_hand_ref.remove_card_from_hand(card)
+	wound_pile_ref.add_card_to_pile(card)
 
 ###########################################################################
 #                            CARDS MANAGEMENT                             #
 ###########################################################################
+
+func deck_size():
+	return deck_pile_ref.deck_size
+	
+func flip_card_in_hand(card):
+	if !card.is_flipped && card["flip_effect"]:
+		card.rotation_degrees += 180
+		print(card["flip_effect"])
+		card.is_flipped = true
+	else:
+		card.is_flipped = false
 
 func highlight_card(card, hovered):
 	if card.is_in_action_zone:
@@ -120,7 +167,9 @@ func is_a_card_played(card):
 	var results = space_state.intersect_point(parameters)
 
 	for result in results:
-		if result.collider.is_in_group("Opponent"):
+		if result.collider.is_in_group("Opponent") && !card.is_flipped:
+			return result.collider
+		elif result.collider.is_in_group("Player") && card.is_flipped:
 			return result.collider
 	return null
 
@@ -144,15 +193,19 @@ func get_upfront_card(cards):
 			highest_z_index = current_card.z_index
 	return highest_z_card
 
+func show_pile(pile):
+	if pile == "DeckPile":
+		deck_pile_ref.show_pile()
+	elif pile == "DiscardPile":
+		discard_pile_ref.show_pile()
+	elif pile == "WoundPile":
+		wound_pile_ref.show_pile()
+	elif pile == "BanishPile":
+		banish_pile_ref.show_pile()
+
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
-
-func _on_attack_phase_detected():
-	is_defense_phase = false
-
-func _on_defense_phase_detected():
-	is_defense_phase = true
 
 func _on_left_mouse_released():
 	if card_being_dragged:

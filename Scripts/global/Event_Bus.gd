@@ -8,13 +8,8 @@ signal hovered_off()
 signal left_mouse_clicked()
 signal left_mouse_released()
 
-#signals from BattleManager to CardManager and InputManager
-signal attack_phase_signal()
-signal defense_phase_signal()
-
-#signals from BattleManager to UserInterface
+#signals from BattleManager to UserInterface and InputManager
 signal turn_increased(int)
-signal combat_phase_changed(String)
 signal combat_in_progress(bool)
 
 #signals from BattleManager to Player
@@ -23,3 +18,6 @@ signal player_health_updated(int)
 #signals from CardManager to CardTargetSelector
 signal aim_started()
 signal aim_ended()
+
+#signals from DeckPile to DiscardPile
+signal shuffle_back_discard(bool)

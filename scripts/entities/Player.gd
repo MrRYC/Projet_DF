@@ -1,26 +1,21 @@
 extends Node2D
-class_name Opponent
+class_name Player
 
-var max_health : int = 6
-var current_health : int = max_health
+var current_health
 
-func _ready():
+func set_starting_health(health):
+	current_health = health
 	update_health()
 
 func take_damage(amount,is_action_zone_empty):
-	#var overkill = false
 	current_health -= amount
-
 	if current_health < 0:
 		current_health = 0
-		#overkill = true
 
 	update_health()
 	
 	if current_health <= 0 && is_action_zone_empty:
 		die()
-	
-	#overkill = false
 
 func update_health():
 	$HealthLabel.text = str(current_health)

@@ -1,0 +1,102 @@
+const BOXING_COMBO = {
+	"Jab_LeadCross":{
+		"name" = "One-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+	}, 
+	"Jab_Jab_LeadCross":{
+		"name" = "One-One-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Jab_Card",
+		"card_3" = "Cross_Card",
+	}, 
+	"Jab_Hook":{
+		"name" = "One-Three",
+		"card_1" = "Jab_Card",
+		"card_2" = "Hook_Card",
+	}, 
+	"RearCross_LeadHook":{
+		"name" = "Two-Three",
+		"card_1" = "Rear_Cross_Card",
+		"card_2" = "Hook_Card",
+	}, 
+	"Jab_Cross_LeadHook":{
+		"name" = "One-Two-Three",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Hook_Card",
+	},
+	"Jab_Cross_Uppercut":{
+		"name" = "One-Two-Five",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Uppercut_Card",
+	}, 
+	"RearCross_Uppercut_RearCross":{
+		"name" = "Two-Five-Two",
+		"card_1" = "Rear_Cross_Card",
+		"card_2" = "Uppercut_Card",
+		"card_3" = "Rear_Cross_Card",
+	}, 
+	"Jab_Cross_Uppercut_Cross":{
+		"name" = "One-Two-Five-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Uppercut_Card",
+		"card_4" = "Cross_Card",
+	},
+	"Jab_Cross_LeadHook_RearHook":{
+		"name" = "One-Two-Three-Four",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Hook_Card",
+		"card_4" = "Rear_Hook_Card",
+	}, 
+	"Jab_Cross_BodyJab_Cross":{
+		"name" = "One-Two-One-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Close_Jab_Card",
+		"card_4" = "Cross_Card",
+	}, 
+	"FeinteJab_Cross":{
+		"name" = "FOne-Two",
+		"card_1" = "Feinte_Jab_Card",
+		"card_2" = "Cross_Card",
+	},
+	"Cross_LeadHook_Esquive_Uppercut":{
+		"name" = "Two-Three-Esquive-Five",
+		"card_1" = "Cross_Card",
+		"card_2" = "Hook_Card",
+		"card_3" = "Esquive_Card",
+		"card_4" = "Cross_Card",
+	}, 
+	"Jab_Cross_Decalage_LeadHook":{
+		"name" = "One-Two-One-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Jab_Card",
+		"card_4" = "Hook_Card",
+	}, 
+	"Jab_Cross_LeadHook_EsquiveRotative_Cross":{
+		"name" = "One-Two-Three-ER-Two",
+		"card_1" = "Jab_Card",
+		"card_2" = "Cross_Card",
+		"card_3" = "Hook_Card",
+		"card_4" = "EsquiveRotative_Card",
+		"card_5" = "Cross_Card",
+	}, 
+	"Jab_FeinteCross_LeadHook":{
+		"name" = "One-FTwo-Three",
+		"card_1" = "Jab_Card",
+		"card_2" = "Feinte_Cross_Card",
+		"card_3" = "Hook_Card",
+	}, 
+	"Cross_Uppercut_LeadHook_Cross":{
+		"name" = "One-Five-Three-Two",
+		"card_1" = "Cross_Card",
+		"card_2" = "Uppercut_Card",
+		"card_3" = "Hook_Card",
+		"card_4" = "Cross_Card",
+	}
+}
