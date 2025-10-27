@@ -46,14 +46,14 @@ func raycast_at_cursor():
 
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
-			if card_found.is_in_action_zone:
+			if card_found.card_current_area == 2:
 				card_manager_ref.return_card_to_hand(card_found)
 			elif card_found:
 				card_manager_ref.start_drag(card_found)
 
 		# CLIC DROIT
 		elif collider.collision_mask == COLLISION_MASK_CARD and right_mouse:
-			if !card_found.is_in_action_zone:
+			if card_found.card_current_area == 1:
 				card_manager_ref.flip_card_in_hand(card_found)
 
 		# CLIC GAUCHE sur pile = détail

@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://brw8md31axmbx" path="res://scripts/ui/UI.gd" id="9_3uw2j"]
 [ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/Banish_pile.png" id="9_j4qnp"]
 [ext_resource type="Script" uid="uid://b0uxxt4by12e6" path="res://scripts/area/ActionZone.gd" id="10_65qkc"]
-[ext_resource type="Script" uid="uid://bmgjtmwj7dd8t" path="res://scripts/area/Banish.gd" id="10_sc1dx"]
+[ext_resource type="Script" uid="uid://bmgjtmwj7dd8t" path="res://scripts/area/Exhaust.gd" id="10_sc1dx"]
 [ext_resource type="PackedScene" uid="uid://e04imrnfufeq" path="res://scenes/Player.tscn" id="11_5vvyt"]
 [ext_resource type="PackedScene" uid="uid://b3vs7n1efdpym" path="res://scenes/Opponent.tscn" id="12_5vvyt"]
 
@@ -64,12 +64,13 @@ scale = Vector2(0.6625, 0.6625)
 texture = ExtResource("5_73sli")
 
 [node name="DeckCardCountLabel" type="RichTextLabel" parent="Piles/DeckPile"]
-offset_left = -34.0
+offset_left = -77.0
 offset_top = 16.0
-offset_right = 6.0
+offset_right = -25.0
 offset_bottom = 46.0
 scale = Vector2(2, 2)
 text = "0"
+horizontal_alignment = 1
 
 [node name="WoundPile" type="Node2D" parent="Piles"]
 z_index = -2
@@ -90,12 +91,13 @@ scale = Vector2(0.12, 0.12)
 texture = ExtResource("7_c2ibq")
 
 [node name="WoundCardCountLabel" type="RichTextLabel" parent="Piles/WoundPile"]
-offset_left = -34.0
+offset_left = -65.0
 offset_top = 16.0
-offset_right = 6.0
+offset_right = -25.0
 offset_bottom = 46.0
 scale = Vector2(2, 2)
 text = "0"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="DiscardPile" type="Node2D" parent="Piles"]
@@ -118,38 +120,40 @@ scale = Vector2(0.65625, 0.658333)
 texture = ExtResource("5_73sli")
 
 [node name="DiscardCardCountLabel" type="RichTextLabel" parent="Piles/DiscardPile"]
-offset_left = 16.0
+offset_left = -27.0
 offset_top = 15.0
-offset_right = 48.0
+offset_right = 25.0
 offset_bottom = 41.0
 scale = Vector2(2, 2)
 text = "0"
+horizontal_alignment = 1
 
-[node name="BanishPile" type="Node2D" parent="Piles"]
+[node name="ExhaustPile" type="Node2D" parent="Piles"]
 z_index = -2
 position = Vector2(1672, -140)
 script = ExtResource("10_sc1dx")
 
-[node name="DeckArea2D" type="Area2D" parent="Piles/BanishPile"]
+[node name="DeckArea2D" type="Area2D" parent="Piles/ExhaustPile"]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/BanishPile/DeckArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/ExhaustPile/DeckArea2D"]
 position = Vector2(-25, 44)
 shape = SubResource("CircleShape2D_fpfj3")
 
-[node name="Sprite2D" type="Sprite2D" parent="Piles/BanishPile"]
+[node name="Sprite2D" type="Sprite2D" parent="Piles/ExhaustPile"]
 position = Vector2(-25, 45)
 scale = Vector2(0.12, 0.12)
 texture = ExtResource("9_j4qnp")
 
-[node name="BanishCardCountLabel" type="RichTextLabel" parent="Piles/BanishPile"]
-offset_left = -34.0
-offset_top = 16.0
-offset_right = 6.0
-offset_bottom = 46.0
+[node name="BanishCardCountLabel" type="RichTextLabel" parent="Piles/ExhaustPile"]
+offset_left = -64.0
+offset_top = 17.0
+offset_right = -24.0
+offset_bottom = 47.0
 scale = Vector2(2, 2)
 text = "0"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="TurnManager" type="Node" parent="."]

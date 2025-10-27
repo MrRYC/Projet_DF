@@ -7,7 +7,7 @@ const action_ZONE_X_POSITION = 125
 @onready var card_manager_ref = $"../CardManager"
 
 #variables du script
-var action_zone = []
+var action_zone : Array[CARD] = []
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -16,20 +16,22 @@ var action_zone = []
 func add_card_to_action_zone(card, speed):
 	if card not in action_zone:
 		action_zone.insert(0,card)
-		card.is_in_action_zone = true
 		card_manager_ref.update_card_size(card,false)
 		update_action_zone_positions(speed)
 
 func remove_card_from_action_zone(card):
 	if card in action_zone:
+		card.card_current_area = card.card_area.IN_HAND
 		action_zone.erase(card)
-		card.is_in_action_zone = false
 		card_manager_ref.update_card_size(card,true)
 		update_action_zone_positions(Global.DEFAULT_CARD_MOVE_SPEED)
 
 func empty_action_zone():
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
+		if card.is_flipped:
+			card_manager_ref.flip_card_in_hand(card)
+
 		card_manager_ref.return_card_to_hand(card)
 
 ###########################################################################
@@ -66,4 +68,4 @@ func animate_card_to_position(card, new_position, speed):
 
 func _on_empty_action_zone_button_pressed():
 	if action_zone.size() > 0:
-		empty_action_zone()	
+		empty_action_zone()

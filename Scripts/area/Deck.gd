@@ -13,11 +13,16 @@ const DRAW_SPEED = 0.5
 var deck_size
 
 #variable du deck du joueur
-var deck_pile_id : Array = ["Jab_Card", "Jab_Card", "Jab_Card", "Cross_Card", "Cross_Card", "Hook_Card" , "Uppercut_Card"]
+var starting_deck_id : Array = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Cross_Card", "Cross_Card", "Cross_Card", "Hook_Card" , "Uppercut_Card"]
+var player_deck : Array[CARD] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	deck_size = deck_pile_id.size()
+	for id in starting_deck_id:
+		var new_card = instanciate_card(id)
+		player_deck.append(new_card)
+
+	deck_size = player_deck.size()
 	shuffle()
 	update_label(deck_size)
 
@@ -27,11 +32,11 @@ func _ready() -> void:
 
 func new_turn(new_hand_size):	
 	for i in range(new_hand_size):
-		if deck_pile_id.size() == 0:
+		if player_deck.size() == 0:
 			EventBus.shuffle_back_discard.emit(true)
 
 		draw_card()
-		update_label(deck_pile_id.size())
+		update_label(player_deck.size())
 
 ###########################################################################
 #                              DECK MANAGEMENT                            #
@@ -52,29 +57,26 @@ func instanciate_card(id):
 	return card
 	
 func draw_card():
-	var card_drawn_id = deck_pile_id[0] #Tirage de la première carte du deck
-	deck_pile_id.erase(card_drawn_id) #Retrait de la carte du deck
-	
-	var new_card = instanciate_card(card_drawn_id)
-	
-	card_manager_ref.add_child(new_card)
-	player_hand_ref.add_card_to_hand(new_card, DRAW_SPEED)
-	
+	var new_card_drawn = player_deck.pop_front() #Tirage de la première carte du deck
+	new_card_drawn.card_current_area = new_card_drawn.card_area.IN_HAND
+	card_manager_ref.add_child(new_card_drawn)
+	player_hand_ref.add_card_to_hand(new_card_drawn, DRAW_SPEED)
+
 	#lancement de l'animation de la carte lors de la pioche
-	new_card.get_node("CardDrawFlipAnimation").play("card_flip")
+	new_card_drawn.get_node("CardDrawFlipAnimation").play("card_flip")
 
 func show_pile():
-	if deck_pile_id.is_empty():
+	if player_deck.is_empty():
 		print("Deck pile vide")
 		return
 	
 	print("📜 Cartes restantes dans le deck :")
-	for card_id in deck_pile_id:
-		var c_data = card_db_ref.CARDS[card_id]
+	for card in player_deck:
+		var c_data = card_db_ref.CARDS[card.id]
 		print(str(c_data))
 
 func shuffle():
-	deck_pile_id.shuffle()
+	player_deck.shuffle()
 
 func update_label(cards_in_deck):
 	$DeckCardCountLabel.text = str(cards_in_deck)

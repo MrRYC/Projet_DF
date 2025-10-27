@@ -1,7 +1,7 @@
 extends Node
 
 #constantes
-const START_HAND_SIZE = 5 #main de départ maximum
+const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables de référence vers un autre Node
 @onready var card_manager_ref = $"../CardManager"
@@ -14,7 +14,6 @@ var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 0
 var is_action_zone_empty = false
 var player_current_health
-var destination_pile : String
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,6 +34,7 @@ func update_max_hand_size():
 
 func new_turn():
 	card_manager_ref.new_turn(update_max_hand_size())
+	action_zone_ref.action_zone.clear()
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
 
@@ -63,7 +63,6 @@ func execute_action_phase():
 	EventBus.combat_in_progress.emit(true)
 
 	is_action_zone_empty = false
-	action_zone_ref.action_zone.clear()
 
 func apply_player_actions(card, _target): #target à définir
 	if card.is_flipped:
@@ -78,7 +77,7 @@ func check_flip_effect(card):
 	#exemple de valeurs de card.data["flip_effect"] = {"name" : "Block", "animation_time": 0.5, "usage_number": -1, "side_effect" : "none"}
 	
 	#application de l'effet sur le joueur
-	var fe_name = card.flip_effect["name"]
+	var fe_name = card.flip_effect["e_name"]
 	var player_effect_txt : String
 	
 	if fe_name == "Block":
@@ -121,17 +120,3 @@ func wait_before_action(card, time):
 		fade_in_animation.play("fade_to_black_180")
 
 	await get_tree().create_timer(time).timeout
-
-	check_destination_pile(card)
-	card_manager_ref.send_card_to(card, destination_pile)
-
-func check_destination_pile(card):
-	
-	if card.is_flipped && card.flip_effect:
-		var card_side_effect = card.flip_effect["side_effect"]
-		if card_side_effect == "banish":
-			destination_pile = "banish"
-		elif card_side_effect == "wound":
-			destination_pile = "wound"
-	else:
-		destination_pile="discard" 

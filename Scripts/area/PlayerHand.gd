@@ -18,22 +18,18 @@ var hand_x_position_max = 0.0
 ###########################################################################
 
 func add_card_to_hand(card, speed):
+	card.card_current_area = card.card_area.IN_HAND
 	if card not in player_hand:
 		player_hand.insert(0,card)
 		update_hand_positions(speed)
 	else:
 		animate_card_to_position(card, card.starting_position, Global.DEFAULT_CARD_MOVE_SPEED)
 
-func add_card_to_discard(card):
-	if card in player_hand:
-		discard_pile_ref.add_card_to_discard(card)
-		update_hand_positions(Global.DEFAULT_CARD_MOVE_SPEED)
-
 func remove_card_from_hand(card):
 	if card in player_hand:
 		player_hand.erase(card)
 		update_hand_positions(Global.DEFAULT_CARD_MOVE_SPEED)
-		
+
 ###########################################################################
 #                           PLAYER HAND POSITION                          #
 ###########################################################################

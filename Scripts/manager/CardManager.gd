@@ -13,13 +13,14 @@ const ENEMY_COLLISION_MASK = 1
 @onready var deck_pile_ref: Node2D = $"../Piles/DeckPile"
 @onready var wound_pile_ref: Node2D = $"../Piles/WoundPile"
 @onready var discard_pile_ref: Node2D = $"../Piles/DiscardPile"
-@onready var banish_pile_ref: Node2D = $"../Piles/BanishPile"
+@onready var exhaust_pile_ref: Node2D = $"../Piles/ExhaustPile"
 
 #variables du script
 var screen_size
 var card_being_dragged
 var is_hovering_on_card : bool = false
 var is_end_of_turn : bool = false
+var destination_pile : String = "discard"
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -33,25 +34,104 @@ func _process(_delta: float) -> void:
 		var mouse_pos = get_global_mouse_position()
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x,0,screen_size.x),
 			clamp(mouse_pos.y,0,screen_size.y))
+	else:
+		pass
+
+###########################################################################
+#                          ACTION ZONE MOVEMENT                           #
+###########################################################################
+
+func return_card_to_hand(card):
+	card.card_current_area = card.card_area.IN_HAND
+	card.target = null
+	action_zone_ref.remove_card_from_action_zone(card)
+	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
+
+func send_card_to_action_zone(card, opponent):
+	card.card_current_area = card.card_area.IN_ACTION_ZONE
+	card.target = opponent
+	player_hand_ref.remove_card_from_hand(card)
+	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
 
 ###########################################################################
 #                             TURN MANAGEMENT                             #
 ###########################################################################
 
 func new_turn(max_hand_size):
+	if action_zone_ref.action_zone.size() > 0:
+		for card in action_zone_ref.action_zone.duplicate():
+			check_destination_pile(card)
+
 	if player_hand_ref.player_hand.size() > 0:
 		for card in player_hand_ref.player_hand.duplicate():
-			send_card_to_discard(card)
+			send_card_to_discard(card,true)
 
 	deck_pile_ref.new_turn(max_hand_size)
 
+func check_destination_pile(card):
+	if !card.is_flipped:
+		send_card_to_discard(card,false)
+	elif card.is_flipped && card.flip_effect:
+		var card_side_effect = card.flip_effect["e_side_effect"]
+		if card_side_effect == "exhaust":
+			send_card_to_exhaust(card,false)
+		elif card_side_effect == "wound":
+			send_card_to_wound(card,false)
+
 ###########################################################################
-#                              CARDS MOVEMENT                             #
+#                             PILE MANAGEMENT                             #
+###########################################################################
+
+func send_card_to_discard(card, is_card_in_hand):
+	card.card_current_area = card.card_area.IN_DISCARD
+	card.target = null
+	discard_pile_ref.add_card_to_pile(card)
+
+	if is_card_in_hand:
+		player_hand_ref.remove_card_from_hand(card)
+	else:
+		action_zone_ref.remove_card_from_action_zone(card)
+
+func send_card_to_exhaust(card, is_card_in_hand):
+	card.card_current_area = card.card_area.IN_EXHAUST
+	card.target = null
+	exhaust_pile_ref.add_card_to_pile(card)
+
+	if is_card_in_hand:
+		player_hand_ref.remove_card_from_hand(card)
+	else:
+		action_zone_ref.remove_card_from_action_zone(card)
+
+func send_card_to_wound(card, is_card_in_hand):
+	card.card_current_area = card.card_area.IN_WOUND
+	card.target = null
+	wound_pile_ref.add_card_to_pile(card)
+
+	if is_card_in_hand:
+		player_hand_ref.remove_card_from_hand(card)
+	else:
+		action_zone_ref.remove_card_from_action_zone(card)
+
+func deck_size():
+	return deck_pile_ref.deck_size
+
+func show_pile(pile):
+	if pile == "DeckPile":
+		deck_pile_ref.show_pile()
+	elif pile == "DiscardPile":
+		discard_pile_ref.show_pile()
+	elif pile == "WoundPile":
+		wound_pile_ref.show_pile()
+	elif pile == "ExhaustPile":
+		exhaust_pile_ref.show_pile()
+
+###########################################################################
+#                            CARDS MANAGEMENT                             #
 ###########################################################################
 
 func start_drag(card):
 	card_being_dragged = card
-	card.scale = Vector2(1,1)
+	card.scale = Vector2(1.0,1.0)
 	EventBus.aim_started.emit(card)
 
 func finish_drag():
@@ -72,75 +152,34 @@ func finish_drag():
 		return_card_to_hand(card_being_dragged)
 	
 	card_being_dragged = null
-	
-func return_card_to_hand(card):
-	card.is_in_action_zone = false
-	card.target = null
-	action_zone_ref.remove_card_from_action_zone(card)
-	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
 
-func send_card_to_action_zone(card, opponent):
-	card.target = opponent
-	card.is_in_action_zone = true
-	player_hand_ref.remove_card_from_hand(card)
-	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
-
-func send_card_to(card, pile):
-	if pile == "discard":
-		send_card_to_discard(card)
-	elif pile == "banish":
-		send_card_to_banish(card)
-	elif pile == "wound":
-		send_card_to_wound(card)
-	
-func send_card_to_discard(card):
-	card.is_in_action_zone = false
-	card.target = null
-	player_hand_ref.remove_card_from_hand(card)
-	discard_pile_ref.add_card_to_pile(card)
-
-func send_card_to_banish(card):
-	card.is_in_action_zone = false
-	card.target = null
-	player_hand_ref.remove_card_from_hand(card)
-	banish_pile_ref.add_card_to_pile(card)
-	
-func send_card_to_wound(card):
-	card.is_in_action_zone = false
-	card.target = null
-	player_hand_ref.remove_card_from_hand(card)
-	wound_pile_ref.add_card_to_pile(card)
-
-###########################################################################
-#                            CARDS MANAGEMENT                             #
-###########################################################################
-
-func deck_size():
-	return deck_pile_ref.deck_size
-	
 func flip_card_in_hand(card):
+	if !card["flip_effect"]:
+		print("carte sans effet")
+		card.get_node("CardErrorAnimation").play("tilt_error")
+		return
+	
+	card.rotation_degrees += 180
 	if !card.is_flipped && card["flip_effect"]:
-		card.rotation_degrees += 180
-		print(card["flip_effect"])
 		card.is_flipped = true
 	else:
 		card.is_flipped = false
 
 func highlight_card(card, hovered):
-	if card.is_in_action_zone:
-		return
-	elif hovered:
-		card.scale = Vector2(1.05,1.05)
+	if card.card_current_area == 1 && hovered: # 1 = IN_HAND
+		card.scale = Vector2(1.1,1.1)
 		card.z_index = 2
+	elif card.card_current_area == 2 : # 2 = IN_ACTION_ZONE
+		return
 	else:
 		update_card_size(card,true)
 
 func update_card_size(card, standard_size):
-	if standard_size:
-		card.scale = Vector2(1, 1)
-		card.z_index = 1
-	else:
+	if card.card_current_area == 2:
 		card.scale = Vector2(0.5, 0.5)
+		card.z_index = 1
+	elif standard_size:
+		card.scale = Vector2(1, 1)
 		card.z_index = 1
 
 func is_a_card_selected():
@@ -192,16 +231,6 @@ func get_upfront_card(cards):
 			highest_z_card = current_card
 			highest_z_index = current_card.z_index
 	return highest_z_card
-
-func show_pile(pile):
-	if pile == "DeckPile":
-		deck_pile_ref.show_pile()
-	elif pile == "DiscardPile":
-		discard_pile_ref.show_pile()
-	elif pile == "WoundPile":
-		wound_pile_ref.show_pile()
-	elif pile == "BanishPile":
-		banish_pile_ref.show_pile()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
