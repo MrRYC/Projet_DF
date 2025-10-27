@@ -13,12 +13,12 @@ const DRAW_SPEED = 0.5
 var deck_size
 
 #variable du deck du joueur
-var starting_deck_id : Array = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Cross_Card", "Cross_Card", "Cross_Card", "Hook_Card" , "Uppercut_Card"]
+var starting_deck : Array = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Cross_Card", "Cross_Card", "Cross_Card", "Hook_Card" , "Uppercut_Card"]
 var player_deck : Array[CARD] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for id in starting_deck_id:
+	for id in starting_deck:
 		var new_card = instanciate_card(id)
 		player_deck.append(new_card)
 

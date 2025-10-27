@@ -7,7 +7,7 @@ var current_health : int = max_health
 func _ready():
 	update_health()
 
-func take_damage(amount,is_action_zone_empty):
+func take_damage(amount,is_last_action):
 	#var overkill = false
 	current_health -= amount
 
@@ -17,7 +17,7 @@ func take_damage(amount,is_action_zone_empty):
 
 	update_health()
 	
-	if current_health <= 0 && is_action_zone_empty:
+	if current_health <= 0 && is_last_action:
 		die()
 	
 	#overkill = false

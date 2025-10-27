@@ -12,7 +12,6 @@ const START_HAND_SIZE = 4 #main de départ maximum
 #variables du script
 var new_hand_max_size = START_HAND_SIZE
 var nb_turn = 0
-var is_action_zone_empty = false
 var player_current_health
 
 # Called when the node enters the scene tree for the first time.
@@ -52,26 +51,24 @@ func execute_action_phase():
 	
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
-
-	for i in range(action_zone_copy.size()):
-		if i == action_zone_copy.size()-1:
-			is_action_zone_empty = true
-
-		await wait_before_action(action_zone_copy[i], action_zone_copy[i].animation_time)
-		apply_player_actions(action_zone_copy[i], action_zone_copy[i].target)
+	for card in range(action_zone_copy.size()):
+		var last_action = false
+		if card == action_zone_copy.size()-1:
+			last_action = true
+			
+		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
+		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target, last_action)
 
 	EventBus.combat_in_progress.emit(true)
 
-	is_action_zone_empty = false
-
-func apply_player_actions(card, _target): #target à définir
+func apply_player_actions(card, _target, last_action): #target à définir
 	if card.is_flipped:
 		var flip_effect_txt = check_flip_effect(card)
 		print(flip_effect_txt)
 		return
 
 	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
-	opponent_ref.take_damage(attack,is_action_zone_empty)
+	opponent_ref.take_damage(attack,last_action)
 	
 func check_flip_effect(card):
 	#exemple de valeurs de card.data["flip_effect"] = {"name" : "Block", "animation_time": 0.5, "usage_number": -1, "side_effect" : "none"}

@@ -8,6 +8,7 @@ const action_ZONE_X_POSITION = 125
 
 #variables du script
 var action_zone : Array[CARD] = []
+var combat_in_progress : bool
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -16,15 +17,15 @@ var action_zone : Array[CARD] = []
 func add_card_to_action_zone(card, speed):
 	if card not in action_zone:
 		action_zone.insert(0,card)
+		card.card_current_area = card.card_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card,false)
 		update_action_zone_positions(speed)
 
 func remove_card_from_action_zone(card):
 	if card in action_zone:
-		card.card_current_area = card.card_area.IN_HAND
-		action_zone.erase(card)
+		action_zone.append(card)
+		card.queue_free()
 		card_manager_ref.update_card_size(card,true)
-		update_action_zone_positions(Global.DEFAULT_CARD_MOVE_SPEED)
 
 func empty_action_zone():
 	var action_zone_copy = action_zone.duplicate()
@@ -41,6 +42,7 @@ func empty_action_zone():
 func update_action_zone_positions(speed):
 	var action_zone_y_position = 150
 	var offset = 0
+		
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
 		var card = action_zone[i]
 		

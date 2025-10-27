@@ -4,7 +4,7 @@ extends Node2D
 const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 
 #variables génériques
-var exhaust_pile : Array[CARD] = []
+var exhaust_pile : Array = []
 
 ###########################################################################
 #                             WOUND MANAGEMENT                            #
@@ -24,7 +24,7 @@ func show_pile():
 		return
 
 	print("📜 Cartes dans la Banish pile :")
-	for card in exhaust_pile:
+	for card_id in exhaust_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card.id]
+		var c_data = card_db_ref.CARDS[card_id]
 		print(str(c_data))

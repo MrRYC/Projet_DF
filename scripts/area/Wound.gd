@@ -4,14 +4,14 @@ extends Node2D
 const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 
 #variables génériques
-var wound_pile : Array[CARD] = []
+var wound_pile : Array = []
 
 ###########################################################################
 #                             WOUND MANAGEMENT                            #
 ###########################################################################
 
 func add_card_to_pile(card):
-	wound_pile.append(card)
+	wound_pile.append(card.id)
 	card.queue_free()
 	update_label(wound_pile.size())
 
@@ -24,7 +24,7 @@ func show_pile():
 		return
 
 	print("📜 Cartes dans la wound pile :")
-	for card in wound_pile:
+	for card_id in wound_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card.id]
+		var c_data = card_db_ref.CARDS[card_id]
 		print(str(c_data))

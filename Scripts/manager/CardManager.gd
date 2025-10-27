@@ -42,16 +42,14 @@ func _process(_delta: float) -> void:
 ###########################################################################
 
 func return_card_to_hand(card):
-	card.card_current_area = card.card_area.IN_HAND
 	card.target = null
-	action_zone_ref.remove_card_from_action_zone(card)
 	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	action_zone_ref.remove_card_from_action_zone(card)
 
 func send_card_to_action_zone(card, opponent):
-	card.card_current_area = card.card_area.IN_ACTION_ZONE
 	card.target = opponent
-	player_hand_ref.remove_card_from_hand(card)
 	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	player_hand_ref.remove_card_from_hand(card)
 
 ###########################################################################
 #                             TURN MANAGEMENT                             #
@@ -64,53 +62,59 @@ func new_turn(max_hand_size):
 
 	if player_hand_ref.player_hand.size() > 0:
 		for card in player_hand_ref.player_hand.duplicate():
-			send_card_to_discard(card,true)
+			send_card_to_discard(card)
+			card.queue_free()
 
 	deck_pile_ref.new_turn(max_hand_size)
-
-func check_destination_pile(card):
-	if !card.is_flipped:
-		send_card_to_discard(card,false)
-	elif card.is_flipped && card.flip_effect:
-		var card_side_effect = card.flip_effect["e_side_effect"]
-		if card_side_effect == "exhaust":
-			send_card_to_exhaust(card,false)
-		elif card_side_effect == "wound":
-			send_card_to_wound(card,false)
 
 ###########################################################################
 #                             PILE MANAGEMENT                             #
 ###########################################################################
 
-func send_card_to_discard(card, is_card_in_hand):
-	card.card_current_area = card.card_area.IN_DISCARD
+func check_destination_pile(card):
+	if card.is_flipped:
+		var card_side_effect = card.flip_effect["e_side_effect"]
+		if card_side_effect == "exhaust":
+			send_card_to_exhaust(card)
+		elif card_side_effect == "wound":
+			send_card_to_wound(card)
+		else:
+			send_card_to_discard(card)
+	else:
+		send_card_to_discard(card)
+
+func send_card_to_discard(card):
 	card.target = null
 	discard_pile_ref.add_card_to_pile(card)
 
-	if is_card_in_hand:
+	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
-func send_card_to_exhaust(card, is_card_in_hand):
-	card.card_current_area = card.card_area.IN_EXHAUST
+	card.card_current_area = card.card_area.IN_DISCARD
+
+func send_card_to_exhaust(card):
 	card.target = null
 	exhaust_pile_ref.add_card_to_pile(card)
 
-	if is_card_in_hand:
+	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
+		
+	card.card_current_area = card.card_area.IN_EXHAUST
 
-func send_card_to_wound(card, is_card_in_hand):
-	card.card_current_area = card.card_area.IN_WOUND
+func send_card_to_wound(card):
 	card.target = null
 	wound_pile_ref.add_card_to_pile(card)
 
-	if is_card_in_hand:
+	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
+	
+	card.card_current_area = card.card_area.IN_WOUND
 
 func deck_size():
 	return deck_pile_ref.deck_size

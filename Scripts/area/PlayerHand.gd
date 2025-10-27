@@ -18,9 +18,9 @@ var hand_x_position_max = 0.0
 ###########################################################################
 
 func add_card_to_hand(card, speed):
-	card.card_current_area = card.card_area.IN_HAND
 	if card not in player_hand:
 		player_hand.insert(0,card)
+		card.card_current_area = card.card_area.IN_HAND
 		update_hand_positions(speed)
 	else:
 		animate_card_to_position(card, card.starting_position, Global.DEFAULT_CARD_MOVE_SPEED)

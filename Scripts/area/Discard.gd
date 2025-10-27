@@ -7,7 +7,7 @@ const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 @onready var deck_pile_ref: Node2D = $"../DeckPile"
 
 #variables génériques
-var discard_pile : Array[CARD] = []
+var discard_pile : Array = []
 
 func _ready() -> void:
 	EventBus.shuffle_back_discard.connect(_on_deck_empty)
@@ -17,22 +17,24 @@ func _ready() -> void:
 ###########################################################################
 
 func add_card_to_pile(card):
-	discard_pile.append(card)
+	discard_pile.append(card.id)
+	card.queue_free()
 	update_label(discard_pile.size())
 
 func shuffle_back_discard():
 	if discard_pile.size() == 0:
 		return
 
-	deck_pile_ref.player_deck += discard_pile
+	deck_pile_ref.starting_deck += discard_pile
+	
 	clear()
 	update_label(0)
 	
 func clear():
 	discard_pile.clear()
 
-func update_label(count_cards_in_discard : int):
-	$DiscardCardCountLabel.text = str(count_cards_in_discard)
+func update_label(discard_size : int):
+	$DiscardCardCountLabel.text = str(discard_size)
 
 func show_pile():
 	if discard_pile.is_empty():
