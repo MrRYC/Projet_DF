@@ -71,25 +71,26 @@ func apply_player_actions(card, _target, last_action): #target à définir
 	opponent_ref.take_damage(attack,last_action)
 	
 func check_flip_effect(card):
-	#exemple de valeurs de card.data["flip_effect"] = {"name" : "Block", "animation_time": 0.5, "usage_number": -1, "side_effect" : "none"}
-	
+		
 	#application de l'effet sur le joueur
-	var fe_name = card.flip_effect["e_name"]
+	if card.slot_flip_effect["uses"] == null:
+		pass
+	elif card.slot_flip_effect["uses"] == 0:
+		return
+	else :
+		print("card.slot_flip_effect[uses] -= 1")
+
+	var slot_effect = card.slot_flip_effect["effect"]
 	var player_effect_txt : String
 	
-	if fe_name == "Block":
+	if slot_effect == "add_block":
 		player_effect_txt = "+1 block appliqué"
-	elif fe_name == "Dodge":
+	elif slot_effect == "add_dodge":
 		player_effect_txt = "+1 esquive appliquée"
-	elif fe_name == "Breath":
+	elif slot_effect == "add_breath":
 		player_effect_txt = "respiration activée"
-	#elif fe_name == "Regen":
-		##player.restore_endurance(value)
 	else:
 		player_effect_txt = "Effet inconnu"
-
-	#var fe_animation_time = card.flip_effect["animation_time"]
-	#var fe_usage_number = card.flip_effect["usage_number"]
 
 	return player_effect_txt
 

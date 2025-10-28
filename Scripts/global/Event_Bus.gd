@@ -8,11 +8,11 @@ signal hovered_off()
 signal left_mouse_clicked()
 signal left_mouse_released()
 
-#signals from BattleManager to UserInterface and InputManager
+#signals from TurnManager to UserInterface, InputManager, Card_dictionnary & Enhancement_dictionnary
 signal turn_increased(int)
 signal combat_in_progress(bool)
 
-#signals from BattleManager to Player
+#signals from TurnManager to Player
 signal player_health_updated(int)
 
 #signals from CardManager to CardTargetSelector

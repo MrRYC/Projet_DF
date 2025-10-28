@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Daily Fighters_1 action phase"
-run/main_scene="uid://6fmdpcse0m7l"
+run/main_scene="uid://b06lee1m3e0y6"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 Global="*res://scripts/global/_Global.gd"
 EventBus="*res://scripts/global/Event_Bus.gd"
+Card="*res://scripts/resources/Card.gd"
+Enhancement="*res://scripts/resources/Enhancement.gd"
 
 [debug]
 
