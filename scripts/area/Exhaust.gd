@@ -24,7 +24,7 @@ func show_pile():
 		return
 
 	print("📜 Cartes dans la Banish pile :")
-	for card_id in exhaust_pile:
+	for card in exhaust_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card_id]
+		var c_data = card_db_ref.CARDS[card]
 		print(str(c_data))

@@ -40,11 +40,11 @@ func show_pile():
 	if discard_pile.is_empty():
 		print("Discard pile vide")
 		return
-	
-	print("📜 Cartes dans la discard :")
+
+	print("📜 Cartes restantes dans le deck :")
 	for card in discard_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card.id]
+		var c_data = card_db_ref.CARDS[card]
 		print(str(c_data))
 		
 func _on_deck_empty(is_deck_empty):
