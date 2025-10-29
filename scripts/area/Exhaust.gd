@@ -11,8 +11,7 @@ var exhaust_pile : Array = []
 ###########################################################################
 
 func add_card_to_pile(card):
-	exhaust_pile.append(card)
-	card.queue_free()
+	exhaust_pile.insert(0,card)
 	update_label(exhaust_pile.size())
 
 func update_label(count_cards_in_discard : int):
@@ -26,5 +25,5 @@ func show_pile():
 	print("📜 Cartes dans la Banish pile :")
 	for card in exhaust_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card]
+		var c_data = card_db_ref.CARDS[card.id]
 		print(str(c_data))

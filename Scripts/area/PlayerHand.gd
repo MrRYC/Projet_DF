@@ -9,7 +9,7 @@ const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 
 #variables du script
 @onready var center_screen_x = get_viewport().size.x / 2
-var player_hand = []
+var player_hand : Array[CARD] = []
 var hand_x_position_min = 0.0
 var hand_x_position_max = 0.0
 

@@ -23,8 +23,10 @@ func add_card_to_action_zone(card, speed):
 
 func remove_card_from_action_zone(card):
 	if card in action_zone:
-		action_zone.append(card)
-		card.queue_free()
+		if card.is_flipped:
+			card_manager_ref.flip_card_in_hand(card)
+		
+		action_zone.erase(card)
 		card_manager_ref.update_card_size(card,true)
 
 func empty_action_zone():

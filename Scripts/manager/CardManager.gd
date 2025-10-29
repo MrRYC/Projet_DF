@@ -72,26 +72,28 @@ func new_turn(max_hand_size):
 ###########################################################################
 
 func check_destination_pile(card):
+	var tween := create_tween()
 	if card.is_flipped:
 		var card_side_effect = card.slot_flip_effect["side_effect"]
 		if card_side_effect == "exhaust":
-			send_card_to_exhaust(card)
+			tween.tween_callback(send_card_to_exhaust.bind(card))
 		elif card_side_effect == "wound":
-			send_card_to_wound(card)
+			tween.tween_callback(send_card_to_wound.bind(card))
 		else:
-			send_card_to_discard(card)
+			tween.tween_callback(send_card_to_discard.bind(card))
 	else:
-		send_card_to_discard(card)
+		tween.tween_callback(send_card_to_discard.bind(card))
+
+	tween.tween_interval(Global.HAND_DISCARD_INTERVAL)
 
 func send_card_to_discard(card):
 	card.target = null
-	discard_pile_ref.add_card_to_pile(card)
-
 	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
+	discard_pile_ref.add_card_to_pile(card)
 	card.card_current_area = card.card_area.IN_DISCARD
 
 func send_card_to_exhaust(card):

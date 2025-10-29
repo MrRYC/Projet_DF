@@ -11,8 +11,7 @@ var wound_pile : Array = []
 ###########################################################################
 
 func add_card_to_pile(card):
-	wound_pile.append(card.id)
-	card.queue_free()
+	wound_pile.insert(0,card)
 	update_label(wound_pile.size())
 
 func update_label(count_cards_in_discard : int):
@@ -24,7 +23,7 @@ func show_pile():
 		return
 
 	print("📜 Cartes dans la wound pile :")
-	for card_id in wound_pile:
+	for card in wound_pile:
 		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card_id]
+		var c_data = card_db_ref.CARDS[card.id]
 		print(str(c_data))
