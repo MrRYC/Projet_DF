@@ -60,9 +60,9 @@ func new_turn(max_hand_size):
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
 
-	#if player_hand_ref.player_hand.size() > 0:
-		#for card in player_hand_ref.player_hand.duplicate():
-			#send_card_to_discard(card)
+	if player_hand_ref.player_hand.size() > 0:
+		for card in player_hand_ref.player_hand.duplicate():
+			send_card_to_discard(card)
 			#card.queue_free()
 
 	deck_pile_ref.new_turn(max_hand_size)
