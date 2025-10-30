@@ -9,6 +9,7 @@ signal left_mouse_clicked()
 signal left_mouse_released()
 
 #signals from TurnManager to UserInterface, InputManager, Card_dictionnary & Enhancement_dictionnary
+signal new_turn(int)
 signal turn_increased(int)
 signal combat_in_progress(bool)
 

@@ -1,7 +1,7 @@
 extends Node
 
 #constantes
-const START_HAND_SIZE = 4 #main de départ maximum
+const START_HAND_SIZE = 5 #main de départ maximum
 
 #variables de référence vers un autre Node
 @onready var card_manager_ref = $"../CardManager"
@@ -29,11 +29,13 @@ func _on_phase_button_pressed() -> void:
 
 func update_max_hand_size():
 	new_hand_max_size = START_HAND_SIZE #To be adapt based on skill cards effect
-	return new_hand_max_size
 
 func new_turn():
-	card_manager_ref.new_turn(update_max_hand_size())
+	EventBus.new_turn.emit(new_hand_max_size)
+	
+	card_manager_ref.new_turn(new_hand_max_size)
 	action_zone_ref.action_zone.clear()
+	
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
 

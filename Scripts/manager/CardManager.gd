@@ -43,12 +43,12 @@ func _process(_delta: float) -> void:
 
 func return_card_to_hand(card):
 	card.target = null
-	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	player_hand_ref.add_card_to_hand(card)
 	action_zone_ref.remove_card_from_action_zone(card)
 
 func send_card_to_action_zone(card, opponent):
 	card.target = opponent
-	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	action_zone_ref.add_card_to_action_zone(card)
 	player_hand_ref.remove_card_from_hand(card)
 
 ###########################################################################
@@ -60,10 +60,10 @@ func new_turn(max_hand_size):
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
 
-	if player_hand_ref.player_hand.size() > 0:
-		for card in player_hand_ref.player_hand.duplicate():
-			send_card_to_discard(card)
-			card.queue_free()
+	#if player_hand_ref.player_hand.size() > 0:
+		#for card in player_hand_ref.player_hand.duplicate():
+			#send_card_to_discard(card)
+			#card.queue_free()
 
 	deck_pile_ref.new_turn(max_hand_size)
 
@@ -144,19 +144,14 @@ func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	EventBus.aim_ended.emit(card_being_dragged)
 
-	var opponent_targeted = is_a_card_played(card_being_dragged)
-	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
-	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
-	
-	if opponent_targeted:
-		send_card_to_action_zone(card_being_dragged, opponent_targeted)
-	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
+	var target = is_a_card_played(card_being_dragged)
+	if target:
+		send_card_to_action_zone(card_being_dragged, target)
+	else:
 		var mouse_x = get_global_mouse_position().x
-		var new_index = player_hand_ref.get_drop_index(mouse_x)
-		player_hand_ref.move_card_to_index(card_being_dragged, new_index)
-	elif !is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
-		return_card_to_hand(card_being_dragged)
-	
+		player_hand_ref.move_card_to_index(card_being_dragged, mouse_x)
+
+	card_being_dragged.scale = Vector2(1.0,1.0)
 	card_being_dragged = null
 
 func flip_card_in_hand(card):
@@ -217,15 +212,6 @@ func is_a_card_played(card):
 		elif result.collider.is_in_group("Player") && card.is_flipped:
 			return result.collider
 	return null
-
-#On récupère la taille dynamique de la main du joueur
-func is_in_bounds(pos: Vector2, pos_min: Vector2, pos_max: Vector2) -> bool:
-	var offset_x_left = pos_min.x - 100
-	var offset_x_right = pos_max.x + 75
-	var offset_x_up = pos_min.y+ - 75
-	var offset_x_down = pos_max.y + 75
-
-	return pos.x >= offset_x_left and pos.x <= offset_x_right and pos.y >= offset_x_up  and pos.y <= offset_x_down
 
 func get_upfront_card(cards):
 	var highest_z_card = cards[0].collider.get_parent()

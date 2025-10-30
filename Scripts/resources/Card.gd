@@ -9,6 +9,7 @@ enum card_area { IN_DECK, IN_HAND, IN_ACTION_ZONE, IN_DISCARD, IN_WOUND, IN_EXHA
 var card_current_area : card_area = card_area.IN_DECK
 
 var id : String
+var in_hand : bool = false
 var animation_time : float
 var attack : int
 var reach : String #single or multi target

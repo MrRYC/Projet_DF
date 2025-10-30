@@ -19,10 +19,8 @@ func _ready() -> void:
 func add_card_to_pile(card):
 	discard_pile.insert(0,card)
 	update_label(discard_pile.size())
-	print(discard_pile)
 
 func shuffle_back_discard():
-	print(discard_pile)
 	
 	if discard_pile.is_empty():
 		return

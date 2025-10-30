@@ -14,12 +14,12 @@ var combat_in_progress : bool
 #                          ACTION ZONE MANAGEMENT                         #
 ###########################################################################
 
-func add_card_to_action_zone(card, speed):
+func add_card_to_action_zone(card):
 	if card not in action_zone:
 		action_zone.insert(0,card)
 		card.card_current_area = card.card_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card,false)
-		update_action_zone_positions(speed)
+		update_action_zone_positions()
 
 func remove_card_from_action_zone(card):
 	if card in action_zone:
@@ -41,7 +41,8 @@ func empty_action_zone():
 #                              CARDS POSITION                             #
 ###########################################################################
 
-func update_action_zone_positions(speed):
+func update_action_zone_positions():
+	var speed = Global.DEFAULT_CARD_MOVE_SPEED
 	var action_zone_y_position = 150
 	var offset = 0
 		

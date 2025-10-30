@@ -14,7 +14,6 @@ var deck_size
 
 #variable du deck du joueur
 var starting_deck : Array = ["Jab_Card", "Jab_Card", "Jab_Card", "Jab_Card", "Cross_Card", "Cross_Card", "Cross_Card", "Hook_Card" , "Uppercut_Card"]
-var player_deck_save : Dictionary = {}
 var player_deck : Array[CARD] = []
 
 # Called when the node enters the scene tree for the first time.
@@ -35,7 +34,7 @@ func new_turn(new_hand_size):
 		if player_deck.size() == 0:
 			EventBus.shuffle_back_discard.emit(true)
 		
-		tween.tween_callback(draw_card)
+		tween.tween_callback(draw_card.bind(i))
 		tween.tween_interval(Global.HAND_DRAW_INTERVAL)
 
 ###########################################################################
@@ -48,6 +47,7 @@ func add_card(card: CARD):
 func instanciate_card(id):
 	var card = CARD_SCENE.instantiate()
 	card.id = id
+
 	var card_data = card_db_ref.CARDS[id]
 	card.setup_card(card_data)
 
@@ -56,14 +56,16 @@ func instanciate_card(id):
 	
 	add_card(card)
 
-func draw_card():
-	var card_drawn = player_deck.pop_front() #Tirage de la première carte du deck
+func draw_card(index):
+	var card = player_deck.pop_front() #Tirage de la première carte du deck
 	
-	card_manager_ref.add_child(card_drawn)
-	player_hand_ref.add_card_to_hand(card_drawn, DRAW_SPEED)
+	card.card_current_area = card.card_area.IN_HAND
+	
+	card_manager_ref.add_child(card)
+	player_hand_ref.add_card_to_hand(card, index)
 
 	##lancement de l'animation de la carte lors de la pioche
-	card_drawn.get_node("CardDrawFlipAnimation").play("card_flip")
+	card.get_node("CardDrawFlipAnimation").play("card_flip")
 	
 	update_label(player_deck.size())
 
