@@ -9,7 +9,8 @@ const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 
 #variables du script
 @onready var center_screen_x = get_viewport().size.x / 2
-var player_hand : Array[CARD] = []
+var speed = Global.HAND_DRAW_INTERVAL
+var player_hand = []
 var hand_x_position_min = 0.0
 var hand_x_position_max = 0.0
 
@@ -17,18 +18,18 @@ var hand_x_position_max = 0.0
 #                              HAND MANAGEMENT                            #
 ###########################################################################
 
-func add_card_to_hand(card, speed):
+func add_card_to_hand(card):
 	if card not in player_hand:
 		player_hand.insert(0,card)
 		card.card_current_area = card.card_area.IN_HAND
-		update_hand_positions(speed)
+		update_hand_positions()
 	else:
-		animate_card_to_position(card, card.starting_position, Global.DEFAULT_CARD_MOVE_SPEED)
+		animate_card_to_position(card, card.starting_position)
 
 func remove_card_from_hand(card):
 	if card in player_hand:
 		player_hand.erase(card)
-		update_hand_positions(Global.DEFAULT_CARD_MOVE_SPEED)
+		update_hand_positions()
 
 ###########################################################################
 #                           PLAYER HAND POSITION                          #
@@ -46,7 +47,7 @@ func calculate_hand_size(cards_x_position : Array):
 #                              CARDS POSITION                             #
 ###########################################################################
 
-func update_hand_positions(speed):
+func update_hand_positions():
 	if player_hand.size() == 0:
 		hand_x_position_min = 0.0
 		hand_x_position_max = 0.0
@@ -62,7 +63,7 @@ func update_hand_positions(speed):
 		var card = player_hand[i]
 		card.starting_position = new_position
 
-		animate_card_to_position(card, new_position, speed)
+		animate_card_to_position(card, new_position)
 		
 	calculate_hand_size(cards_x_position)
 
@@ -77,13 +78,13 @@ func move_card_to_index(card, target_index):
 	if card in player_hand:
 		player_hand.erase(card)
 		player_hand.insert(target_index, card)
-		update_hand_positions(Global.DEFAULT_CARD_MOVE_SPEED)
+		update_hand_positions()
 
 func calculate_card_position(index):
 	var total_width = (player_hand.size() - 1) * CARD_WIDTH
 	var x_offset = center_screen_x + index * CARD_WIDTH - total_width / 2.0
 	return x_offset
 
-func animate_card_to_position(card, new_position, speed):
+func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, speed)

@@ -43,12 +43,12 @@ func _process(_delta: float) -> void:
 
 func return_card_to_hand(card):
 	card.target = null
-	player_hand_ref.add_card_to_hand(card, Global.DEFAULT_CARD_MOVE_SPEED)
-	action_zone_ref.remove_card_from_action_zone(card)
+	player_hand_ref.add_card_to_hand(card)
+	update_card_size(card)
 
 func send_card_to_action_zone(card, opponent):
 	card.target = opponent
-	action_zone_ref.add_card_to_action_zone(card, Global.DEFAULT_CARD_MOVE_SPEED)
+	action_zone_ref.add_card_to_action_zone(card)
 	player_hand_ref.remove_card_from_hand(card)
 
 ###########################################################################
@@ -64,6 +64,7 @@ func new_turn(max_hand_size):
 		for card in player_hand_ref.player_hand.duplicate():
 			send_card_to_discard(card)
 			card.queue_free()
+			player_hand_ref.player_hand.clear()
 
 	deck_pile_ref.new_turn(max_hand_size)
 
@@ -88,12 +89,13 @@ func check_destination_pile(card):
 
 func send_card_to_discard(card):
 	card.target = null
+	discard_pile_ref.add_card_to_pile(card)
+		
 	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
-	discard_pile_ref.add_card_to_pile(card)
 	card.card_current_area = card.card_area.IN_DISCARD
 
 func send_card_to_exhaust(card):
@@ -178,13 +180,13 @@ func highlight_card(card, hovered):
 	elif card.card_current_area == 2 : # 2 = IN_ACTION_ZONE
 		return
 	else:
-		update_card_size(card,true)
+		update_card_size(card)
 
-func update_card_size(card, standard_size):
+func update_card_size(card):
 	if card.card_current_area == 2:
 		card.scale = Vector2(0.5, 0.5)
 		card.z_index = 1
-	elif standard_size:
+	else:
 		card.scale = Vector2(1, 1)
 		card.z_index = 1
 

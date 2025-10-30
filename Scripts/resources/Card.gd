@@ -1,6 +1,11 @@
 extends Node2D
 class_name CARD
 
+
+###########################################################################
+#                               CARD STATE                                #
+###########################################################################
+
 #variables du script
 #var slots_flip_effect: Array = []             # définitions de slots (depuis CardDB)
 
@@ -11,9 +16,9 @@ var card_current_area : card_area = card_area.IN_DECK
 var id : String
 var animation_time : float
 var attack : int
-var reach : String #single or multi target
+var reach : String = "" #single or multi target
 var target : Node2D
-var slot_number : int
+var slot_number : int = 0
 var slot_flip_effect : Dictionary = {}
 var is_flipped = false
 
@@ -24,6 +29,9 @@ var is_flipped = false
 func setup_card(data: Dictionary):
 	if data.has("title"):
 		$Name.text = data["title"]
+
+	if data.has("id"):
+		id = data["id"]
 
 	if data.has("description"):
 		#$Name.text = data["description"]

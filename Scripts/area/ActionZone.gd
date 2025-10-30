@@ -7,41 +7,37 @@ const action_ZONE_X_POSITION = 125
 @onready var card_manager_ref = $"../CardManager"
 
 #variables du script
-var action_zone : Array[CARD] = []
+var action_zone = []
 var combat_in_progress : bool
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
 ###########################################################################
 
-func add_card_to_action_zone(card, speed):
+func add_card_to_action_zone(card):
 	if card not in action_zone:
 		action_zone.insert(0,card)
 		card.card_current_area = card.card_area.IN_ACTION_ZONE
-		card_manager_ref.update_card_size(card,false)
-		update_action_zone_positions(speed)
-
+		card_manager_ref.update_card_size(card)
+		update_action_zone_positions()
+#
 func remove_card_from_action_zone(card):
-	if card in action_zone:
-		if card.is_flipped:
-			card_manager_ref.flip_card_in_hand(card)
-		
-		action_zone.erase(card)
-		card_manager_ref.update_card_size(card,true)
+	action_zone.erase(card)
 
 func empty_action_zone():
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
 		if card.is_flipped:
 			card_manager_ref.flip_card_in_hand(card)
-
 		card_manager_ref.return_card_to_hand(card)
+
+	action_zone.clear()
 
 ###########################################################################
 #                              CARDS POSITION                             #
 ###########################################################################
 
-func update_action_zone_positions(speed):
+func update_action_zone_positions():
 	var action_zone_y_position = 150
 	var offset = 0
 		
@@ -55,16 +51,16 @@ func update_action_zone_positions(speed):
 			
 		var new_position = Vector2(action_ZONE_X_POSITION, action_zone_y_position+offset)
 		card.starting_position = new_position
-		animate_card_to_position(card, new_position, speed)
+		animate_card_to_position(card, new_position)
 
 		if !card.is_flipped:
 			action_zone_y_position += 121
 		else:
 			action_zone_y_position += 122
 
-func animate_card_to_position(card, new_position, speed):
+func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
-	tween.tween_property(card, "position", new_position, speed)
+	tween.tween_property(card, "position", new_position, Global.HAND_DRAW_INTERVAL)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

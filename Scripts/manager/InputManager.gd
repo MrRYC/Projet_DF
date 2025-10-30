@@ -47,7 +47,7 @@ func raycast_at_cursor():
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
 			if card_found.card_current_area == 2:
-				card_manager_ref.return_card_to_hand(card_found)
+				pass
 			elif card_found:
 				card_manager_ref.start_drag(card_found)
 
