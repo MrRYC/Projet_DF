@@ -92,30 +92,25 @@ func send_card_to_discard(card):
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-
 	discard_pile_ref.add_card_to_pile(card)
 	card.card_current_area = card.card_area.IN_DISCARD
 
 func send_card_to_exhaust(card):
 	card.target = null
 	exhaust_pile_ref.add_card_to_pile(card)
-
 	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-		
 	card.card_current_area = card.card_area.IN_EXHAUST
 
 func send_card_to_wound(card):
 	card.target = null
 	wound_pile_ref.add_card_to_pile(card)
-
 	if card.card_current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-	
 	card.card_current_area = card.card_area.IN_WOUND
 
 func deck_size():
@@ -159,7 +154,7 @@ func flip_card_in_hand(card):
 		print("carte sans effet")
 		card.get_node("CardErrorAnimation").play("tilt_error")
 		return
-	
+
 	card.rotation_degrees += 180
 	if !card.is_flipped && card["slot_flip_effect"]:
 		card.is_flipped = true

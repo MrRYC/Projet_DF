@@ -66,7 +66,8 @@ func update_hand_positions(card, index):
 func move_card_to_index(card, mouse_pos_x):
 	var player_hand_min_zone = Vector2(hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(hand_x_position_max, HAND_Y_POSITION)
-	var index = 0
+	var card_index = get_card_index(card)
+	print("carte tiré position : "+str(card_index))
 	var new_index = get_drop_index(mouse_pos_x)
 	
 	for i in card_position_in_hand:
@@ -74,23 +75,21 @@ func move_card_to_index(card, mouse_pos_x):
 			if new_index == 0 :
 				var new_position = Vector2(hand_x_position_min, HAND_Y_POSITION)
 				card.starting_position = new_position
-				print(card.starting_position)
 				animate_card_to_position(card, new_position)
 			else:
-				while index <= new_index:
+				while card_index <= new_index:
 					
 					update_hand_positions(card, i)
-					index +=1
+
 		elif !is_in_bounds(card.position, player_hand_min_zone, player_hand_max_zone):
 			print(card.starting_position)
 			animate_card_to_position(card, card.starting_position)
 
-				
-	#elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
-		#var mouse_x = get_global_mouse_position().x
-		#player_hand_ref.move_card_to_index(card_being_dragged, mouse_x)
-	#elif !is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
-		#return_card_to_hand(card_being_dragged)
+func get_card_index(card):
+	print(card.starting_position)
+	for i in card_position_in_hand.size():
+		if card_position_in_hand[i] > card.starting_position:
+			return i
 
 func get_drop_index(mouse_pos_x):
 	for i in card_position_in_hand.size():
