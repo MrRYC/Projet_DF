@@ -62,31 +62,36 @@ func execute_action_phase():
 
 func apply_player_actions(card, _target, last_action): #target à définir
 	if card.is_flipped:
-		var flip_effect_txt = check_flip_effect(card)
-		print(flip_effect_txt)
+		check_slots_effect(card)
 		return
 
-	var attack = int(card.get_node("Attack").text) # ou card.attack si tu veux le stocker
+	var attack = card.attack
 	opponent_ref.take_damage(attack,last_action)
 	
-func check_flip_effect(card):
-		
-	#application de l'effet sur le joueur
-	if card.slot_flip_effect["uses"] == null:
-		pass
-	elif card.slot_flip_effect["uses"] == 0:
-		return
-	else :
-		print("card.slot_flip_effect[uses] -= 1")
-
-	var slot_effect = card.slot_flip_effect["effect"]
-	var player_effect_txt : String
+func check_slots_effect(card):
 	
-	if slot_effect == "add_block":
+	if !card.slot_number:
+		return
+	
+	#application de l'effet sur le joueur
+	for slot_effect in card.effect_per_slot:
+		if card.effect_per_slot[slot_effect]["uses"] == null:
+			pass
+		elif card.effect_per_slot[slot_effect]["uses"] == 0:
+			return
+		else :
+			print(apply_slots_effect(card.effect_per_slot[slot_effect]["id"]))
+			card.effect_per_slot[slot_effect]["uses"] -= 1
+			print(card.effect_per_slot[slot_effect]["uses"])
+
+func apply_slots_effect(slot_effect):
+	var player_effect_txt : String
+
+	if slot_effect == "Block":
 		player_effect_txt = "+1 block appliqué"
-	elif slot_effect == "add_dodge":
+	elif slot_effect == "Dodge":
 		player_effect_txt = "+1 esquive appliquée"
-	elif slot_effect == "add_breath":
+	elif slot_effect == "Breath":
 		player_effect_txt = "respiration activée"
 	else:
 		player_effect_txt = "Effet inconnu"

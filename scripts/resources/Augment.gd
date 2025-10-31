@@ -7,9 +7,9 @@ var description : String
 var effect : String
 var side_effect : String = ""
 var condition : String = ""
-var time_cost : float
-var value : int
-var uses : int
+var time_cost : float = 0.0
+var value : int = 0
+var uses
 
 ###########################################################################
 #                       ENHANCEMENT CONFIGURATION                         #

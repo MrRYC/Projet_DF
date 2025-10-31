@@ -17,20 +17,30 @@ func _ready() -> void:
 ###########################################################################
 
 func add_card_to_pile(card):
+	var card_data = card.id
 	#Sauvegarde des données des slots de la carte
 	var card_data_snapshot := {
-		"id":card["id"],
+		"id":card_data,
 		"slot_number":card["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
-		"slot_flip_effect":{}
+		"effect_per_slot":{}
 	}
 	
-	#if card.slot_flip_effect.has("uses"):
-		#card_data_snapshot["slot_flip_effect"]["uses"] = card.slot_flip_effect["uses"]
+	#Sauvegarde des datas modifiables des augments
+	if card.slot_number > 0:
+		for slot_index in card.effect_per_slot.keys():
+			#Récupération des augment des slots de la carte
+			var slot_effect = card.effect_per_slot[slot_index]
+			
+			if not card_data_snapshot["effect_per_slot"].has(slot_index):
+				card_data_snapshot["effect_per_slot"][slot_index] = {}
+			
+			if slot_effect.has("uses"):
+				card_data_snapshot["effect_per_slot"][slot_index]["id"] = slot_effect["id"]
+				card_data_snapshot["effect_per_slot"][slot_index]["uses"] = slot_effect["uses"]
 	
 	#Déplacement dans la discard
 	discard_pile.append(card_data_snapshot)
-	#card_data_snapshot.card_current_area = card_data_snapshot.card_area.IN_DISCARD
-	
+
 	update_label(discard_pile.size())
 
 func shuffle_back_discard():

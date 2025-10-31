@@ -16,7 +16,7 @@ var attack : int
 var reach : String = "" #single or multi target
 var target : Node2D
 var slot_number : int = 0
-var slot_flip_effect : Dictionary = {}
+var effect_per_slot : Dictionary = {}
 var is_flipped = false
 
 ###########################################################################
@@ -49,8 +49,8 @@ func setup_card(data: Dictionary):
 		slot_number = data["slot_number"] 
 
 	#liste des augments id si carte à des slots
-	if data.has("slot_flip_effect"):
-		slot_flip_effect = data["slot_flip_effect"]
+	if data.has("effect_per_slot"):
+		effect_per_slot = data["effect_per_slot"]
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

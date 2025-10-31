@@ -10,7 +10,7 @@ const CARDS = {
 		"attack" = 1,
 		"reach" = "single_enemy",
 		"slot_number" = 0,
-		"slot_flip_effect" = {},
+		"effect_per_slot" = {},
 	}, 
 	"Cross_Card":{
 		"title" = "Cross",
@@ -20,7 +20,7 @@ const CARDS = {
 		"attack" = 1,
 		"reach" = "single_enemy",
 		"slot_number" = 1,
-		"slot_flip_effect" = {},
+		"effect_per_slot" = {},
 	}, 
 	"Hook_Card":{
 		"title" = "Hook",
@@ -30,7 +30,7 @@ const CARDS = {
 		"attack" = 2,
 		"reach" = "single_enemy",
 		"slot_number" = 1,
-		"slot_flip_effect" = {},
+		"effect_per_slot" = {},
 	}, 
 	"Uppercut_Card":{
 		"title" = "Uppercut",
@@ -40,6 +40,6 @@ const CARDS = {
 		"attack" = 3,
 		"reach" = "single_enemy",
 		"slot_number" = 1,
-		"slot_flip_effect" = {},
+		"effect_per_slot" = {},
 	}
 }

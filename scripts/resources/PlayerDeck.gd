@@ -11,7 +11,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Jab_Card_02":{
 		"title" : "Jab",
@@ -22,7 +22,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Jab_Card_03":{
 		"title" : "Jab",
@@ -33,7 +33,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Jab_Card_04":{
 		"title" : "Jab",
@@ -44,7 +44,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Cross_Card_01":{
 		"title" : "Cross",
@@ -55,7 +55,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Cross_Card_02":{
 		"title" : "Cross",
@@ -66,7 +66,7 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 0,
-		"slot_flip_effect" : {}
+		"effect_per_slot" : {}
 	}, 
 	"Power_Cross_Card_01":{
 		"title" : "P-Cross",
@@ -77,8 +77,8 @@ const CARDS = {
 		"attack" : 1,
 		"reach" : "single_enemy",
 		"slot_number" : 1,
-		"slot_flip_effect" : {
-				"slot_01" : "Block",
+		"effect_per_slot" : {
+				0 : "Block_Augment",
 			}
 	}, 
 	"Hook_Card_01":{
@@ -90,9 +90,9 @@ const CARDS = {
 		"attack" : 2,
 		"reach" : "single_enemy",
 		"slot_number" : 2,
-		"slot_flip_effect" : {
-				"slot_01" : "Dodge",
-				#"slot_02" : "Dodge",
+		"effect_per_slot" : {
+				0 : "Dodge_Augment",
+				#1 : "Dodge",
 			}
 	}, 
 	"Uppercut_Card_01":{
@@ -104,8 +104,8 @@ const CARDS = {
 		"attack" : 3,
 		"reach" : "single_enemy",
 		"slot_number" : 1,
-		"slot_flip_effect" : {
-				"slot_01" : "Breath",
+		"effect_per_slot" : {
+				0 : "Breath_Augment",
 			}
 	}
 }
