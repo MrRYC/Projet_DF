@@ -38,7 +38,7 @@ func load_player_deck():
 		
 		var card_data_snapshot := {
 			"id":card_data["id"],
-			"slot_number":card_data["slot_number"], #attention, il faudra gérer les augment qui s'inactivent après x utilisation
+			"slot_number":card_data["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
 			"slot_flip_effect":{}
 		}
 

@@ -17,24 +17,28 @@ func _ready() -> void:
 ###########################################################################
 
 func add_card_to_pile(card):
-	var card_id = card.id
-	var card_id_data: Dictionary = {
-		"id": card_id,
-		"attack": card.attack,
-		"animation_time": card.animation_time,
+	#Sauvegarde des données des slots de la carte
+	var card_data_snapshot := {
+		"id":card["id"],
+		"slot_number":card["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
+		"slot_flip_effect":{}
 	}
-	discard_pile.append(card_id_data)
-	card.card_current_area = card.card_area.IN_DISCARD
+	
+	#if card.slot_flip_effect.has("uses"):
+		#card_data_snapshot["slot_flip_effect"]["uses"] = card.slot_flip_effect["uses"]
+	
+	#Déplacement dans la discard
+	discard_pile.append(card_data_snapshot)
+	#card_data_snapshot.card_current_area = card_data_snapshot.card_area.IN_DISCARD
+	
 	update_label(discard_pile.size())
 
 func shuffle_back_discard():
 	if discard_pile.is_empty():
 		return
 
-	while discard_pile.size() > 0:
-		deck_pile_ref.append(discard_pile.pop_front())
-	
-	print(deck_pile_ref.player_deck)
+	for card in discard_pile.duplicate():
+		deck_pile_ref.player_deck.append(card)
 	
 	clear()
 	update_label(0)
@@ -52,9 +56,7 @@ func show_pile():
 
 	print("📜 Cartes restantes dans le deck :")
 	for card in discard_pile:
-		var card_db_ref = load("res://scripts/resources/CardDB.gd")
-		var c_data = card_db_ref.CARDS[card.id]
-		print(str(c_data))
+		print(card)
 		
 func _on_deck_empty(is_deck_empty):
 	if is_deck_empty:
