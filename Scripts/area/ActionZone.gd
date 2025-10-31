@@ -17,7 +17,7 @@ var combat_in_progress : bool
 func add_card_to_action_zone(card):
 	if card not in action_zone:
 		action_zone.insert(0,card)
-		card.card_current_area = card.card_area.IN_ACTION_ZONE
+		card.current_area = card.board_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
 #

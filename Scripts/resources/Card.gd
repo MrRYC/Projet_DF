@@ -7,8 +7,8 @@ class_name CARD
 ###########################################################################
 
 var starting_position #position de départ de la carte utilisée dans la funct update_hand_positions du script PlayerHand
-enum card_area { IN_DECK, IN_HAND, IN_ACTION_ZONE, IN_DISCARD, IN_WOUND, IN_EXHAUST } # 0 = IN_DECK, 1 = IN_HAND, 2 = IN_ACTION_ZONE, 3 = IN_DISCARD, 4 = IN_WOUND, 5 = IN_EXHAUST
-var card_current_area : card_area = card_area.IN_DECK
+enum board_area { IN_PILE, IN_HAND, IN_ACTION_ZONE } # 0 = IN_PILE, 1 = IN_HAND, 2 = IN_ACTION_ZONE
+var current_area : board_area = board_area.IN_PILE
 
 var id : String
 var animation_time : float

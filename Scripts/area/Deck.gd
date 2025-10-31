@@ -24,7 +24,6 @@ func _ready() -> void:
 ###########################################################################
 func new_turn(new_hand_size):
 	for i in range(new_hand_size):
-		print(player_deck)
 		await draw()
 
 ###########################################################################
@@ -101,9 +100,8 @@ func show_pile():
 		return
 	
 	print("📜 Cartes restantes dans le deck :")
-	#for card in player_deck:
-		#var c_data = card_db_ref.CARDS[card.id]
-		#print(str(c_data))
+	for card in player_deck:
+		print(card)
 
 func shuffle():
 	player_deck.shuffle()

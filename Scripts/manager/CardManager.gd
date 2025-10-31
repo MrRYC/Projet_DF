@@ -60,6 +60,7 @@ func new_turn(_max_hand_size):
 	if action_zone_ref.action_zone.size() > 0:
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
+			card.queue_free()
 		action_zone_ref.action_zone.clear()
 
 	if player_hand_ref.player_hand.size() > 0:
@@ -95,39 +96,35 @@ func check_destination_pile(card):
 			send_card_to_discard(card)
 	else:
 		send_card_to_discard(card)
+	
+	card.current_area = card.board_area.IN_PILE
 
 func send_card_to_discard(card):
 	card.target = null
 	discard_pile_ref.add_card_to_pile(card)
 		
-	if card.card_current_area == 1:
+	if card.current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-
-	card.card_current_area = card.card_area.IN_DISCARD
 
 func send_card_to_exhaust(card):
 	card.target = null
 	exhaust_pile_ref.add_card_to_pile(card)
 
-	if card.card_current_area == 1:
+	if card.current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-		
-	card.card_current_area = card.card_area.IN_EXHAUST
 
 func send_card_to_wound(card):
 	card.target = null
 	wound_pile_ref.add_card_to_pile(card)
 
-	if card.card_current_area == 1:
+	if card.current_area == 1:
 		player_hand_ref.remove_card_from_hand(card)
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
-	
-	card.card_current_area = card.card_area.IN_WOUND
 
 func deck_size():
 	return deck_pile_ref.deck_size
@@ -183,16 +180,16 @@ func flip_card_in_hand(card):
 		card.is_flipped = false
 
 func highlight_card(card, hovered):
-	if card.card_current_area == 1 && hovered: # 1 = IN_HAND
+	if card.current_area == 1 && hovered: # 1 = IN_HAND
 		card.scale = Vector2(1.1,1.1)
 		card.z_index = 2
-	elif card.card_current_area == 2 : # 2 = IN_ACTION_ZONE
+	elif card.current_area == 2 : # 2 = IN_ACTION_ZONE
 		return
 	else:
 		update_card_size(card)
 
 func update_card_size(card):
-	if card.card_current_area == 2:
+	if card.current_area == 2:
 		card.scale = Vector2(0.5, 0.5)
 		card.z_index = 1
 	else:

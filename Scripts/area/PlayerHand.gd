@@ -18,7 +18,7 @@ var hand_x_position_max = 0.0
 func add_card_to_hand(card):
 	if card not in player_hand:
 		player_hand.insert(0,card)
-		card.card_current_area = card.card_area.IN_HAND
+		card.current_area = card.board_area.IN_HAND
 		update_hand_positions()
 	else:
 		animate_card_to_position(card, card.starting_position)
