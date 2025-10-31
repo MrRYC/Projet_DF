@@ -1,3 +1,6 @@
+extends Resource
+class_name Combo
+
 const BOXING_COMBO = {
 	"Jab_LeadCross":{
 		"name" = "One-Two",

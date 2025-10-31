@@ -1,9 +1,7 @@
 extends Node2D
-class_name ENHANCEMENT
+class_name AUGMENT
 
 #variables du script
-
-var enhancements: Dictionary = {}
 var title : String
 var description : String
 var effect : String
@@ -26,6 +24,9 @@ func setup_enhancement(data: Dictionary):
 
 	if data.has("effect"):
 		effect = data["effect"]
+
+	if data.has("side_effect"):
+		side_effect = data["side_effect"]
 
 	if data.has("condition"):
 		condition = data["condition"]

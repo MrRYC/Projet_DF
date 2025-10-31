@@ -4,9 +4,6 @@ extends Node2D
 const CARD_WIDTH = 175 #espace entre les cartes
 const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 
-#variables de référence vers autre Node
-@onready var discard_pile_ref: Node2D = $"../Piles/DiscardPile"
-
 #variables du script
 @onready var center_screen_x = get_viewport().size.x / 2
 var speed = Global.HAND_DRAW_INTERVAL

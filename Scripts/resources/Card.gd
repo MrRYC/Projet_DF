@@ -6,9 +6,6 @@ class_name CARD
 #                               CARD STATE                                #
 ###########################################################################
 
-#variables du script
-#var slots_flip_effect: Array = []             # définitions de slots (depuis CardDB)
-
 var starting_position #position de départ de la carte utilisée dans la funct update_hand_positions du script PlayerHand
 enum card_area { IN_DECK, IN_HAND, IN_ACTION_ZONE, IN_DISCARD, IN_WOUND, IN_EXHAUST } # 0 = IN_DECK, 1 = IN_HAND, 2 = IN_ACTION_ZONE, 3 = IN_DISCARD, 4 = IN_WOUND, 5 = IN_EXHAUST
 var card_current_area : card_area = card_area.IN_DECK
@@ -51,6 +48,7 @@ func setup_card(data: Dictionary):
 	if data.has("slot_number"):
 		slot_number = data["slot_number"] 
 
+	#liste des augments id si carte à des slots
 	if data.has("slot_flip_effect"):
 		slot_flip_effect = data["slot_flip_effect"]
 

@@ -11,13 +11,13 @@ const START_HAND_SIZE = 4 #main de départ maximum
 
 #variables du script
 var new_hand_max_size = START_HAND_SIZE
-var nb_turn = 0
+var nb_turn = 1
 var player_current_health
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	EventBus.new_turn.emit(update_max_hand_size())
 	player_ref.set_starting_health(card_manager_ref.deck_size())
-	new_turn()
 
 func _on_phase_button_pressed() -> void:
 	await execute_action_phase()
@@ -32,10 +32,9 @@ func update_max_hand_size():
 	return new_hand_max_size
 
 func new_turn():
-	card_manager_ref.new_turn(update_max_hand_size())
-	action_zone_ref.action_zone.clear()
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
+	EventBus.new_turn.emit(update_max_hand_size())
 
 ###########################################################################
 #                            BATTLE EXECUTION                             #

@@ -28,6 +28,7 @@ func _ready() -> void:
 	EventBus.left_mouse_released.connect(_on_left_mouse_released)
 	EventBus.hovered.connect(_on_hovered_over_card)
 	EventBus.hovered_off.connect(_on_hovered_off_card)
+	EventBus.new_turn.connect(_on_new_turn)
 
 func _process(_delta: float) -> void:
 	if card_being_dragged:
@@ -55,37 +56,45 @@ func send_card_to_action_zone(card, opponent):
 #                             TURN MANAGEMENT                             #
 ###########################################################################
 
-func new_turn(max_hand_size):
+func new_turn(_max_hand_size):
 	if action_zone_ref.action_zone.size() > 0:
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
+		action_zone_ref.action_zone.clear()
 
 	if player_hand_ref.player_hand.size() > 0:
 		for card in player_hand_ref.player_hand.duplicate():
 			send_card_to_discard(card)
 			card.queue_free()
-			player_hand_ref.player_hand.clear()
-
-	deck_pile_ref.new_turn(max_hand_size)
+		player_hand_ref.player_hand.clear()
 
 ###########################################################################
 #                             PILE MANAGEMENT                             #
 ###########################################################################
 
 func check_destination_pile(card):
-	var tween := create_tween()
+	#if card.uses == null:
+		#send_card_to_discard(card)
+	#elif card.is_flipped && card.uses ==0:
+		#if card_side_effect == "exhaust":
+			#send_card_to_exhaust(card)
+		#elif card_side_effect == "wound":
+			#send_card_to_wound(card)
+		#else:
+			#inactivation du slot
+	#else:
+		#send_card_to_discard(card)
+
 	if card.is_flipped:
 		var card_side_effect = card.slot_flip_effect["side_effect"]
 		if card_side_effect == "exhaust":
-			tween.tween_callback(send_card_to_exhaust.bind(card))
+			send_card_to_exhaust(card)
 		elif card_side_effect == "wound":
-			tween.tween_callback(send_card_to_wound.bind(card))
+			send_card_to_wound(card)
 		else:
-			tween.tween_callback(send_card_to_discard.bind(card))
+			send_card_to_discard(card)
 	else:
-		tween.tween_callback(send_card_to_discard.bind(card))
-
-	tween.tween_interval(Global.HAND_DISCARD_INTERVAL)
+		send_card_to_discard(card)
 
 func send_card_to_discard(card):
 	card.target = null
@@ -262,3 +271,6 @@ func _on_hovered_off_card(card):
 		highlight_card(new_card_hovered, true)
 	else:
 		is_hovering_on_card = false
+
+func _on_new_turn(new_hand_size):
+	new_turn(new_hand_size)

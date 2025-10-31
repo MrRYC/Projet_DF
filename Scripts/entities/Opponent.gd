@@ -1,5 +1,5 @@
 extends Node2D
-class_name Opponent
+class_name OPPONENT
 
 var max_health : int = 6
 var current_health : int = max_health

@@ -1,5 +1,5 @@
 extends Resource
-class_name Player_Deck
+class_name PLAYERDECK
 
 const CARDS = {
 	"Jab_Card_01":{
@@ -69,7 +69,7 @@ const CARDS = {
 		"slot_flip_effect" : {}
 	}, 
 	"Power_Cross_Card_01":{
-		"title" : "Power Cross",
+		"title" : "P-Cross",
 		"id" : "Power_Cross_Card_01",
 		"description" : "Coup de poing bras faible",
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
@@ -78,13 +78,7 @@ const CARDS = {
 		"reach" : "single_enemy",
 		"slot_number" : 1,
 		"slot_flip_effect" : {
-				"title" : "Block",
-				"effect" : "add_block",
-				"side_effect" : null,
-				"condition" : null,
-				"time_cost" : 0.5,
-				"value" : 1,
-				"uses" : null
+				"slot_01" : "Block",
 			}
 	}, 
 	"Hook_Card_01":{
@@ -95,15 +89,10 @@ const CARDS = {
 		"animation_time" : 1.2,
 		"attack" : 2,
 		"reach" : "single_enemy",
-		"slot_number" : 1,
+		"slot_number" : 2,
 		"slot_flip_effect" : {
-				"title" : "Dodge",
-				"effect" : "add_dodge",
-				"side_effect" : "inactive",
-				"condition" : null,
-				"time_cost" : 0.6,
-				"value" : 1,
-				"uses" : 2
+				"slot_01" : "Dodge",
+				#"slot_02" : "Dodge",
 			}
 	}, 
 	"Uppercut_Card_01":{
@@ -116,12 +105,7 @@ const CARDS = {
 		"reach" : "single_enemy",
 		"slot_number" : 1,
 		"slot_flip_effect" : {
-				"title" : "Breath",
-				"effect" : "add_breath",
-				"side_effect" : "exhaust",
-				"time_cost" : 1.0,
-				"value" : 1,
-				"uses" : 1,
+				"slot_01" : "Breath",
 			}
 	}
 }

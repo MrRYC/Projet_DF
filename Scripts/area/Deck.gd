@@ -10,43 +10,65 @@ const CARD_SCENE = preload("res://scenes/Card.tscn")
 #variables du script
 var player_deck : Array = []
 var deck_size : int = 0
-
+var nb_turn : int = 1
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	EventBus.turn_increased.connect(_on_turn_increase)
+	EventBus.new_turn.connect(_on_new_turn)
+
+	#instanciation du deck du joueur
 	load_player_deck()
-	shuffle()
-	deck_size = player_deck.size()
 
 ###########################################################################
 #                             TURN MANAGEMENT                             #
 ###########################################################################
-
 func new_turn(new_hand_size):
-	var tween := create_tween()
 	for i in range(new_hand_size):
-		if player_deck.size() == 0:
-			EventBus.shuffle_back_discard.emit(true)
-		
-		tween.tween_callback(draw_card)
-		tween.tween_interval(Global.HAND_DRAW_INTERVAL)
+		print(player_deck)
+		await draw()
 
 ###########################################################################
 #                               DECK CREATION                             #
 ###########################################################################
 
 func load_player_deck():
-	for card_id in Player_Deck.CARDS.keys():
-		var card_data = Player_Deck.CARDS[card_id]
-		instanciate_card(card_data)
+	for card in PLAYERDECK.CARDS.keys():
+		#Récupération de données du dictionnaire de la carte (id et id des augment utilisés)
+		var card_data = PLAYERDECK.CARDS[card]
+		
+		var card_data_snapshot := {
+			"id":card_data["id"],
+			"slot_number":card_data["slot_number"], #attention, il faudra gérer les augment qui s'inactivent après x utilisation
+			"slot_flip_effect":{}
+		}
 
-func instanciate_card(card_data):
-	var card = CARD_SCENE.instantiate()
-	# Configure la carte (title, attack, etc.)
-	card.setup_card(card_data)
-	#Applique l'images à la carte
-	card.get_node("CardFrontImage").texture = load(card_data["image"]) #CardFrontImage fait référence au sprite CardFront du Node2D Card
+		player_deck.append(card_data_snapshot)
 
-	add_card(card)
+	shuffle()
+	deck_size = player_deck.size()
+
+func recreate_card_from_snapshot(snapshot):
+	var card_id = snapshot["id"]
+
+	#Récupération des données de la carte
+	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
+	var updated_data: Dictionary = orignal_data.duplicate(true)
+
+	#Mise à jour des données sauvegardées de la carte
+	#if snapshot.has("slot_flip_effect") \
+	#and snapshot["slot_flip_effect"].has("uses") \
+	#and updated_data.has("slot_flip_effect"):
+		#updated_data["slot_flip_effect"]["uses"] = snapshot["slot_flip_effect"]["uses"]
+
+	#Instanciation de la carte
+	var card: CARD = CARD_SCENE.instantiate()
+	card.setup_card(updated_data)
+
+	#Ajour de l'image
+	if updated_data.has("image"):
+		card.get_node("CardFrontImage").texture = load(updated_data["image"])
+
+	return card
 
 ###########################################################################
 #                               CARD ENGINE                               #
@@ -55,15 +77,22 @@ func instanciate_card(card_data):
 func add_card(card):
 	player_deck.append(card)
 
-func draw_card():
-	var card_drawn = player_deck.pop_front() #Tirage de la première carte du deck
+func draw():
+	if player_deck.size() == 0 && 	nb_turn > 1:
+		EventBus.shuffle_back_discard.emit(true)
+
+	var card = player_deck.pop_front() #Tirage de la première carte du deck
+	var card_node: CARD = recreate_card_from_snapshot(card)
 	
-	card_manager_ref.add_child(card_drawn)
-	player_hand_ref.add_card_to_hand(card_drawn)
+	card_manager_ref.add_child(card_node)
+	player_hand_ref.add_card_to_hand(card_node)
 
 	##lancement de l'animation de la carte lors de la pioche
-	card_drawn.get_node("CardDrawFlipAnimation").play("card_flip")
-	
+	card_node.get_node("CardDrawFlipAnimation").play("card_flip")
+
+	await get_tree().create_timer(Global.HAND_DRAW_INTERVAL).timeout
+
+	player_deck.erase(card)
 	update_label(player_deck.size())
 
 func show_pile():
@@ -81,3 +110,13 @@ func shuffle():
 
 func update_label(cards_in_deck):
 	$DeckCardCountLabel.text = str(cards_in_deck)
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_turn_increase(turn):
+	nb_turn = turn
+
+func _on_new_turn(new_hand_size):
+	new_turn(new_hand_size)
