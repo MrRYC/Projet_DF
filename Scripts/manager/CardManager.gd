@@ -163,11 +163,13 @@ func flip_card_in_hand(card):
 		print("carte sans effet")
 		card.get_node("CardErrorAnimation").play("tilt_error")
 		return
-
-	if card.effect_per_slot[0]["uses"] == 0 && card.effect_per_slot[0]["side_effect"] == "inactivate":
-		print("effet inactivé")
-		card.get_node("CardErrorAnimation").play("tilt_error")
-		return
+	
+	if card.slot_number == 1:
+		if card.effect_per_slot[0]["uses"] == 0 && card.effect_per_slot[0]["side_effect"] == "inactivate":
+			EventBus.augment_inactivated.emit(true) #catch du signal afin de grisé l'augment inactivé
+			print("effet inactivé")
+			card.get_node("CardErrorAnimation").play("tilt_error")
+			return
 	
 	card.rotation_degrees += 180
 	if !card.is_flipped && card.slot_number:
