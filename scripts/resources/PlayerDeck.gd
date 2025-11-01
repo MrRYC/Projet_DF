@@ -72,7 +72,7 @@ const CARDS = {
 		"title" : "P-Cross",
 		"id" : "Power_Cross_Card_01",
 		"description" : "Coup de poing bras faible",
-		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
+		"image" : "res://assets/fighting_style/boxing/P-Cross_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
 		"reach" : "single_enemy",
