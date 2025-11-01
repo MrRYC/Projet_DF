@@ -76,13 +76,12 @@ func check_slots_effect(card):
 	#application de l'effet sur le joueur
 	for slot_effect in card.effect_per_slot:
 		if card.effect_per_slot[slot_effect]["uses"] == null:
-			pass
+			print(apply_slots_effect(card.effect_per_slot[slot_effect]["id"]))
 		elif card.effect_per_slot[slot_effect]["uses"] == 0:
 			return
 		else :
 			print(apply_slots_effect(card.effect_per_slot[slot_effect]["id"]))
 			card.effect_per_slot[slot_effect]["uses"] -= 1
-			print(card.effect_per_slot[slot_effect]["uses"])
 
 func apply_slots_effect(slot_effect):
 	var player_effect_txt : String

@@ -32,32 +32,35 @@ func new_turn(new_hand_size):
 
 func load_player_deck():
 	for card_id in PLAYERDECK.CARDS.keys():
-		#Récupération des données de base des dictionnaires PLAYERDECK et AUGMENTDB
-		var card_data = add_augments_to_card_data(card_id)
-
-		#Sauvegarde des datas modifiables des cartes
-		var card_data_snapshot := {
-			"id":card_data["id"],
-			"slot_number":card_data["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
-			"effect_per_slot":{}
-		}
-
-		#Sauvegarde des datas modifiables des augments
-		if card_data.has("effect_per_slot"):
-			for slot_index in card_data["effect_per_slot"].keys():
-				var augment = card_data["effect_per_slot"][slot_index]
-				if augment.has("uses"):
-					if not card_data_snapshot["effect_per_slot"].has(slot_index):
-						card_data_snapshot["effect_per_slot"][slot_index] = {}
-					card_data_snapshot["effect_per_slot"][slot_index]["id"] = augment["id"]
-					card_data_snapshot["effect_per_slot"][slot_index]["uses"] = augment["uses"]
-
-		player_deck.append(card_data_snapshot)
+		var card = build_card_from_dictionaries(card_id)
+		player_deck.append(card)
 
 	shuffle()
 	deck_size = player_deck.size()
 
-func add_augments_to_card_data(card_id):
+func build_card_from_dictionaries(card_id):
+	var card_data = add_augments(card_id)
+
+	#Sauvegarde des datas modifiables des cartes
+	var card_data_snapshot := {
+		"id":card_data["id"],
+		"slot_number":card_data["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
+		"effect_per_slot":{}
+	}
+
+	#Sauvegarde des datas modifiables des augments
+	if card_data.has("effect_per_slot"):
+		for slot_index in card_data["effect_per_slot"].keys():
+			var augment = card_data["effect_per_slot"][slot_index]
+			if augment.has("uses"):
+				if not card_data_snapshot["effect_per_slot"].has(slot_index):
+					card_data_snapshot["effect_per_slot"][slot_index] = {}
+				card_data_snapshot["effect_per_slot"][slot_index]["id"] = augment["id"]
+				card_data_snapshot["effect_per_slot"][slot_index]["uses"] = augment["uses"]
+	
+	return card_data_snapshot
+
+func add_augments(card_id):
 	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
 	var updated_data: Dictionary = orignal_data.duplicate(true)
 
@@ -77,44 +80,8 @@ func add_augments_to_card_data(card_id):
 	
 	return updated_data
 
-func create_card_in_hand(card_data):
-	var card_id = card_data["id"]
-
-	#Récupération des données de la carte
-	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
-	var updated_data: Dictionary = orignal_data.duplicate(true)
-
-	#Récupération puis mise à jour des données sauvegardées de la carte
-	if updated_data.has("effect_per_slot"):
-		var card_augment := {}
-		for slot_index in updated_data["effect_per_slot"].keys():
-			var augment_id = updated_data["effect_per_slot"][slot_index]
-
-			if AUGMENTDB.AUGMENTS.has(augment_id):
-				#Copie de l'augment afin de pouvoir gérer les utilisations
-				card_augment[slot_index] = AUGMENTDB.AUGMENTS[augment_id].duplicate(true)
-			else: #Stockackage de l'augment si inconnu dans la BD
-				push_error("Augment '%s' not found in AugmentDB" % augment_id)
-				card_augment[slot_index] = {}
-		
-		updated_data["effect_per_slot"] = card_augment
-
-	if card_id == "Hook_Card_01":
-		print(updated_data)
-
-	#Instanciation de la carte
-	var card: CARD = CARD_SCENE.instantiate()
-	card.setup_card(updated_data)
-	
-
-	#Ajout de l'image
-	if updated_data.has("image"):
-		card.get_node("CardFrontImage").texture = load(updated_data["image"])
-
-	return card
-
 ###########################################################################
-#                               CARD ENGINE                               #
+#                               DRAW ENGINE                               #
 ###########################################################################
 
 func add_card(card):
@@ -137,6 +104,46 @@ func draw():
 
 	player_deck.erase(card)
 	update_label(player_deck.size())
+
+func create_card_in_hand(card_data):
+	var card_id = card_data["id"]
+
+	#Récupération des données de la carte
+	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
+	var updated_data: Dictionary = orignal_data.duplicate(true)
+
+	#Récupération puis mise à jour des données sauvegardées de la carte
+	if updated_data.has("effect_per_slot"):
+		var card_augment := {}
+		for slot_index in updated_data["effect_per_slot"].keys():
+			var slot_effect = card_data.effect_per_slot[slot_index]
+			var augment_id = updated_data["effect_per_slot"][slot_index]
+
+			if AUGMENTDB.AUGMENTS.has(augment_id):
+				#Copie de l'augment afin de pouvoir gérer les utilisations
+				card_augment[slot_index] = AUGMENTDB.AUGMENTS[augment_id].duplicate(true)
+				#Mise à jour de la valeur "uses" de l'augment
+				if slot_effect.has("uses"):
+					card_augment[slot_index]["uses"] = slot_effect["uses"]
+			else: #Stockackage de l'augment si inconnu dans la BD
+				push_error("Augment '%s' not found in AugmentDB" % augment_id)
+				card_augment[slot_index] = {}
+		
+		updated_data["effect_per_slot"] = card_augment
+
+	#Instanciation de la carte
+	var card: CARD = CARD_SCENE.instantiate()
+	card.setup_card(updated_data)
+
+	#Ajout de l'image
+	if updated_data.has("image"):
+		card.get_node("CardFrontImage").texture = load(updated_data["image"])
+
+	return card
+
+###########################################################################
+#                               CARD ENGINE                               #
+###########################################################################
 
 func show_pile():
 	if player_deck.is_empty():
