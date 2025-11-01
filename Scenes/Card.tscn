@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://cn1b036qd1fce"]
+[gd_scene load_steps=15 format=3 uid="uid://cn1b036qd1fce"]
 
 [ext_resource type="Script" uid="uid://ctw76x2p8isvs" path="res://scripts/resources/Card.gd" id="1_0nb81"]
+[ext_resource type="Texture2D" uid="uid://bjlljqqtcnl2g" path="res://assets/fighting_style/boxing/Jab_Card.png" id="2_4dx8l"]
 [ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/Deck.png" id="3_lot17"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
@@ -370,12 +371,16 @@ _data = {
 position = Vector2(150, 950)
 script = ExtResource("1_0nb81")
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_4dx8l")
+
 [node name="CardFrontImage" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(0, 55)
 scale = Vector2(0.1, 1)
 
 [node name="CardBackImage" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(0, 54)
 texture = ExtResource("3_lot17")
 
@@ -387,32 +392,56 @@ shape = SubResource("RectangleShape2D_nx35t")
 
 [node name="Name" type="RichTextLabel" parent="."]
 modulate = Color(1, 1, 1, 0)
-offset_left = -71.0
-offset_top = -94.0
-offset_right = 24.0
-offset_bottom = -70.0
+offset_left = -21.000004
+offset_top = -110.99994
+offset_right = 39.666668
+offset_bottom = -95.666626
 scale = Vector2(1.5, 1.5)
+theme_override_font_sizes/normal_font_size = 10
 bbcode_enabled = true
-text = "0
-"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Time" type="RichTextLabel" parent="."]
 modulate = Color(1, 1, 1, 0)
-offset_left = 32.0
-offset_top = -128.0
-offset_right = 57.0
-offset_bottom = -88.0
+offset_left = -68.0
+offset_top = -57.0
+offset_right = -53.0
+offset_bottom = -44.0
 scale = Vector2(2, 2)
+theme_override_font_sizes/normal_font_size = 8
 text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Attack" type="RichTextLabel" parent="."]
 modulate = Color(1, 1, 1, 0)
-offset_left = -14.0
-offset_top = 61.0
-offset_right = 26.0
-offset_bottom = 101.0
+offset_left = -68.0
+offset_top = -101.0
+offset_right = -53.5
+offset_bottom = -87.0
 scale = Vector2(2, 2)
+theme_override_font_sizes/normal_font_size = 10
 text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="RichTextLabel" parent="."]
+offset_left = -49.0
+offset_top = -11.0
+offset_right = 39.0
+offset_bottom = 95.0
+theme_override_font_sizes/normal_font_size = 10
+horizontal_alignment = 1
+
+[node name="Slot_0_Description" type="RichTextLabel" parent="."]
+offset_left = -51.0
+offset_top = 63.0
+offset_right = 40.0
+offset_bottom = 88.0
+theme_override_font_sizes/normal_font_size = 10
+vertical_alignment = 1
 
 [node name="CardDrawFlipAnimation" type="AnimationPlayer" parent="."]
 libraries = {
