@@ -4,7 +4,7 @@ class_name AUGMENTDB
 const AUGMENTS = {
 	"Block_Augment" : {
 		"id" : "Block",
-		"description" : "add block",
+		"description" : "add 1 block",
 		"side_effect" : null,
 		"condition" : null,
 		"time_cost" : 0.5,
@@ -13,7 +13,7 @@ const AUGMENTS = {
 	}, 
 	"Dodge_Augment" : {
 		"id" : "Dodge",
-		"description" : "add dodge",
+		"description" : "add 1 dodge",
 		"side_effect" : "inactivate",
 		"condition" : null,
 		"time_cost" : 0.6,
@@ -22,7 +22,7 @@ const AUGMENTS = {
 	}, 
 	"Breath_Augment" : {
 		"id" : "Breath",
-		"description" : "add effect breath",
+		"description" : "add 2.5 recovery",
 		"side_effect" : "exhaust",
 		"time_cost" : 1.0,
 		"value" : 1,

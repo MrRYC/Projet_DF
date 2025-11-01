@@ -31,8 +31,7 @@ func setup_card(data: Dictionary):
 		id = data["id"]
 
 	if data.has("description"):
-		#$Name.text = data["description"]
-		pass
+		$Description.text = data["description"]
 
 	if data.has("animation_time"):
 		animation_time = data["animation_time"]
@@ -51,6 +50,25 @@ func setup_card(data: Dictionary):
 	#liste des augments id si carte à des slots
 	if data.has("effect_per_slot"):
 		effect_per_slot = data["effect_per_slot"]
+
+###########################################################################
+#                              CARD FUNCTIONS                             #
+###########################################################################
+
+func card_is_flipped():
+	self.rotation_degrees += 180
+		
+	if is_flipped:
+		$Description.visible = false
+		$Slot_1_Description.visible = true
+	else:
+		$Description.visible = true
+		$Slot_1_Description.visible = false
+
+func set_augment_text(slot1):
+	$Slot_1_Description.text = slot1
+	#$Slot_2_Description.text = slot2
+	#$Slot_3_Description.text = slot3
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
