@@ -9,7 +9,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
@@ -20,7 +20,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
@@ -31,7 +31,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
@@ -42,7 +42,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
@@ -53,7 +53,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
@@ -64,18 +64,18 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
 		"animation_time" : 1.0,
 		"attack" : 1,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 0,
 		"effect_per_slot" : {}
 	}, 
 	"Power_Cross_Card_01":{
 		"title" : "P-Cross",
 		"id" : "Power_Cross_Card_01",
-		"description" : "Coup de poing bras faible",
+		"description" : "Coup de poing faisant 1 dégât à 2 ennemis aléatoires",
 		"image" : "res://assets/fighting_style/boxing/P-Cross_Card.png",
 		"animation_time" : 1.0,
-		"attack" : 1,
-		"reach" : "single_enemy",
+		"attack" : 2,
+		"reach" : 2,
 		"slot_number" : 1,
 		"effect_per_slot" : {
 				0 : "Block_Augment",
@@ -88,7 +88,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Hook_Card.png",
 		"animation_time" : 1.2,
 		"attack" : 2,
-		"reach" : "single_enemy",
+		"reach" : 0,
 		"slot_number" : 2,
 		"effect_per_slot" : {
 				0 : "Dodge_Augment",
@@ -102,7 +102,7 @@ const CARDS = {
 		"image" : "res://assets/fighting_style/boxing/Uppercut_Card.png",
 		"animation_time" : 1.5,
 		"attack" : 3,
-		"reach" : "single_enemy",
+		"reach" : 1,
 		"slot_number" : 1,
 		"effect_per_slot" : {
 				0 : "Breath_Augment",

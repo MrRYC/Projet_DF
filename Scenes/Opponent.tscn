@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3vs7n1efdpym"]
+[gd_scene load_steps=3 format=3 uid="uid://b3vs7n1efdpym"]
 
 [ext_resource type="Script" uid="uid://bmpbet4eaqcvj" path="res://scripts/entities/Opponent.gd" id="1_kivkk"]
-[ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_fav6y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -20,7 +19,6 @@ shape = SubResource("CapsuleShape2D_gyqbi")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.372084, 0.372083)
-texture = ExtResource("2_fav6y")
 
 [node name="HealthLabel" type="RichTextLabel" parent="." groups=["Entity", "Opponent"]]
 offset_left = -25.0

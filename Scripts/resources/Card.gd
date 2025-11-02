@@ -13,7 +13,8 @@ var current_area : board_area = board_area.IN_PILE
 var id : String
 var animation_time : float
 var attack : int
-var reach : String = "" #single or multi target
+enum attack_reach { SINGLE, AOE, RANDOM} # 0 = Portée de 1 ennemi, 1 = Portée à l'ensemble l'ennnemi, 2 = Portée aléatoire
+var reach : attack_reach
 var target : Node2D
 var slot_number : int = 0
 var effect_per_slot : Dictionary = {}
