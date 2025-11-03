@@ -32,7 +32,7 @@ bg_color = Color(0.622903, 0.0662068, 0.261057, 1)
 [node name="Main" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("11_5vvyt")]
-position = Vector2(625, 605)
+position = Vector2(627, 607)
 
 [node name="InputManager" type="Node2D" parent="."]
 script = ExtResource("1_kdgm2")

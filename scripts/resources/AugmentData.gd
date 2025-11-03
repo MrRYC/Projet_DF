@@ -1,5 +1,5 @@
 extends Node2D
-class_name AUGMENT
+class_name AUGMENT_DATA
 
 #variables du script
 var title : String

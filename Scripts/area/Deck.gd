@@ -92,7 +92,7 @@ func draw():
 		EventBus.shuffle_back_discard.emit(true)
 
 	var card = player_deck.pop_front() #Tirage de la première carte du deck
-	var card_node: CARD = create_card_in_hand(card)
+	var card_node: CARD_DATA = create_card_in_hand(card)
 	
 	card_manager_ref.add_child(card_node)
 	player_hand_ref.add_card_to_hand(card_node)
@@ -132,7 +132,7 @@ func create_card_in_hand(card_data):
 		updated_data["effect_per_slot"] = card_augment
 
 	#Instanciation de la carte
-	var card: CARD = CARD_SCENE.instantiate()
+	var card: CARD_DATA = CARD_SCENE.instantiate()
 	card.setup_card(updated_data)
 
 	#Ajout de l'image

@@ -6,9 +6,8 @@ const START_HAND_SIZE = 4 #main de départ maximum
 #variables de référence vers un autre Node
 @onready var card_manager_ref = $"../CardManager"
 @onready var action_zone_ref = $"../ActionZone"
-@onready var opponent_ref = $"../Opponent"
 @onready var player_ref = $"../Player"
-@onready var enemy_manager_ref = $"../EnemyManager"
+@onready var opponent_manager_ref = $"../OpponentManager"
 
 #variables du script
 var new_hand_max_size = START_HAND_SIZE
@@ -22,7 +21,7 @@ func _ready() -> void:
 
 func _on_phase_button_pressed() -> void:
 	await execute_action_phase()
-	enemy_manager_ref.attack_end_of_turn_enemies()
+	opponent_manager_ref.attack_end_of_turn_enemies()
 	new_turn()
 
 ###########################################################################
@@ -60,7 +59,7 @@ func execute_action_phase():
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
 		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target, last_action)
 		
-		enemy_manager_ref.notify_card_played()
+		opponent_manager_ref.notify_card_played()
 
 	apply_ai_end_turn_actions()
 	
@@ -76,7 +75,7 @@ func apply_player_actions(card, _target, last_action): #target à définir
 		return
 
 	var attack = card.attack
-	opponent_ref.take_damage(attack,last_action)
+	#OPPONENT.take_damage(attack,last_action)
 	
 func check_slots_effect(card):
 	
@@ -137,5 +136,5 @@ func wait_before_action(card, time):
 ###########################################################################
 
 func apply_ai_end_turn_actions():
-	enemy_manager_ref.end_of_turn_actions()
+	opponent_manager_ref.end_of_turn_actions()
 	player_ref.take_damage()

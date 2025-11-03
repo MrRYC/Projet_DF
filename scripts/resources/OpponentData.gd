@@ -1,5 +1,5 @@
 extends Resource
-class_name ENEMYDATA
+class_name OPPONENT_DATA
 
 #Variables de la ressource
 @export var display_name: String
