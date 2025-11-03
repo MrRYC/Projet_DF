@@ -41,7 +41,8 @@ func on_player_card_played():
 			data.attack_performed = true
 
 func perform_attack():
-	take_damage
+	pass
+	#take_damage()
 	
 func overkill_animation():
 	print("animation overkill")

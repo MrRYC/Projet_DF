@@ -24,7 +24,13 @@ func spawn_random_opponent_set(min_count:int, max_count:int):
 		place_opponent(opponents.opponents_per_set.size(), o, opponent_node)
 
 func place_opponent(number, index, opponent_node):
-	var random = randi_range(550, 675)
+	var random = 605
+	
+	if index % 2 == 0:
+		random = randi_range(590, 630)
+	else:
+		random = randi_range(550, 590)
+
 	match number:
 		1 : opponent_node.global_position = Vector2(1300, 605)
 		2 : opponent_node.global_position = Vector2(900 + index*200, random)

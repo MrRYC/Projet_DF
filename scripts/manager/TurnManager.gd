@@ -69,13 +69,13 @@ func execute_action_phase():
 #                              PLAYER ACTION                              #
 ###########################################################################
 
-func apply_player_actions(card, _target, last_action): #target à définir
+func apply_player_actions(card, target, last_action): #target à définir
 	if card.is_flipped:
 		check_slots_effect(card)
 		return
 
 	var attack = card.attack
-	#OPPONENT.take_damage(attack,last_action)
+	target.take_damage(attack,last_action)
 	
 func check_slots_effect(card):
 	
