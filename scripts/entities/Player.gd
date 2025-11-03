@@ -7,14 +7,14 @@ func set_starting_health(health):
 	current_health = health
 	update_health()
 
-func take_damage(amount,is_action_zone_empty):
+func take_damage(amount):
 	current_health -= amount
 	if current_health < 0:
 		current_health = 0
 
 	update_health()
-	
-	if current_health <= 0 && is_action_zone_empty:
+
+	if current_health <= 0:
 		die()
 
 func update_health():

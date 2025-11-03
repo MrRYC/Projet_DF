@@ -1,7 +1,8 @@
 extends Node2D
 
 #constantes
-const action_ZONE_X_POSITION = 125
+const action_lane1_ZONE_X_POSITION = 125
+const action_lane2_ZONE_X_POSITION = 225
 
 #variables de référence
 @onready var card_manager_ref = $"../CardManager"
@@ -39,24 +40,36 @@ func empty_action_zone():
 
 func update_action_zone_positions():
 	var action_zone_y_position = 150
+	var action_zone_x_position = action_lane1_ZONE_X_POSITION
 	var offset = 0
-		
+
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
+		print(i)
 		var card = action_zone[i]
 		
 		if !card.is_flipped:
 			offset = 0
 		else:
 			offset = 1
-			
-		var new_position = Vector2(action_ZONE_X_POSITION, action_zone_y_position+offset)
+
+		#gestion du positionnement en cascade des cartes dans l'action zone
+		if (action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone pair et index de la carte pair --> lane 2
+			action_zone_x_position = action_lane2_ZONE_X_POSITION
+		elif (action_zone.size() % 2 == 0) && !(i % 2 == 0): #action zone pair et index de la carte impair --> lane 1
+			action_zone_x_position = action_lane1_ZONE_X_POSITION
+		elif !(action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone impair et index de la carte pair --> lane 1
+			action_zone_x_position = action_lane1_ZONE_X_POSITION
+		else: #action zone impair et index de la carte impair --> lane 2
+			action_zone_x_position = action_lane2_ZONE_X_POSITION
+
+		var new_position = Vector2(action_zone_x_position, action_zone_y_position+offset)
 		card.starting_position = new_position
 		animate_card_to_position(card, new_position)
 
 		if !card.is_flipped:
-			action_zone_y_position += 121
+			action_zone_y_position += 71
 		else:
-			action_zone_y_position += 122
+			action_zone_y_position += 72
 
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
