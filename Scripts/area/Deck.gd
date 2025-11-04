@@ -37,6 +37,7 @@ func load_player_deck():
 
 	shuffle()
 	deck_size = player_deck.size()
+	EventBus.deck_loaded.emit(deck_size)
 
 func build_card_from_dictionaries(card_id):
 	var card_data = add_augments(card_id)
