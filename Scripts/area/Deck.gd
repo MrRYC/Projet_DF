@@ -58,6 +58,7 @@ func build_card_from_dictionaries(card_id):
 					card_data_snapshot["effect_per_slot"][slot_index] = {}
 				card_data_snapshot["effect_per_slot"][slot_index]["id"] = augment["id"]
 				card_data_snapshot["effect_per_slot"][slot_index]["uses"] = augment["uses"]
+				card_data_snapshot["effect_per_slot"][slot_index]["side_effect"] = augment["side_effect"]
 	
 	return card_data_snapshot
 
@@ -71,7 +72,7 @@ func add_augments(card_id):
 			var augment_id = updated_data["effect_per_slot"][slot_index]
 
 			if AUGMENTDB.AUGMENTS.has(augment_id):
-				#Copie de l'augment afin de pouvoir gérer les utilisations
+				#Copie des augment afin de pouvoir gérer les utilisations au fil du combat
 				card_augment[slot_index] = AUGMENTDB.AUGMENTS[augment_id].duplicate(true)
 			else: #Stockackage de l'augment si inconnu dans la BD
 				push_error("Augment '%s' not found in AugmentDB" % augment_id)
@@ -146,7 +147,7 @@ func create_card_in_hand(card_data):
 
 	#Ajout de l'image
 	if effect_inactive:
-		card.get_node("CardFrontImage").texture = load("res://assets/resources/augments/Augment_Inactivated.png")
+		card.get_node("CardFrontImage").texture = load("res://assets/fighting_style/Inactive_Augment.png")
 	elif updated_data.has("image"):
 		card.get_node("CardFrontImage").texture = load(updated_data["image"])
 

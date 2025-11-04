@@ -11,8 +11,8 @@ func _ready() -> void:
 func _on_turn_increased(turn):
 	$TurnLabel.text = str("Turn ",turn)
 
-func _on_combat_in_progress(is_action_phase_ended):
-	if !is_action_phase_ended:
+func _on_combat_in_progress(combat_in_progress):
+	if combat_in_progress:
 		$ActionButton.disabled = true
 		$EmptyActionZoneButton.disabled = true
 	else:

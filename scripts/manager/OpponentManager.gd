@@ -37,10 +37,29 @@ func place_opponent(number, index, opponent_node):
 		
 func end_of_turn_actions():
 	for opponent in match_up:
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
+		if opponent == null:
+			pass
+		elif opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
 			opponent.perform_action(opponent)
 
 func notify_card_played():
 	for opponent in match_up:
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		if opponent == null:
+			pass
+		elif opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			opponent.on_player_card_played(opponent)
+
+func opponent_death():
+	var match_up_duplicate : Array = match_up.duplicate()
+	for opponent in match_up_duplicate:
+		var dead : bool = false
+		if opponent == null:
+			pass
+		else:
+			dead = opponent.death_check()
+		
+		if dead:
+			match_up.erase(opponent)
+		
+		if match_up.size() == 0:
+			get_tree().quit() #quit the game

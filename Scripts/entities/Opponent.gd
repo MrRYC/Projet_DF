@@ -3,7 +3,7 @@ class_name OPPONENT
 
 var data: OPPONENT_DATA
 var current_hp : int
-var extra_damage : int
+var extra_damage : int = 0
 var cards_played_counter: int = 0
 
 func init_from_data(d: OPPONENT_DATA):
@@ -12,19 +12,17 @@ func init_from_data(d: OPPONENT_DATA):
 	$Sprite2D.texture = d.sprite
 	update_health()
 
-func take_damage(amount,is_last_action):
+func take_damage(amount):
 	current_hp -= amount
 
 	if current_hp < 0:
 		current_hp = 0
 		extra_damage += amount
+		#animation étourdi
+
 	update_health()
 	
-	if is_last_action :
-		if extra_damage > 3 :
-			overkill_animation()
-		elif current_hp <= 0 :
-			die()
+	return extra_damage
 
 func update_health():
 	$HealthLabel.text = str(current_hp)
@@ -51,10 +49,19 @@ func perform_action(opponent):
 	else:
 		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]]))
 
+func death_check():
+	if extra_damage > 3 :
+		overkill_animation()
+		return true
+	elif current_hp == 0 :
+		die()
+		return true
+	else:
+		return false
+
 func overkill_animation():
 	print("animation overkill")
 	die()
 
 func die():
 	queue_free() # ou animation de mort
-	get_tree().quit() #quit the game

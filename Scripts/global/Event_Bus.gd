@@ -13,9 +13,6 @@ signal new_turn(int)
 signal turn_increased(int)
 signal combat_in_progress(bool)
 
-#signals from TurnManager to PlayerDeck
-signal augment_inactivated(bool)
-
 #signals from TurnManager to Player
 signal player_health_updated(int)
 

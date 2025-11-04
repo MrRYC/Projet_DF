@@ -143,12 +143,12 @@ func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	EventBus.aim_ended.emit(card_being_dragged)
 
-	var entity_targeted = is_a_card_played(card_being_dragged)
+	var card_target = is_a_card_played(card_being_dragged)
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	if entity_targeted:
-		send_card_to_action_zone(card_being_dragged, entity_targeted)
+	if card_target:
+		send_card_to_action_zone(card_being_dragged, card_target)
 		EventBus.card_played.emit()
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
@@ -160,14 +160,15 @@ func finish_drag():
 	card_being_dragged = null
 
 func flip_card_in_hand(card):
-	if !card.slot_number:
+	if !card.slot_number :
 		print("carte sans effet")
 		card.get_node("CardErrorAnimation").play("tilt_error")
 		return
 	
+	print(card.id)
+	print(card.slot_number)
 	if card.slot_number == 1:
 		if card.effect_per_slot[0]["uses"] == 0 && card.effect_per_slot[0]["side_effect"] == "inactivate":
-			EventBus.augment_inactivated.emit(true) #catch du signal afin de grisé l'augment inactivé
 			print("effet inactivé")
 			card.get_node("CardErrorAnimation").play("tilt_error")
 			return
@@ -218,13 +219,14 @@ func is_a_card_played(card):
 	parameters.position = card.get_global_position() # CHANGEMENT ICI
 	parameters.collide_with_areas = true
 	
-	var results = space_state.intersect_point(parameters)
+	var hits = space_state.intersect_point(parameters)
 
-	for result in results:
-		if result.collider.is_in_group("Opponent") && !card.is_flipped:
-			return result.collider
-		elif result.collider.is_in_group("Player") && card.is_flipped:
-			return result.collider
+	for hit in hits:
+		if hit.collider.is_in_group("Opponent") && !card.is_flipped:
+			return hit.collider.get_parent()
+		elif hit.collider.is_in_group("Player") && card.is_flipped:
+			return hit.collider.get_parent()
+
 	return null
 
 #On récupère la taille dynamique de la main du joueur

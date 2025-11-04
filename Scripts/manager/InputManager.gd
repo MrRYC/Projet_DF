@@ -61,8 +61,8 @@ func raycast_at_cursor():
 			if !is_combat_in_progress:
 				card_manager_ref.show_pile(collider.get_parent().name)
 
-func _on_combat_in_progress(is_action_phase_ended):
-	if !is_action_phase_ended:
+func _on_combat_in_progress(combat_in_progress):
+	if combat_in_progress:
 		is_combat_in_progress = true
 	else:
 		is_combat_in_progress = false

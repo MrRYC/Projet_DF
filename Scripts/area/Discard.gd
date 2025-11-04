@@ -37,6 +37,7 @@ func add_card_to_pile(card):
 			if slot_effect.has("uses"):
 				card_data_snapshot["effect_per_slot"][slot_index]["id"] = slot_effect["id"]
 				card_data_snapshot["effect_per_slot"][slot_index]["uses"] = slot_effect["uses"]
+				card_data_snapshot["effect_per_slot"][slot_index]["side_effect"] = slot_effect["side_effect"]
 	
 	#Déplacement dans la discard
 	discard_pile.append(card_data_snapshot)

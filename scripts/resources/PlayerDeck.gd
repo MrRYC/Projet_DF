@@ -97,10 +97,9 @@ const CARDS = {
 		"animation_time" : 1.2,
 		"attack" : 2,
 		"reach" : 0,
-		"slot_number" : 2,
+		"slot_number" : 1,
 		"effect_per_slot" : {
 				0 : "Dodge_Augment",
-				#1 : "Dodge",
 			}
 	}, 
 	"Uppercut_Card_01":{
@@ -115,6 +114,7 @@ const CARDS = {
 		"slot_number" : 1,
 		"effect_per_slot" : {
 				0 : "Breath_Augment",
+				#1 : "Dodge",
 			}
 	}
 }
