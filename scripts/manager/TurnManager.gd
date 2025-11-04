@@ -18,9 +18,11 @@ var damage_to_player : int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	EventBus.deck_loaded.connect(_on_deck_loaded)
 	EventBus.card_played.connect(_on_card_played)
 	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
+	
+	EventBus.new_turn.emit(update_max_hand_size())
+	player_ref.set_starting_health(card_manager_ref.deck_size())
 
 func _on_phase_button_pressed() -> void:
 	await execute_action_phase()
@@ -147,10 +149,6 @@ func apply_player_damage(amount):
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
-
-func _on_deck_loaded(deck_size):
-	player_ref.set_starting_health(deck_size)
-	EventBus.new_turn.emit(update_max_hand_size())
 
 func _on_ai_attack_performed(amount):
 	apply_player_damage(amount)

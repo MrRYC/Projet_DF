@@ -6,7 +6,8 @@ extends Node
 var match_up: Array = [] # instances Opponent en jeu
 
 func _ready():
-	spawn_random_opponent_set(0, 3)
+	#spawn_random_opponent_set(0, 3)
+	spawn_random_opponent_set(0, 0)
 
 func spawn_random_opponent_set(min_count:int, max_count:int):
 	var random = randi_range(min_count, max_count)

@@ -29,8 +29,5 @@ signal card_played()
 #signals from DeckPile to DiscardPile
 signal shuffle_back_discard(bool)
 
-#signals from DeckPile to TurnManager
-signal deck_loaded(int)
-
 #signals from Opponent_Data to Player
 signal ai_attack_performed(int)
