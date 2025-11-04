@@ -107,6 +107,7 @@ func draw():
 
 func create_card_in_hand(card_data):
 	var card_id = card_data["id"]
+	var effect_inactive = false
 
 	#Récupération des données de la carte
 	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
@@ -130,13 +131,20 @@ func create_card_in_hand(card_data):
 				card_augment[slot_index] = {}
 		
 		updated_data["effect_per_slot"] = card_augment
-
+	print(updated_data.effect_per_slot["uses"])
+	if updated_data.effect_per_slot["uses"]==0 && updated_data.effect_per_slot["side_effect"]=="inactivate":
+		effect_inactive =true
+	else:
+		effect_inactive = false
+		
 	#Instanciation de la carte
 	var card: CARD_DATA = CARD_SCENE.instantiate()
 	card.setup_card(updated_data)
 
 	#Ajout de l'image
-	if updated_data.has("image"):
+	if effect_inactive:
+		card.get_node("CardFrontImage").texture = load("res://assets/resources/augments/Augment_Inactivated.png")
+	elif updated_data.has("image"):
 		card.get_node("CardFrontImage").texture = load(updated_data["image"])
 
 	return card

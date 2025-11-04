@@ -1,7 +1,7 @@
 extends Node
 
 #constantes
-const START_HAND_SIZE = 4 #main de départ maximum
+const START_HAND_SIZE = 5 #main de départ maximum
 
 #variables de référence vers un autre Node
 @onready var card_manager_ref = $"../CardManager"
