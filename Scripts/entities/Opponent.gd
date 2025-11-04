@@ -49,8 +49,8 @@ func perform_action(opponent):
 	else:
 		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]]))
 
-func death_check():
-	if extra_damage > 3 :
+func death_check(overkill_limit):
+	if extra_damage >= overkill_limit :
 		overkill_animation()
 		return true
 	elif current_hp == 0 :

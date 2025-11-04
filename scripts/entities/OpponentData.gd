@@ -5,6 +5,7 @@ class_name OPPONENT_DATA
 @export var display_name: String
 @export var max_hp: int
 var extra_damage:int = 0
+@export var overkill_limit:int = 0
 @export var sprite: Texture2D
 
 #Gestion de l'IA

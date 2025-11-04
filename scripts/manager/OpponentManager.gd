@@ -56,7 +56,7 @@ func opponent_death():
 		if opponent == null:
 			pass
 		else:
-			dead = opponent.death_check()
+			dead = opponent.death_check(opponent.data.overkill_limit)
 		
 		if dead:
 			match_up.erase(opponent)
