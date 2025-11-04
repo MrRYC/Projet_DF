@@ -15,7 +15,6 @@ func spawn_random_opponent_set(min_count:int, max_count:int):
 	var opponents : Dictionary = OPPONENTS_SETS.SETS[selected_set]
 	
 	for o in opponents.opponents_per_set:
-		print(opponents.opponents_per_set[o])
 		var opponent_data: OPPONENT_DATA = load(opponents.opponents_per_set[o])
 		var opponent_node = opponent_scene.instantiate()
 		opponent_node.init_from_data(opponent_data)
@@ -39,9 +38,10 @@ func place_opponent(number, index, opponent_node):
 		
 func end_of_turn_actions():
 	for opponent in match_up:
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-			opponent.perform_attack()
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
+			opponent.perform_action(opponent)
 
 func notify_card_played():
 	for opponent in match_up:
-		opponent.on_player_card_played()
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			opponent.on_player_card_played(opponent)

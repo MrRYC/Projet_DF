@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="OPPONENT_DATA" load_steps=3 format=3 uid="uid://c7nss2m5g6hg2"]
 
-[ext_resource type="Script" uid="uid://d0dtmu3bnq7s6" path="res://scripts/resources/OpponentData.gd" id="1_wwam8"]
+[ext_resource type="Script" uid="uid://d0dtmu3bnq7s6" path="res://scripts/entities/OpponentData.gd" id="1_wwam8"]
 [ext_resource type="Texture2D" uid="uid://bp0iolkl4cl8r" path="res://assets/entities/opponent/Opponent_2.png" id="2_1gv7p"]
 
 [resource]
@@ -8,5 +8,10 @@ script = ExtResource("1_wwam8")
 display_name = "Jaxx"
 max_hp = 6
 sprite = ExtResource("2_1gv7p")
+action_1 = 1
+action_2 = 3
+action_3 = 1
+action_4 = 2
+damage = 2
 behavior_type = 1
-cards_threshold = 3
+attack_threshold = 3
