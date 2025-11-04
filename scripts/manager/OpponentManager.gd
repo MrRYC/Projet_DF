@@ -6,7 +6,8 @@ extends Node
 var match_up: Array = [] # instances Opponent en jeu
 
 func _ready():
-	spawn_random_opponent_set(0, 3)
+	EventBus.new_turn.connect(_on_new_turn)
+	spawn_random_opponent_set(3, 3)
 
 func spawn_random_opponent_set(min_count:int, max_count:int):
 	var random = randi_range(min_count, max_count)
@@ -37,29 +38,32 @@ func place_opponent(number, index, opponent_node):
 		
 func end_of_turn_actions():
 	for opponent in match_up:
-		if opponent == null:
-			pass
-		elif opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
 			opponent.perform_action(opponent)
 
 func notify_card_played():
 	for opponent in match_up:
-		if opponent == null:
-			pass
-		elif opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			opponent.on_player_card_played(opponent)
 
 func opponent_death():
 	var match_up_duplicate : Array = match_up.duplicate()
 	for opponent in match_up_duplicate:
 		var dead : bool = false
-		if opponent == null:
-			pass
-		else:
-			dead = opponent.death_check(opponent.data.overkill_limit)
+		dead = opponent.death_check(opponent.data.overkill_limit)
 		
 		if dead:
 			match_up.erase(opponent)
 		
 		if match_up.size() == 0:
 			get_tree().quit() #quit the game
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_new_turn(_deck_size):
+	for opponent in match_up:
+		opponent.extra_damage = 0
+		opponent.cards_played_counter = 0
+		opponent.data.attack_performed = false
