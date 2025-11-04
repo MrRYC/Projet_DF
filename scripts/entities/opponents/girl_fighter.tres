@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="OPPONENT_DATA" load_steps=3 format=3 uid="uid://b5gjfpvttpuxb"]
+
+[ext_resource type="Script" uid="uid://d0dtmu3bnq7s6" path="res://scripts/entities/OpponentData.gd" id="1_x4i2f"]
+[ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_jw7sd"]
+
+[resource]
+script = ExtResource("1_x4i2f")
+display_name = "Deb"
+max_hp = 3
+sprite = ExtResource("2_jw7sd")
+action_1 = 1
+action_2 = 2
+action_3 = 1
+damage = 1

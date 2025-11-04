@@ -123,6 +123,13 @@ func create_card_in_hand(card_data):
 			if AUGMENTDB.AUGMENTS.has(augment_id):
 				#Copie de l'augment afin de pouvoir gérer les utilisations
 				card_augment[slot_index] = AUGMENTDB.AUGMENTS[augment_id].duplicate(true)
+				
+				#Check si l'effet est encore actif
+				if slot_effect["uses"]==0 && slot_effect["side_effect"]=="inactivate":
+					effect_inactive =true
+				else:
+					effect_inactive = false
+				
 				#Mise à jour de la valeur "uses" de l'augment
 				if slot_effect.has("uses"):
 					card_augment[slot_index]["uses"] = slot_effect["uses"]
@@ -131,12 +138,7 @@ func create_card_in_hand(card_data):
 				card_augment[slot_index] = {}
 		
 		updated_data["effect_per_slot"] = card_augment
-	print(updated_data.effect_per_slot["uses"])
-	if updated_data.effect_per_slot["uses"]==0 && updated_data.effect_per_slot["side_effect"]=="inactivate":
-		effect_inactive =true
-	else:
-		effect_inactive = false
-		
+
 	#Instanciation de la carte
 	var card: CARD_DATA = CARD_SCENE.instantiate()
 	card.setup_card(updated_data)

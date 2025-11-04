@@ -29,21 +29,28 @@ func take_damage(amount,is_last_action):
 func update_health():
 	$HealthLabel.text = str(current_hp)
 
-func on_player_card_played():
-	if data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
-		cards_played_counter += 1
-		if data.attack_performed:
-			print("attaque déjà réalisée")
-			pass
+func on_player_card_played(opponent):
+	if opponent.data.attack_performed:
+		print("attaque déjà réalisée")
+		return
 
-		if cards_played_counter == data.cards_threshold:
-			perform_attack()
-			data.attack_performed = true
+	opponent.data.threshold_countdown += 1
+	print("j'attaque dans "+ str(opponent.data.attack_threshold-opponent.data.threshold_countdown) +" tours")
 
-func perform_attack():
-	pass
-	#take_damage()
-	
+	if opponent.data.threshold_countdown == opponent.data.attack_threshold:
+		perform_action(opponent)
+		opponent.data.threshold_countdown = 0
+		opponent.data.attack_performed = true
+
+func perform_action(opponent):
+	var action : int = randi_range(0, 3)
+	opponent.data.init_action_list()
+	if opponent.data.list_of_actions[action] == 1:
+		EventBus.ai_attack_performed.emit(opponent.data.damage)
+		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]])+" : "+str(opponent.data.damage))
+	else:
+		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]]))
+
 func overkill_animation():
 	print("animation overkill")
 	die()

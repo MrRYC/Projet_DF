@@ -11,17 +11,21 @@ const START_HAND_SIZE = 5 #main de départ maximum
 
 #variables du script
 var new_hand_max_size = START_HAND_SIZE
-var nb_turn = 1
+var nb_turn : int = 1
 var player_current_health
+var is_player_attacked : bool = false
+var damage_to_player : int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	EventBus.card_played.connect(_on_card_played)
+	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
+	
 	EventBus.new_turn.emit(update_max_hand_size())
 	player_ref.set_starting_health(card_manager_ref.deck_size())
 
 func _on_phase_button_pressed() -> void:
 	await execute_action_phase()
-	opponent_manager_ref.attack_end_of_turn_enemies()
 	new_turn()
 
 ###########################################################################
@@ -58,8 +62,6 @@ func execute_action_phase():
 			
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
 		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target, last_action)
-		
-		opponent_manager_ref.notify_card_played()
 
 	apply_ai_end_turn_actions()
 	
@@ -135,6 +137,21 @@ func wait_before_action(card, time):
 #                               AI ACTION                                 #
 ###########################################################################
 
+func threshold_actions_countdown():
+	opponent_manager_ref.notify_card_played()
+
 func apply_ai_end_turn_actions():
 	opponent_manager_ref.end_of_turn_actions()
-	player_ref.take_damage()
+
+func apply_player_damage(amount):
+	player_ref.take_damage(amount)
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_ai_attack_performed(amount):
+	apply_player_damage(amount)
+
+func _on_card_played():
+	threshold_actions_countdown()

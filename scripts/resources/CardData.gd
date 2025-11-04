@@ -11,6 +11,7 @@ enum board_area { IN_PILE, IN_HAND, IN_ACTION_ZONE } # 0 = IN_PILE, 1 = IN_HAND,
 var current_area : board_area = board_area.IN_PILE
 
 var id : String
+enum card_class { BOXING } # 0 = Boxe, 1 = ..., 2 = ...
 var animation_time : float
 var attack : int
 enum attack_reach { SINGLE, AOE, RANDOM} # 0 = Portée de 1 ennemi, 1 = Portée à l'ensemble l'ennnemi, 2 = Portée aléatoire

@@ -34,20 +34,23 @@ bg_color = Color(0.622903, 0.0662068, 0.261057, 1)
 [node name="Player" parent="." instance=ExtResource("11_5vvyt")]
 position = Vector2(625, 605)
 
+[node name="TurnManager" type="Node" parent="."]
+script = ExtResource("7_ralk2")
+
 [node name="InputManager" type="Node2D" parent="."]
 script = ExtResource("1_kdgm2")
 
 [node name="CardManager" type="Node2D" parent="."]
 script = ExtResource("2_b2kfh")
 
+[node name="OpponentManager" type="Node2D" parent="."]
+script = ExtResource("6_sc1dx")
+
 [node name="PlayerHand" type="Node2D" parent="."]
 script = ExtResource("3_o0gpq")
 
 [node name="ActionZone" type="Node2D" parent="."]
 script = ExtResource("10_65qkc")
-
-[node name="EnemyManager" type="Node2D" parent="."]
-script = ExtResource("6_sc1dx")
 
 [node name="Piles" type="Node2D" parent="."]
 position = Vector2(150, 950)
@@ -161,9 +164,6 @@ scale = Vector2(2, 2)
 text = "0"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
-
-[node name="TurnManager" type="Node" parent="."]
-script = ExtResource("7_ralk2")
 
 [node name="UserInterface" type="Node" parent="."]
 script = ExtResource("9_3uw2j")

@@ -44,7 +44,6 @@ func update_action_zone_positions():
 	var offset = 0
 
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
-		print(i)
 		var card = action_zone[i]
 		
 		if !card.is_flipped:

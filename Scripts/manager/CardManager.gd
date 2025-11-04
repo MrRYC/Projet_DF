@@ -143,12 +143,13 @@ func finish_drag():
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	EventBus.aim_ended.emit(card_being_dragged)
 
-	var opponent_targeted = is_a_card_played(card_being_dragged)
+	var entity_targeted = is_a_card_played(card_being_dragged)
 	var player_hand_min_zone = Vector2(player_hand_ref.hand_x_position_min, 775)
 	var player_hand_max_zone = Vector2(player_hand_ref.hand_x_position_max, player_hand_ref.HAND_Y_POSITION)
 	
-	if opponent_targeted:
-		send_card_to_action_zone(card_being_dragged, opponent_targeted)
+	if entity_targeted:
+		send_card_to_action_zone(card_being_dragged, entity_targeted)
+		EventBus.card_played.emit()
 	elif is_in_bounds(card_being_dragged.position, player_hand_min_zone, player_hand_max_zone):
 		var mouse_x = get_global_mouse_position().x
 		var new_index = player_hand_ref.get_drop_index(mouse_x)
