@@ -1,7 +1,7 @@
 extends Node
 
 @export var opponent_scene: PackedScene = preload("res://scenes/Opponent.tscn")
-@export var opponent_slots: Array[NodePath]
+@onready var action_zone: Node2D = $"../ActionZone"
 
 var match_up: Array = [] # instances Opponent en jeu
 
@@ -38,8 +38,7 @@ func place_opponent(number, index, opponent_node):
 		
 func end_of_turn_actions():
 	for opponent in match_up:
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
-			opponent.perform_action(opponent)
+		opponent.perform_action(opponent)
 
 func notify_card_played():
 	for opponent in match_up:
@@ -63,7 +62,13 @@ func opponent_death():
 ###########################################################################
 
 func _on_new_turn(_deck_size):
+	action_zone.clear_all_intents()
 	for opponent in match_up:
 		opponent.extra_damage = 0
 		opponent.cards_played_counter = 0
-		opponent.data.attack_performed = false
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			action_zone.save_intent_markers(opponent)
+
+func _on_empty_action_zone_button_pressed() -> void:
+	for opponent in match_up:
+		opponent.cards_played_counter = 0

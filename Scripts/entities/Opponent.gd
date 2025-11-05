@@ -28,17 +28,14 @@ func update_health():
 	$HealthLabel.text = str(current_hp)
 
 func on_player_card_played(opponent):
-	if opponent.data.attack_performed:
-		print("attaque déjà réalisée")
+	cards_played_counter += 1
+	
+	if cards_played_counter == opponent.data.attack_threshold:
+		#Animation de l'ennemi prêt
+		print("j'attaquerai à la séquence n° : "+ str(opponent.data.attack_threshold))
+	elif cards_played_counter < opponent.data.attack_threshold:
+		#Animation idle
 		return
-
-	opponent.data.threshold_countdown += 1
-	print("j'attaque dans "+ str(opponent.data.attack_threshold-opponent.data.threshold_countdown) +" tours")
-
-	if opponent.data.threshold_countdown == opponent.data.attack_threshold:
-		perform_action(opponent)
-		opponent.data.threshold_countdown = 0
-		opponent.data.attack_performed = true
 
 func perform_action(opponent):
 	var action : int = randi_range(0, 3)
