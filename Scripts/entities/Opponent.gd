@@ -24,7 +24,7 @@ func take_damage(amount):
 	
 	if self.block != 0:
 		defensive_action()
-		update_intent()
+		update_intent(self.block)
 	else:
 		current_hp -= amount
 
@@ -51,8 +51,11 @@ func update_health():
 #                             ACTIONS MANAGEMENT                          #
 ###########################################################################
 
-func update_intent():
-	$Intent.text = str(self.data.action_type.keys()[self.action])+" : "+str(self.block)
+func update_intent(value):
+	if value == 0:
+		$Intent.text = str(self.data.action_type.keys()[self.action])
+	else:
+		$Intent.text = str(self.data.action_type.keys()[self.action])+" : "+str(value)
 
 func on_player_card_played():
 	cards_played_counter += 1
@@ -75,7 +78,7 @@ func set_defensive_action():
 		"DOUBLE_BLOCK": 
 			self.block = 2
 			self.action_performed = true
-			
+
 	#Animaion block gain
 
 func perform_action():

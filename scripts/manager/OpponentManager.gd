@@ -76,6 +76,7 @@ func opponent_death():
 
 func _on_new_turn(_deck_size):
 	action_zone.clear_all_intents()
+	var label_value : int = 0
 	for opponent in match_up:
 		#Effacement des données temporaires
 		opponent.extra_damage = 0
@@ -88,10 +89,19 @@ func _on_new_turn(_deck_size):
 		opponent.data.init_action_list()
 		var action_number : int = randi_range(0, 3)
 		opponent.action = opponent.data.list_of_actions[action_number]
-		print(opponent.data.action_type.keys()[opponent.action])
-		opponent.set_defensive_action()
-		opponent.update_intent()
+		
+		#Activation des effets défensifs
+		if opponent.data.action_type.keys()[opponent.action] == "SIMPLE_BLOCK" || opponent.data.action_type.keys()[opponent.action] == "DOUBLE_BLOCK":
+			opponent.set_defensive_action()
+			label_value = opponent.block
 
+		#Récupération de la valeur d'attaque pour le label des intentions
+		if opponent.data.action_type.keys()[opponent.action] == "ATTACK":
+			label_value = opponent.data.damage
+		
+		opponent.update_intent(label_value)
+
+		#Activation du marqeur si l'opponent est de type action après x cartes et que son action est une action
 		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD && opponent.data.action_type.keys()[opponent.action] == "ATTACK" : 
 			action_zone.save_intent_markers(opponent)
 
