@@ -7,6 +7,7 @@
 script = ExtResource("1_wwam8")
 display_name = "Jaxx"
 max_hp = 6
+overkill_limit = 4
 sprite = ExtResource("2_1gv7p")
 action_1 = 1
 action_2 = 3

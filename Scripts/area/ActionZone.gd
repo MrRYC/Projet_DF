@@ -3,12 +3,14 @@ extends Node2D
 #constantes
 const action_lane1_ZONE_X_POSITION = 125
 const action_lane2_ZONE_X_POSITION = 225
+const MARKER_SCENE = preload("res://scenes/Intent_Marker.tscn")
 
 #variables de référence
 @onready var card_manager_ref = $"../CardManager"
 
 #variables du script
 var action_zone = []
+var intent_markers = []
 var combat_in_progress : bool
 
 ###########################################################################
@@ -69,10 +71,42 @@ func update_action_zone_positions():
 			action_zone_y_position += 71
 		else:
 			action_zone_y_position += 72
+		
+	update_intent_markers()
 
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, Global.HAND_DRAW_INTERVAL)
+
+###########################################################################
+#                            OPPONENTS INTENT                             #
+###########################################################################
+
+func save_intent_markers(opponent):
+	var m : MARKER = MARKER_SCENE.instantiate()
+	add_child(m)
+	intent_markers.append(m)
+	
+	m.opponent = opponent
+	m.attack_threshold = opponent.data.attack_threshold
+	m.position = Vector2(125, 150)
+
+func update_intent_markers():
+	for m in intent_markers:
+		if action_zone.size() < m.attack_threshold:
+			print("je décalle le marqueur")
+		else:
+			print("je suis à la position de mon marqueur - carte n° "+str(m.attack_threshold))
+
+func reset_markers_position():
+	for m in intent_markers:
+		m.position = Vector2(125, 150)
+		
+func clear_all_intents():
+	for m in intent_markers:
+		if is_instance_valid(m):
+			m.queue_free()
+	intent_markers.clear()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
@@ -81,3 +115,6 @@ func animate_card_to_position(card, new_position):
 func _on_empty_action_zone_button_pressed():
 	if action_zone.size() > 0:
 		empty_action_zone()
+
+	if intent_markers.size() > 0:
+		reset_markers_position()

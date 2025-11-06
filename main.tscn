@@ -215,4 +215,5 @@ text = "Cancel"
 one_shot = true
 
 [connection signal="pressed" from="UserInterface/ActionButton" to="TurnManager" method="_on_phase_button_pressed"]
+[connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="OpponentManager" method="_on_empty_action_zone_button_pressed"]
 [connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="ActionZone" method="_on_empty_action_zone_button_pressed"]

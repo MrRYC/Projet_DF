@@ -49,33 +49,31 @@ func new_turn():
 #  o Sinon ennemi attaque en fin de tour
 
 func execute_action_phase():
-	EventBus.combat_in_progress.emit(false)
+	EventBus.combat_in_progress.emit(true)
 	
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
 	for card in range(action_zone_copy.size()):
-		var last_action = false
-		if card == action_zone_copy.size()-1:
-			last_action = true
-			
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
-		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target, last_action)
+		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target)
 
+	execute_opponent_death_effect()
 	apply_ai_end_turn_actions()
 	
-	EventBus.combat_in_progress.emit(true)
+	EventBus.combat_in_progress.emit(false)
 
 ###########################################################################
 #                              PLAYER ACTION                              #
 ###########################################################################
 
-func apply_player_actions(card, target, last_action): #target à définir
+func apply_player_actions(card, target):
 	if card.is_flipped:
 		check_slots_effect(card)
 		return
 
 	var attack = card.attack
-	target.take_damage(attack,last_action)
+	if target != null:
+		target.extra_damage = target.take_damage(attack)
 	
 func check_slots_effect(card):
 	
@@ -137,6 +135,9 @@ func wait_before_action(card, time):
 
 func threshold_actions_countdown():
 	opponent_manager_ref.notify_card_played()
+
+func execute_opponent_death_effect():
+	opponent_manager_ref.opponent_death()
 
 func apply_ai_end_turn_actions():
 	opponent_manager_ref.end_of_turn_actions()

@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://cn1b036qd1fce"]
+[gd_scene load_steps=14 format=3 uid="uid://cn1b036qd1fce"]
 
 [ext_resource type="Script" uid="uid://ctw76x2p8isvs" path="res://scripts/resources/CardData.gd" id="1_0nb81"]
-[ext_resource type="Texture2D" uid="uid://bjlljqqtcnl2g" path="res://assets/fighting_style/boxing/Jab_Card.png" id="2_4dx8l"]
 [ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/Deck.png" id="3_lot17"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
@@ -370,9 +369,6 @@ _data = {
 [node name="Card" type="Node2D"]
 position = Vector2(150, 950)
 script = ExtResource("1_0nb81")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_4dx8l")
 
 [node name="CardFrontImage" type="Sprite2D" parent="."]
 z_index = -1

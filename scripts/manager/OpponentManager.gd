@@ -1,12 +1,13 @@
 extends Node
 
 @export var opponent_scene: PackedScene = preload("res://scenes/Opponent.tscn")
-@export var opponent_slots: Array[NodePath]
+@onready var action_zone: Node2D = $"../ActionZone"
 
 var match_up: Array = [] # instances Opponent en jeu
 
 func _ready():
-	spawn_random_opponent_set(0, 3)
+	EventBus.new_turn.connect(_on_new_turn)
+	spawn_random_opponent_set(3, 3)
 
 func spawn_random_opponent_set(min_count:int, max_count:int):
 	var random = randi_range(min_count, max_count)
@@ -37,10 +38,37 @@ func place_opponent(number, index, opponent_node):
 		
 func end_of_turn_actions():
 	for opponent in match_up:
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END or opponent.data.attack_performed == false:
-			opponent.perform_action(opponent)
+		opponent.perform_action(opponent)
 
 func notify_card_played():
 	for opponent in match_up:
 		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			opponent.on_player_card_played(opponent)
+
+func opponent_death():
+	var match_up_duplicate : Array = match_up.duplicate()
+	for opponent in match_up_duplicate:
+		var dead : bool = false
+		dead = opponent.death_check(opponent.data.overkill_limit)
+		
+		if dead:
+			match_up.erase(opponent)
+		
+		if match_up.size() == 0:
+			get_tree().quit() #quit the game
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_new_turn(_deck_size):
+	action_zone.clear_all_intents()
+	for opponent in match_up:
+		opponent.extra_damage = 0
+		opponent.cards_played_counter = 0
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			action_zone.save_intent_markers(opponent)
+
+func _on_empty_action_zone_button_pressed() -> void:
+	for opponent in match_up:
+		opponent.cards_played_counter = 0

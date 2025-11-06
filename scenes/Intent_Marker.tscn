@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://drfimj53amceh"]
+
+[ext_resource type="Script" uid="uid://py8f72067g3o" path="res://scripts/resources/IntentMarker.gd" id="1_3igax"]
+[ext_resource type="Texture2D" uid="uid://cmti7fgd06bnl" path="res://assets/fighting_style/Intent_Marker_Card.png" id="1_a4j2l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
+size = Vector2(160, 240)
+
+[node name="Intent_Marker" type="Node2D"]
+z_index = 2
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_3igax")
+
+[node name="MarkerImage" type="Sprite2D" parent="."]
+z_index = -1
+texture = ExtResource("1_a4j2l")
+
+[node name="MarkerArea2D" type="Area2D" parent="."]
+scale = Vector2(1.1, 1.1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MarkerArea2D"]
+shape = SubResource("RectangleShape2D_nx35t")
+
+[connection signal="mouse_entered" from="MarkerArea2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="MarkerArea2D" to="." method="_on_area_2d_mouse_exited"]

@@ -8,13 +8,14 @@ signal hovered_off()
 signal left_mouse_clicked()
 signal left_mouse_released()
 
-#signals from TurnManager to UserInterface, InputManager, CardManager & Deck
+#signals from TurnManager to CardManager, OpponentManager et DeckPile
 signal new_turn(int)
-signal turn_increased(int)
-signal combat_in_progress(bool)
 
-#signals from TurnManager to PlayerDeck
-signal augment_inactivated(bool)
+#signals from TurnManager to UserInterface et DeckPile
+signal turn_increased(int)
+
+#signals from TurnManager to UserInterface, InputManager et ActionZone
+signal combat_in_progress(bool)
 
 #signals from TurnManager to Player
 signal player_health_updated(int)
