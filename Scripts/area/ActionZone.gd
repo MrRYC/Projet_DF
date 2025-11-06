@@ -105,7 +105,6 @@ func update_markers_position(marker):
 	var offset = 0
 	var action_zone_copy = action_zone.duplicate()
 	action_zone_copy.insert(0,marker)
-	print(action_zone_copy)
 
 	for i in range(action_zone_copy.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
 		var element = action_zone_copy[i]

@@ -32,7 +32,7 @@ func on_player_card_played(opponent):
 	
 	if cards_played_counter == opponent.data.attack_threshold:
 		#Animation de l'ennemi prêt
-		print("j'attaquerai à la séquence n° : "+ str(opponent.data.attack_threshold))
+		pass
 	elif cards_played_counter < opponent.data.attack_threshold:
 		#Animation idle
 		return
@@ -40,11 +40,22 @@ func on_player_card_played(opponent):
 func perform_action(opponent):
 	var action : int = randi_range(0, 3)
 	opponent.data.init_action_list()
-	if opponent.data.list_of_actions[action] == 1:
+	var opponent_action = opponent.data.list_of_actions[action]
+	if opponent_action == 1:
 		EventBus.ai_attack_performed.emit(opponent.data.damage)
-		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]])+" : "+str(opponent.data.damage))
+		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent_action])+" : "+str(opponent.data.damage))
 	else:
-		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent.data.list_of_actions[action]]))
+		apply_effect(opponent.data.action_type.keys()[opponent_action])
+		print(str(opponent.data.display_name)+" "+str(opponent.data.action_type.keys()[opponent_action]))
+
+func apply_effect(action):
+	print(action)
+	print(OPPONENT_DATA.action_type.keys())
+	#match opponent.data.list_of_actions.keys():
+		#2:
+		#3:
+		#4:
+		#5:
 
 func death_check(overkill_limit):
 	if extra_damage >= overkill_limit :

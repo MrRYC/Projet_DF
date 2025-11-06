@@ -6,15 +6,16 @@ class_name OPPONENT_DATA
 @export var max_hp: int
 @export var overkill_limit:int = 0
 @export var sprite: Texture2D
+@export var damage : int
+@export var block : int
 
 #Gestion de l'IA
-enum action_type { EMPTY, ATTACK, DEFEND, BUFF } # 0 = Attaque tout à la fin du tour, 1 = Attaque à la séquence x à la fin du tour
+enum action_type { FAILED_ATTACK, ATTACK, SIMPLE_BLOCK, DOUBLE_BLOCK, CANCEL_COMBO, BUFF } 
 @export var action_1 : action_type
 @export var action_2 : action_type
 @export var action_3 : action_type
 @export var action_4 : action_type
 var list_of_actions : Array = []
-@export var damage : int
 
 #Gestion du timing d'attaque
 enum behaviors { ATTACK_AT_THE_END, ATTACK_AT_THRESHOLD } # 0 = Attaque à la fin du tour, 1 = Attaque après x cartes jouées
