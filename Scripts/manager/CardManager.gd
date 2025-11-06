@@ -164,9 +164,7 @@ func flip_card_in_hand(card):
 		print("carte sans effet")
 		card.get_node("CardErrorAnimation").play("tilt_error")
 		return
-	
-	print(card.id)
-	print(card.slot_number)
+
 	if card.slot_number == 1:
 		if card.effect_per_slot[0]["uses"] == 0 && card.effect_per_slot[0]["side_effect"] == "inactivate":
 			print("effet inactivé")
@@ -181,14 +179,16 @@ func flip_card_in_hand(card):
 	
 	card.card_is_flipped()
 
-func highlight_card(card, hovered):
-	if card.current_area == 1 && hovered: # 1 = IN_HAND
-		card.scale = Vector2(1.1,1.1)
-		card.z_index = 2
-	elif card.current_area == 2 : # 2 = IN_ACTION_ZONE
+func highlight_card(element, hovered):
+	if element is MARKER:
+		print("highlight ennemi")
+	elif element.current_area == 1 && hovered: # 1 = IN_HAND
+		element.scale = Vector2(1.1,1.1)
+		element.z_index = 2
+	elif element.current_area == 2 : # 2 = IN_ACTION_ZONE
 		return
 	else:
-		update_card_size(card)
+		update_card_size(element)
 
 func update_card_size(card):
 	if card.current_area == 2:
