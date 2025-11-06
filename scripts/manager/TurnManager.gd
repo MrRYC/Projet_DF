@@ -90,9 +90,11 @@ func apply_slots_effect(slot_effect):
 	var player_effect_txt : String
 
 	if slot_effect == "Block":
-		player_effect_txt = "+1 block appliqué"
+		player_ref.block += 1
+		player_effect_txt = "block appliqué +"+str(player_ref.block)
 	elif slot_effect == "Dodge":
-		player_effect_txt = "+1 esquive appliquée"
+		player_ref.dodge += 1
+		player_effect_txt = "esquive appliquée +"+str(player_ref.dodge)
 	elif slot_effect == "Breath":
 		player_effect_txt = "respiration activée"
 	else:

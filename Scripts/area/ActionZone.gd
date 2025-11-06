@@ -89,6 +89,7 @@ func save_intent_markers(opponent):
 	
 	m.opponent = opponent
 	m.attack_threshold = opponent.data.attack_threshold
+	m.change_color()
 	m.position = Vector2(125, 150)
 
 func update_intent_markers():

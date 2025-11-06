@@ -17,7 +17,7 @@ func init_from_data(d: OPPONENT_DATA):
 	update_health()
 
 ###########################################################################
-#                           HEALTH MANAGEMENT                           #
+#                             HEALTH MANAGEMENT                           #
 ###########################################################################
 
 func take_damage(amount):

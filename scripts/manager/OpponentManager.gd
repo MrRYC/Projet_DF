@@ -78,7 +78,7 @@ func _on_new_turn(_deck_size):
 	action_zone.clear_all_intents()
 	var label_value : int = 0
 	for opponent in match_up:
-		#Effacement des données temporaires
+		#Reinitialisation des données du tour précédent
 		opponent.extra_damage = 0
 		opponent.cards_played_counter = 0
 		opponent.action_performed = false
@@ -93,12 +93,13 @@ func _on_new_turn(_deck_size):
 		#Activation des effets défensifs
 		if opponent.data.action_type.keys()[opponent.action] == "SIMPLE_BLOCK" || opponent.data.action_type.keys()[opponent.action] == "DOUBLE_BLOCK":
 			opponent.set_defensive_action()
-			label_value = opponent.block
+			label_value = opponent.block #Récupération de la valeur de défense pour le label des intentions
 
 		#Récupération de la valeur d'attaque pour le label des intentions
 		if opponent.data.action_type.keys()[opponent.action] == "ATTACK":
 			label_value = opponent.data.damage
 		
+		#Mise à jour du label des intentions
 		opponent.update_intent(label_value)
 
 		#Activation du marqeur si l'opponent est de type action après x cartes et que son action est une action
