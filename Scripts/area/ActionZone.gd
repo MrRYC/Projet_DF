@@ -11,7 +11,7 @@ const MARKER_SCENE = preload("res://scenes/Intent_Marker.tscn")
 #variables du script
 var action_zone = []
 var intent_markers = []
-var combat_in_progress : bool
+var processing : bool
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #

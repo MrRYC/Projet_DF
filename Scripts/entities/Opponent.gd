@@ -17,20 +17,21 @@ func init_from_data(d: OPPONENT_DATA):
 	update_health()
 
 ###########################################################################
-#                             HEALTH MANAGEMENT                           #
+#                           HEALTH MANAGEMENT                           #
 ###########################################################################
 
 func take_damage(amount):
 	
 	if self.block != 0:
 		defensive_action()
+		update_intent()
 	else:
 		current_hp -= amount
 
 	if current_hp < 0:
 		current_hp = 0
 		extra_damage += amount
-		#animation étourdi
+		#Animation étourdi
 
 	update_health()
 	
@@ -38,6 +39,10 @@ func take_damage(amount):
 
 func defensive_action():
 	self.block -= 1
+	
+	if self.block == 0:
+		#Animation block lost
+		pass
 
 func update_health():
 	$HealthLabel.text = str(current_hp)
@@ -47,7 +52,7 @@ func update_health():
 ###########################################################################
 
 func update_intent():
-	$Intent.text = str(self.data.action_type.keys()[self.action])
+	$Intent.text = str(self.data.action_type.keys()[self.action])+" : "+str(self.block)
 
 func on_player_card_played():
 	cards_played_counter += 1
@@ -59,7 +64,7 @@ func on_player_card_played():
 		#Animation idle
 		return
 
-func check_defensive_action():
+func set_defensive_action():
 	if self.action_performed:
 		return
 	
@@ -67,22 +72,25 @@ func check_defensive_action():
 		"SIMPLE_BLOCK": 
 			self.block = 1
 			self.action_performed = true
-			print(str(self.data.display_name)+" Block = "+str(self.block))
 		"DOUBLE_BLOCK": 
 			self.block = 2
 			self.action_performed = true
-			print(str(self.data.display_name)+" Block = "+str(self.block))
+			
+	#Animaion block gain
 
 func perform_action():
 	match self.data.action_type.keys()[self.action]:
 		"ATTACK":
 			EventBus.ai_attack_performed.emit(self.data.damage)
 			print(str(self.data.display_name)+" "+str(self.data.action_type.keys()[self.action])+" : "+str(self.data.damage))
+			#Animation attack
 		"CANCEL_COMBO":
 			self.cancel_combo = true
 			print(str(self.data.display_name)+" Cancel Combo activé = "+str(self.cancel_combo))
+			#ANimation cancel
 		"BUFF":
 			print(str(self.data.display_name)+" "+str(action)+" activé")
+			#Animation buff
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #

@@ -88,9 +88,11 @@ func _on_new_turn(_deck_size):
 		opponent.data.init_action_list()
 		var action_number : int = randi_range(0, 3)
 		opponent.action = opponent.data.list_of_actions[action_number]
+		print(opponent.data.action_type.keys()[opponent.action])
+		opponent.set_defensive_action()
 		opponent.update_intent()
 
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD && opponent.data.action_type.keys()[opponent.action] == "ATTACK" : 
 			action_zone.save_intent_markers(opponent)
 
 func _on_empty_action_zone_button_pressed() -> void:

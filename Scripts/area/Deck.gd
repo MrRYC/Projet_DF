@@ -23,8 +23,10 @@ func _ready() -> void:
 #                             TURN MANAGEMENT                             #
 ###########################################################################
 func new_turn(new_hand_size):
+	EventBus.processing.emit(true)
 	for i in range(new_hand_size):
 		await draw()
+	EventBus.processing.emit(false)
 
 ###########################################################################
 #                               DECK CREATION                             #
@@ -90,7 +92,7 @@ func add_card(card):
 	player_deck.append(card)
 
 func draw():
-	if player_deck.size() == 0 && 	nb_turn > 1:
+	if player_deck.size() == 0 && nb_turn > 1:
 		EventBus.shuffle_back_discard.emit(true)
 
 	var card = player_deck.pop_front() #Tirage de la première carte du deck

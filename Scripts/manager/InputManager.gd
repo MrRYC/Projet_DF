@@ -11,10 +11,10 @@ const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
 #variables du script
 var left_mouse
 var right_mouse
-var is_combat_in_progress
+var is_processing
 
 func _ready() -> void:
-	EventBus.combat_in_progress.connect(_on_combat_in_progress)
+	EventBus.processing.connect(_on_processing)
 
 func _input(event):
 	left_mouse = false
@@ -58,11 +58,11 @@ func raycast_at_cursor():
 
 		# CLIC GAUCHE sur pile = détail
 		elif collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
-			if !is_combat_in_progress:
+			if !is_processing:
 				card_manager_ref.show_pile(collider.get_parent().name)
 
-func _on_combat_in_progress(combat_in_progress):
-	if combat_in_progress:
-		is_combat_in_progress = true
+func _on_processing(processing):
+	if processing:
+		is_processing = true
 	else:
-		is_combat_in_progress = false
+		is_processing = false

@@ -75,18 +75,20 @@ func new_turn(_max_hand_size):
 
 func check_destination_pile(card):
 	var card_side_effect = card.effect_per_slot
-	for slot_index in card_side_effect:
-		if card_side_effect[slot_index]["uses"] == null:
-			send_card_to_discard(card)
-		elif card.is_flipped && card_side_effect[slot_index]["uses"] == 0:
-			if card_side_effect[slot_index]["side_effect"] == "exhaust":
-				send_card_to_exhaust(card)
-			elif card_side_effect[slot_index]["side_effect"] == "wound":
-				send_card_to_wound(card)
-			else:
+	
+	if !card_side_effect:
+		send_card_to_discard(card)
+	else:
+		for slot_index in card_side_effect:
+			if card_side_effect[slot_index]["uses"] == null:
 				send_card_to_discard(card)
-		else:
-			send_card_to_discard(card)
+			elif card.is_flipped && card_side_effect[slot_index]["uses"] == 0:
+				if card_side_effect[slot_index]["side_effect"] == "exhaust":
+					send_card_to_exhaust(card)
+				elif card_side_effect[slot_index]["side_effect"] == "wound":
+					send_card_to_wound(card)
+				else:
+					send_card_to_discard(card)
 	
 	card.current_area = card.board_area.IN_PILE
 

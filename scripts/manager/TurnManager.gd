@@ -44,7 +44,7 @@ func new_turn():
 ###########################################################################
 
 func execute_action_phase():
-	EventBus.combat_in_progress.emit(true)
+	EventBus.processing.emit(true)
 	
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
@@ -55,7 +55,7 @@ func execute_action_phase():
 	execute_opponent_death_effect()
 	apply_ai_end_turn_actions()
 	
-	EventBus.combat_in_progress.emit(false)
+	EventBus.processing.emit(false)
 
 ###########################################################################
 #                              PLAYER ACTION                              #
@@ -69,7 +69,6 @@ func apply_player_actions(card, target):
 	var attack = card.attack
 	
 	if target != null:
-		target.check_defensive_action()
 		target.extra_damage = target.take_damage(attack)
 	
 func check_slots_effect(card):

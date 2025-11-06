@@ -2,7 +2,7 @@ extends Node
 
 func _ready() -> void:
 	EventBus.turn_increased.connect(_on_turn_increased)
-	EventBus.combat_in_progress.connect(_on_combat_in_progress)
+	EventBus.processing.connect(_on_processing)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
@@ -11,8 +11,8 @@ func _ready() -> void:
 func _on_turn_increased(turn):
 	$TurnLabel.text = str("Turn ",turn)
 
-func _on_combat_in_progress(combat_in_progress):
-	if combat_in_progress:
+func _on_processing(processing):
+	if processing:
 		$ActionButton.disabled = true
 		$EmptyActionZoneButton.disabled = true
 	else:

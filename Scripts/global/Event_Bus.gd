@@ -14,8 +14,8 @@ signal new_turn(int)
 #signals from TurnManager to UserInterface et DeckPile
 signal turn_increased(int)
 
-#signals from TurnManager to UserInterface, InputManager et ActionZone
-signal combat_in_progress(bool)
+#signals from TurnManager to UserInterface, InputManager & ActionZone + Deck to UserInterface
+signal processing(bool)
 
 #signals from TurnManager to Player
 signal player_health_updated(int)
