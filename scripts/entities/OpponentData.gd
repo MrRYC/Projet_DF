@@ -7,7 +7,6 @@ class_name OPPONENT_DATA
 @export var overkill_limit:int = 0
 @export var sprite: Texture2D
 @export var damage : int
-@export var block : int
 
 #Gestion de l'IA
 enum action_type { FAILED_ATTACK, ATTACK, SIMPLE_BLOCK, DOUBLE_BLOCK, CANCEL_COMBO, BUFF } 

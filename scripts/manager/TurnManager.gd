@@ -43,11 +43,6 @@ func new_turn():
 #                            BATTLE EXECUTION                             #
 ###########################################################################
 
-# Tour tour des actions
-#  o Le joueur joue ses actions chronologiquement
-#  o Si  ennemi attaque en fonction du nombre de cartes restantes à jouer, insérer une indication dans la zone d'action pour indiquer sa séquence / permettre une défense ou un clash
-#  o Sinon ennemi attaque en fin de tour
-
 func execute_action_phase():
 	EventBus.combat_in_progress.emit(true)
 	
@@ -72,7 +67,9 @@ func apply_player_actions(card, target):
 		return
 
 	var attack = card.attack
+	
 	if target != null:
+		target.check_defensive_action()
 		target.extra_damage = target.take_damage(attack)
 	
 func check_slots_effect(card):

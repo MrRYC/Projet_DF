@@ -9,6 +9,10 @@ func _ready():
 	EventBus.new_turn.connect(_on_new_turn)
 	spawn_random_opponent_set(3, 3)
 
+###########################################################################
+#                           OPPONENT CREATION                             #
+###########################################################################
+
 func spawn_random_opponent_set(min_count:int, max_count:int):
 	var random = randi_range(min_count, max_count)
 	var selected_set = OPPONENTS_SETS.SETS.keys()[random]
@@ -35,21 +39,30 @@ func place_opponent(number, index, opponent_node):
 		1 : opponent_node.global_position = Vector2(1300, 605)
 		2 : opponent_node.global_position = Vector2(900 + index*200, random)
 		3 : opponent_node.global_position = Vector2(800 + index*200, random)
-		
+
+###########################################################################
+#                             ACTIONS MANAGEMENT                          #
+###########################################################################
+
 func end_of_turn_actions():
 	for opponent in match_up:
-		opponent.perform_action(opponent)
+		if !opponent.action_performed:
+			opponent.perform_action()
 
 func notify_card_played():
 	for opponent in match_up:
 		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
-			opponent.on_player_card_played(opponent)
+			opponent.on_player_card_played()
+
+###########################################################################
+#                           DEATH MANAGEMENT                              #
+###########################################################################
 
 func opponent_death():
 	var match_up_duplicate : Array = match_up.duplicate()
 	for opponent in match_up_duplicate:
 		var dead : bool = false
-		dead = opponent.death_check(opponent.data.overkill_limit)
+		dead = opponent.death_check()
 		
 		if dead:
 			match_up.erase(opponent)
@@ -64,8 +77,19 @@ func opponent_death():
 func _on_new_turn(_deck_size):
 	action_zone.clear_all_intents()
 	for opponent in match_up:
+		#Effacement des données temporaires
 		opponent.extra_damage = 0
 		opponent.cards_played_counter = 0
+		opponent.action_performed = false
+		opponent.block = 0
+		opponent.cancel_combo = false
+		
+		#Génération de l'action du tour
+		opponent.data.init_action_list()
+		var action_number : int = randi_range(0, 3)
+		opponent.action = opponent.data.list_of_actions[action_number]
+		opponent.update_intent()
+
 		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			action_zone.save_intent_markers(opponent)
 
