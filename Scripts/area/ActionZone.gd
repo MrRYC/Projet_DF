@@ -11,8 +11,11 @@ const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 #variables du script
 var action_zone = []
 var intent_markers = []
+var end_turn_opponent_marker = []
 var processing : bool
-var marker_color : int = 0
+
+func _ready() -> void:
+	EventBus.new_turn.connect(_on_new_turn)
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -45,7 +48,6 @@ func update_action_zone_positions():
 	var action_zone_y_position = 150
 	var action_zone_x_position = action_lane1_ZONE_X_POSITION
 	var offset = 0
-	var marker_index = 0
 
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
 		var card = action_zone[i]
@@ -88,18 +90,20 @@ func animate_card_to_position(card, new_position):
 #                        OPPONENTS INTENT ORDER                           #
 ###########################################################################
 
-func save_intent_markers(opponent):
+func save_intent_markers(opponent,last_opponent):
 	var m : MARKER = MARKER_SCENE.instantiate()
 	m.opponent = opponent
 	m.array_position = opponent.data.attack_threshold #Sauvegarde de l'Attack Threshold de l'opponent
-	m.set_color(marker_color)
-	marker_color += 1
+	m.set_color()
+	
 	add_child(m)
 	
 	#Affichage du marqueur d'intention
-	marker_ordering(m)
+	threshold_opponent_marker_ordering(m)
+	if last_opponent:
+		end_turn_opponent_marker_ordering()
 
-func marker_ordering(marker):
+func threshold_opponent_marker_ordering(marker):
 	var desired_index = 0
 
 	if marker.array_position > 0:
@@ -107,8 +111,7 @@ func marker_ordering(marker):
 	
 	#Les ennemis qui attaquent à la fin (attack_threshold == 0) sont toujours en dernier
 	if desired_index == 0:
-		intent_markers.append(marker)
-		marker.array_position = intent_markers.size() - 1
+		end_turn_opponent_marker.append(marker)
 	else:
 		#Gestion à la volée de la taille de l'array
 		if intent_markers.size() <= desired_index:
@@ -118,12 +121,19 @@ func marker_ordering(marker):
 			intent_markers[desired_index] = marker
 			marker.array_position = desired_index
 		else:
-			#Si l'ennemi a le même attack_threshold qu'un autre, on décale l'array à partir de 'desired_index'
-			shift_right_from(desired_index)
+			#Si l'ennemi a le même attack_threshold qu'un autre, on ajoute le marqeur dans l'array à partir de 'desired_index'
+			shift_right_from(desired_index + 1)
 			intent_markers[desired_index + 1] = marker
 			marker.array_position = desired_index + 1
-			
-	print(str(marker.opponent)+ " - " + str(desired_index) + " - " + str(marker.opponent_color))
+
+func end_turn_opponent_marker_ordering():
+	if end_turn_opponent_marker.size() == 0:
+		return
+
+	for marker in end_turn_opponent_marker:
+		intent_markers.append(marker)
+	
+	end_turn_opponent_marker.clear()
 
 # Décalage de tous les éléments vers la droite à partir d'un index donné
 func shift_right_from(start_index: int) -> void:
@@ -131,7 +141,7 @@ func shift_right_from(start_index: int) -> void:
 	intent_markers.append(null)
 
 	# décale vers la droite
-	for i in range(intent_markers.size() - 1, start_index + 1, -1):
+	for i in range(intent_markers.size() - 1, start_index, -1):
 		intent_markers[i] = intent_markers[i - 1]
 	# si on a déplacé un marker existant, incrémente sa array_position
 		if intent_markers[i] != null:
@@ -140,18 +150,16 @@ func shift_right_from(start_index: int) -> void:
 func init_markers_position():
 	var marker_y_position = 150
 	var marker_x_position = action_lane1_ZONE_X_POSITION
+	var lane1 = true
 
 	#Positionnement initial des marqueurs d'intention
-	for i in range(intent_markers.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
-		#gestion du positionnement en cascade des cartes dans l'action zone
-		if (intent_markers.size() % 2 == 0) && (i % 2 == 0): #action zone pair et index de la carte pair --> lane 2
-			marker_x_position = action_lane2_ZONE_X_POSITION
-		elif (intent_markers.size() % 2 == 0) && !(i % 2 == 0): #action zone pair et index de la carte impair --> lane 1
+	for i in intent_markers.size(): 
+		if lane1 :
 			marker_x_position = action_lane1_ZONE_X_POSITION
-		elif !(intent_markers.size() % 2 == 0) && (i % 2 == 0): #action zone impair et index de la carte pair --> lane 1
-			marker_x_position = action_lane1_ZONE_X_POSITION
-		else: #action zone impair et index de la carte impair --> lane 2
+			lane1 = false
+		elif !lane1:
 			marker_x_position = action_lane2_ZONE_X_POSITION
+			lane1 = true
 
 		intent_markers[i].position = Vector2(marker_x_position, marker_y_position)
 		intent_markers[i].toggle_border(true)
@@ -165,10 +173,6 @@ func remove_null_markers():
 			m.array_position = new_arr.size()
 			new_arr.append(m)
 	intent_markers = new_arr
-
-func reset_markers_position():
-	for m in intent_markers:
-		m.position = Vector2(125, 150)
 		
 func clear_all_intents():
 	for m in intent_markers:
@@ -185,4 +189,7 @@ func _on_empty_action_zone_button_pressed():
 		empty_action_zone()
 
 	if intent_markers.size() > 0:
-		reset_markers_position()
+		init_markers_position()
+
+func _on_new_turn(_deck_size):
+	intent_markers.clear()

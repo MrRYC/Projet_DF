@@ -77,7 +77,16 @@ func opponent_death():
 func _on_new_turn(_deck_size):
 	action_zone.clear_all_intents()
 	var label_value : int = 0
+	var last_opponent : bool = false
+	var count : int = 0
+	
 	for opponent in match_up:
+		#Vérification du dernier enregistrement
+		if count == match_up.size()-1:
+			last_opponent = true
+		else:
+			count += 1
+		
 		#Reinitialisation des données du tour précédent
 		opponent.extra_damage = 0
 		opponent.cards_played_counter = 0
@@ -104,7 +113,7 @@ func _on_new_turn(_deck_size):
 
 		#Activation du marqeur si l'opponent est de type action après x cartes et que son action est une action
 		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK" : 
-			action_zone.save_intent_markers(opponent)
+			action_zone.save_intent_markers(opponent,last_opponent)
 
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()

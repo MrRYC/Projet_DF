@@ -7,8 +7,7 @@ class_name MARKER
 
 var opponent : Node2D
 var array_position : int
-var marker_color : Array[Color] = [Color(1, 0, 0),Color(13, 12, 0.0, 1.0),Color(0.6, 0.3, 1.0, 1.0),Color(0.008, 0.0, 0.843, 1.0),Color(0.875, 0.341, 0.043, 1.0)]
-var opponent_color : Color
+#var marker_color : Array[Color] = ["",Color(1, 0, 0),Color(13, 12, 0.0, 1.0),Color(0.6, 0.3, 1.0, 1.0),Color(0.008, 0.0, 0.843, 1.0),Color(0.875, 0.341, 0.043, 1.0)]
 
 ###########################################################################
 #                        COlOR RECT MANAGEMENT                            #
@@ -17,9 +16,7 @@ var opponent_color : Color
 func toggle_border(value:bool):
 	$MarkerBorder.visible = value
 
-func set_color(color):
-	self.opponent_color = marker_color[color]
-	
+func set_color():
 	for child in $MarkerBorder.get_children():
 		if child is ColorRect:
-			child.color = self.opponent_color
+			child.color = Color(1, 0, 0)
