@@ -13,6 +13,6 @@ damage = 2
 action_1 = 1
 action_2 = 3
 action_3 = 1
-action_4 = 4
+action_4 = 1
 behavior_type = 1
 attack_threshold = 3

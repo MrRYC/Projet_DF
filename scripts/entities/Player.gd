@@ -53,6 +53,6 @@ func die():
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_new_turn():
+func _on_new_turn(_new_hand_size):
 	block = 0
 	dodge = 0

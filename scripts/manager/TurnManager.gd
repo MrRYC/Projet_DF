@@ -32,12 +32,12 @@ func _on_phase_button_pressed() -> void:
 
 func update_max_hand_size():
 	new_hand_max_size = START_HAND_SIZE #To be adapt based on skill cards effect
-	return new_hand_max_size
 
 func new_turn():
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
-	EventBus.new_turn.emit(update_max_hand_size())
+	update_max_hand_size()
+	EventBus.new_turn.emit(new_hand_max_size)
 
 ###########################################################################
 #                            BATTLE EXECUTION                             #
@@ -149,7 +149,7 @@ func apply_player_damage(amount):
 
 func _on_deck_loaded(deck_size):
 	player_ref.set_starting_health(deck_size)
-	EventBus.new_turn.emit(update_max_hand_size())
+	EventBus.new_turn.emit(START_HAND_SIZE)
 
 func _on_ai_attack_performed(amount):
 	apply_player_damage(amount)

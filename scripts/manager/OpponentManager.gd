@@ -7,7 +7,7 @@ var match_up: Array = [] # instances Opponent en jeu
 
 func _ready():
 	EventBus.new_turn.connect(_on_new_turn)
-	spawn_random_opponent_set(3, 3)
+	spawn_random_opponent_set(5, 5)
 
 ###########################################################################
 #                           OPPONENT CREATION                             #
@@ -88,23 +88,27 @@ func _on_new_turn(_deck_size):
 		#Génération de l'action du tour
 		opponent.data.init_action_list()
 		var action_number : int = randi_range(0, 3)
-		opponent.action = opponent.data.list_of_actions[action_number]
+		opponent.action_type = opponent.data.list_of_actions[action_number]
 		
 		#Activation des effets défensifs
-		if opponent.data.action_type.keys()[opponent.action] == "SIMPLE_BLOCK" || opponent.data.action_type.keys()[opponent.action] == "DOUBLE_BLOCK":
+		if opponent.data.action_type.keys()[opponent.action_type] == "SIMPLE_BLOCK" || opponent.data.action_type.keys()[opponent.action_type] == "DOUBLE_BLOCK":
 			opponent.set_defensive_action()
 			label_value = opponent.block #Récupération de la valeur de défense pour le label des intentions
 
 		#Récupération de la valeur d'attaque pour le label des intentions
-		if opponent.data.action_type.keys()[opponent.action] == "ATTACK":
+		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK":
 			label_value = opponent.data.damage
 		
 		#Mise à jour du label des intentions
 		opponent.update_intent(label_value)
 
 		#Activation du marqeur si l'opponent est de type action après x cartes et que son action est une action
-		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD && opponent.data.action_type.keys()[opponent.action] == "ATTACK" : 
+		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK" : 
 			action_zone.save_intent_markers(opponent)
+
+	#Initialisation des marqueurs d'intention des opponent
+	action_zone.remove_null_markers()
+	action_zone.init_markers_position()
 
 func _on_empty_action_zone_button_pressed() -> void:
 	for opponent in match_up:

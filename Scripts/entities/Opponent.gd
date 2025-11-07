@@ -5,7 +5,8 @@ var data: OPPONENT_DATA
 var current_hp : int
 var extra_damage : int = 0
 var cards_played_counter: int = 0
-var action
+var action_order
+var action_type
 var action_performed = true
 var block : int = 0
 var cancel_combo : bool = false
@@ -53,9 +54,9 @@ func update_health():
 
 func update_intent(value):
 	if value == 0:
-		$Intent.text = str(self.data.action_type.keys()[self.action])
+		$Intent.text = str(self.data.action_type.keys()[self.action_type])
 	else:
-		$Intent.text = str(self.data.action_type.keys()[self.action])+" : "+str(value)
+		$Intent.text = str(self.data.action_type.keys()[self.action_type])+" : "+str(value)
 
 func on_player_card_played():
 	cards_played_counter += 1
@@ -71,7 +72,7 @@ func set_defensive_action():
 	if self.action_performed:
 		return
 	
-	match self.data.action_type.keys()[self.action]:
+	match self.data.action_type.keys()[self.action_type]:
 		"SIMPLE_BLOCK": 
 			self.block = 1
 			self.action_performed = true
@@ -82,17 +83,17 @@ func set_defensive_action():
 	#Animaion block gain
 
 func perform_action():
-	match self.data.action_type.keys()[self.action]:
+	match self.data.action_type.keys()[self.action_type]:
 		"ATTACK":
 			EventBus.ai_attack_performed.emit(self.data.damage)
-			print(str(self.data.display_name)+" "+str(self.data.action_type.keys()[self.action])+" : "+str(self.data.damage))
+			print(str(self.data.display_name)+" "+str(self.data.action_type.keys()[self.action_type])+" : "+str(self.data.damage))
 			#Animation attack
 		"CANCEL_COMBO":
 			self.cancel_combo = true
 			print(str(self.data.display_name)+" Cancel Combo activé = "+str(self.cancel_combo))
 			#ANimation cancel
 		"BUFF":
-			print(str(self.data.display_name)+" "+str(action)+" activé")
+			print(str(self.data.display_name)+" "+str(action_type)+" activé")
 			#Animation buff
 
 ###########################################################################
