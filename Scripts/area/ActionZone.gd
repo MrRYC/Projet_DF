@@ -15,10 +15,6 @@ var end_turn_opponent_marker = []
 var processing : bool
 var solo_attacker : bool = false
 
-func _ready() -> void:
-	EventBus.marker_hovered.connect(_on_marker_hovered)
-	EventBus.marker_hovered_off.connect(_on_marker_hovered_off)
-
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
 ###########################################################################
@@ -216,9 +212,3 @@ func _on_empty_action_zone_button_pressed():
 
 	if intent_markers.size() > 0:
 		init_markers_position()
-
-func _on_marker_hovered(opponent:OPPONENT):
-	print(opponent)
-
-func _on_marker_hovered_off():
-	print("exit marker")

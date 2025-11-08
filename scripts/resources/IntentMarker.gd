@@ -25,8 +25,9 @@ func set_color():
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_marker_area_2d_area_entered() -> void:
+func _on_marker_area_2d_mouse_entered() -> void:
 	EventBus.marker_hovered.emit(opponent)
 
-func _on_marker_area_2d_area_exited() -> void:
+
+func _on_marker_area_2d_mouse_exited() -> void:
 	EventBus.marker_hovered_off.emit()

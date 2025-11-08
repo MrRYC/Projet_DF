@@ -472,5 +472,5 @@ offset_top = 116.0
 offset_right = 78.0
 offset_bottom = 120.0
 
-[connection signal="area_entered" from="MarkerArea2D" to="." method="_on_marker_area_2d_area_entered"]
-[connection signal="area_exited" from="MarkerArea2D" to="." method="_on_marker_area_2d_area_exited"]
+[connection signal="mouse_entered" from="MarkerArea2D" to="." method="_on_marker_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="MarkerArea2D" to="." method="_on_marker_area_2d_mouse_exited"]

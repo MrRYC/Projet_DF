@@ -45,7 +45,6 @@ func raycast_at_cursor():
 	if result.size() > 0:
 		var collider = result[0].collider
 		var card_found = collider.get_parent()
-		print(collider)
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
 			pass

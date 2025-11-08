@@ -14,7 +14,7 @@ var cancel_combo : bool = false
 func init_from_data(d: OPPONENT_DATA):
 	data = d
 	current_hp = d.max_hp
-	$Sprite2D.texture = d.sprite
+	$Image.texture = d.image
 	update_health()
 
 ###########################################################################
@@ -95,6 +95,17 @@ func perform_action():
 		"BUFF":
 			print(str(self.data.display_name)+" "+str(action_type)+" activé")
 			#Animation buff
+
+###########################################################################
+#                            DIMM MANAGEMENT                              #
+###########################################################################
+
+# fonctions concrètes d'application/removal du layer sombre
+func apply_dim_to():
+	$Image.texture = self.data.dimmed_image
+
+func remove_dim_from():
+	$Image.texture = self.data.image
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #

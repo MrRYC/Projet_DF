@@ -5,9 +5,14 @@ extends Node
 
 var match_up: Array = [] # instances Opponent en jeu
 var incoming_attack: Array = [] # liste des opponent qui attaquent ce tour
+var current_hovered_opponent : Node = null
+var dimmed_opponents := [] # array of opponents currently dimmed
 
 func _ready():
 	EventBus.new_turn.connect(_on_new_turn)
+	EventBus.marker_hovered.connect(_on_marker_hovered)
+	EventBus.marker_hovered_off.connect(_on_marker_hovered_off)
+	
 	spawn_random_opponent_set(5, 5)
 
 ###########################################################################
@@ -54,6 +59,28 @@ func notify_card_played():
 	for opponent in match_up:
 		if opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			opponent.on_player_card_played()
+
+###########################################################################
+#                            DIMM MANAGEMENT                              #
+###########################################################################
+
+# applique le dim à tous sauf "except_opponent"
+func dim_all_except(except_opponent):
+	undim_all() # nettoyer d'abord pour éviter doublons
+	for op in match_up:
+		if not is_instance_valid(op):
+			continue
+		if op == except_opponent:
+			continue
+			
+		op.apply_dim_to()
+		dimmed_opponents.append(op)
+
+func undim_all():
+	for op in dimmed_opponents:
+		if is_instance_valid(op):
+			op.remove_dim_from()
+	dimmed_opponents.clear()
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
@@ -119,3 +146,17 @@ func _on_new_turn(_deck_size, _is_first_turn):
 func _on_empty_action_zone_button_pressed() -> void:
 	for opponent in match_up:
 		opponent.cards_played_counter = 0
+
+func _on_marker_hovered(opponent):
+	if current_hovered_opponent == opponent:
+		return
+		
+	current_hovered_opponent = opponent
+	dim_all_except(opponent)
+
+func _on_marker_hovered_off():
+	#if current_hovered_opponent != opponent:
+		#return
+		
+	undim_all()
+	current_hovered_opponent = null

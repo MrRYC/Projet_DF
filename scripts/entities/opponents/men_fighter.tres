@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="OPPONENT_DATA" load_steps=3 format=3 uid="uid://c7nss2m5g6hg2"]
+[gd_resource type="Resource" script_class="OPPONENT_DATA" load_steps=4 format=3 uid="uid://c7nss2m5g6hg2"]
 
+[ext_resource type="Texture2D" uid="uid://bu0yqypyyrnlf" path="res://assets/entities/opponent/Opponent_2_ Dimmed.png" id="1_gu87n"]
 [ext_resource type="Script" uid="uid://d0dtmu3bnq7s6" path="res://scripts/entities/OpponentData.gd" id="1_wwam8"]
 [ext_resource type="Texture2D" uid="uid://bp0iolkl4cl8r" path="res://assets/entities/opponent/Opponent_2.png" id="2_1gv7p"]
 
@@ -8,7 +9,8 @@ script = ExtResource("1_wwam8")
 display_name = "Jaxx"
 max_hp = 6
 overkill_limit = 4
-sprite = ExtResource("2_1gv7p")
+image = ExtResource("2_1gv7p")
+dimmed_image = ExtResource("1_gu87n")
 damage = 2
 action_1 = 1
 action_2 = 3
