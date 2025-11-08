@@ -46,6 +46,9 @@ func return_card_to_hand(card):
 	card.target = null
 	player_hand_ref.add_card_to_hand(card)
 	update_card_size(card)
+	
+func remove_card_from_action_zone(card):
+	action_zone_ref.return_card_to_hand(card)
 
 func send_card_to_action_zone(card, opponent):
 	card.target = opponent
@@ -181,16 +184,17 @@ func flip_card_in_hand(card):
 	
 	card.card_is_flipped()
 
-func highlight_card(element, hovered):
-	if element is MARKER:
-		print("highlight ennemi")
-	elif element.current_area == 1 && hovered: # 1 = IN_HAND
-		element.scale = Vector2(1.1,1.1)
-		element.z_index = 2
-	elif element.current_area == 2 : # 2 = IN_ACTION_ZONE
+func highlight_card(card, hovered):
+	if not (card is CARD_DATA):
+		return
+
+	if card.current_area == 1 && hovered: # 1 = IN_HAND
+		card.scale = Vector2(1.1,1.1)
+		card.z_index = 2
+	elif card.current_area == 2 : # 2 = IN_ACTION_ZONE
 		return
 	else:
-		update_card_size(element)
+		update_card_size(card)
 
 func update_card_size(card):
 	if card.current_area == 2:
@@ -260,7 +264,7 @@ func _on_left_mouse_released():
 		finish_drag()
 	
 func _on_hovered_over_card(card):
-	if !is_hovering_on_card:
+	if !card_being_dragged:
 		is_hovering_on_card = true
 		highlight_card(card,true)
 	
@@ -274,5 +278,5 @@ func _on_hovered_off_card(card):
 	else:
 		is_hovering_on_card = false
 
-func _on_new_turn(new_hand_size):
+func _on_new_turn(new_hand_size, _is_first_turn):
 	new_turn(new_hand_size)

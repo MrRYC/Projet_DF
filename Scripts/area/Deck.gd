@@ -181,5 +181,5 @@ func update_label(cards_in_deck):
 func _on_turn_increase(turn):
 	nb_turn = turn
 
-func _on_new_turn(new_hand_size):
+func _on_new_turn(new_hand_size, _is_first_turn):
 	new_turn(new_hand_size)

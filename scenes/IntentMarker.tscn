@@ -12,6 +12,8 @@ script = ExtResource("1_3igax")
 
 [node name="MarkerArea2D" type="Area2D" parent="."]
 scale = Vector2(1.1, 1.1)
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MarkerArea2D"]
 shape = SubResource("RectangleShape2D_nx35t")
@@ -470,5 +472,5 @@ offset_top = 116.0
 offset_right = 78.0
 offset_bottom = 120.0
 
-[connection signal="mouse_entered" from="MarkerArea2D" to="." method="_on_area_2d_mouse_entered"]
-[connection signal="mouse_exited" from="MarkerArea2D" to="." method="_on_area_2d_mouse_exited"]
+[connection signal="area_entered" from="MarkerArea2D" to="." method="_on_marker_area_2d_area_entered"]
+[connection signal="area_exited" from="MarkerArea2D" to="." method="_on_marker_area_2d_area_exited"]

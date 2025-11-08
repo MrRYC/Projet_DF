@@ -20,3 +20,13 @@ func set_color():
 	for child in $MarkerBorder.get_children():
 		if child is ColorRect:
 			child.color = Color(1, 0, 0)
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_marker_area_2d_area_entered() -> void:
+	EventBus.marker_hovered.emit(opponent)
+
+func _on_marker_area_2d_area_exited() -> void:
+	EventBus.marker_hovered_off.emit()

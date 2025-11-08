@@ -37,7 +37,7 @@ func new_turn():
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
 	update_max_hand_size()
-	EventBus.new_turn.emit(new_hand_max_size)
+	EventBus.new_turn.emit(new_hand_max_size, false) #false étant donné que ce n'est pas le premier tour
 
 ###########################################################################
 #                            BATTLE EXECUTION                             #
@@ -139,6 +139,7 @@ func execute_opponent_death_effect():
 
 func apply_ai_end_turn_actions():
 	opponent_manager_ref.end_of_turn_actions()
+	action_zone_ref.clear_all_intents()
 
 func apply_player_damage(amount):
 	player_ref.take_damage(amount)
@@ -149,7 +150,7 @@ func apply_player_damage(amount):
 
 func _on_deck_loaded(deck_size):
 	player_ref.set_starting_health(deck_size)
-	EventBus.new_turn.emit(START_HAND_SIZE)
+	EventBus.new_turn.emit(START_HAND_SIZE, true) #true étant donné que c'est le premier tour
 
 func _on_ai_attack_performed(amount):
 	apply_player_damage(amount)

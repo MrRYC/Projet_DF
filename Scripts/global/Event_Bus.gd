@@ -4,12 +4,16 @@ extends Node
 signal hovered()
 signal hovered_off()
 
+#signals from IntentMarker to ActionZone
+signal marker_hovered(opponent:OPPONENT)
+signal marker_hovered_off()
+
 #signals from InputManager to CardManager
 signal left_mouse_clicked()
 signal left_mouse_released()
 
 #signals from TurnManager to CardManager, OpponentManager et DeckPile
-signal new_turn(int)
+signal new_turn(int, bool)  #bool = true si premier tour
 
 #signals from TurnManager to UserInterface et DeckPile
 signal turn_increased(int)

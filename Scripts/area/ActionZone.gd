@@ -13,9 +13,11 @@ var action_zone = []
 var intent_markers = []
 var end_turn_opponent_marker = []
 var processing : bool
+var solo_attacker : bool = false
 
 func _ready() -> void:
-	EventBus.new_turn.connect(_on_new_turn)
+	EventBus.marker_hovered.connect(_on_marker_hovered)
+	EventBus.marker_hovered_off.connect(_on_marker_hovered_off)
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -27,7 +29,21 @@ func add_card_to_action_zone(card):
 		card.current_area = card.board_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
-#
+
+func return_card_to_hand(card):
+	var action_zone_copy = action_zone.duplicate()
+	var index = action_zone.find(card)
+	
+	for i in range(0,index+1):
+		var c = action_zone_copy[i]
+		c.target = null
+		if c.is_flipped:
+			card_manager_ref.flip_card_in_hand(c)
+		card_manager_ref.return_card_to_hand(c)
+		remove_card_from_action_zone(c)
+	update_action_zone_positions()
+
+
 func remove_card_from_action_zone(card):
 	action_zone.erase(card)
 
@@ -90,18 +106,25 @@ func animate_card_to_position(card, new_position):
 #                        OPPONENTS INTENT ORDER                           #
 ###########################################################################
 
-func save_intent_markers(opponent,last_opponent):
-	var m : MARKER = MARKER_SCENE.instantiate()
-	m.opponent = opponent
-	m.array_position = opponent.data.attack_threshold #Sauvegarde de l'Attack Threshold de l'opponent
-	m.set_color()
+func save_intent_markers(incoming_attack):
+
+	if incoming_attack.size() == 1:
+		solo_attacker = true
+	else:
+		solo_attacker = false
+
+	for o in incoming_attack:
+		var m: MARKER = MARKER_SCENE.instantiate()
+		m.opponent = o
+		m.array_position = o.data.attack_threshold #Sauvegarde de l'Attack Threshold de l'opponent
+		m.set_color()
+		
+		add_child(m)
 	
-	add_child(m)
-	
-	#Affichage du marqueur d'intention
-	threshold_opponent_marker_ordering(m)
-	if last_opponent:
-		end_turn_opponent_marker_ordering()
+		#Affichage du marqueur d'intention
+		threshold_opponent_marker_ordering(m)
+
+	end_turn_opponent_marker_ordering()
 
 func threshold_opponent_marker_ordering(marker):
 	var desired_index = 0
@@ -111,7 +134,10 @@ func threshold_opponent_marker_ordering(marker):
 	
 	#Les ennemis qui attaquent à la fin (attack_threshold == 0) sont toujours en dernier
 	if desired_index == 0:
-		end_turn_opponent_marker.append(marker)
+		if solo_attacker:
+			intent_markers.append(marker)
+		else:
+			end_turn_opponent_marker.append(marker)
 	else:
 		#Gestion à la volée de la taille de l'array
 		if intent_markers.size() <= desired_index:
@@ -191,5 +217,8 @@ func _on_empty_action_zone_button_pressed():
 	if intent_markers.size() > 0:
 		init_markers_position()
 
-func _on_new_turn(_deck_size):
-	intent_markers.clear()
+func _on_marker_hovered(opponent:OPPONENT):
+	print(opponent)
+
+func _on_marker_hovered_off():
+	print("exit marker")

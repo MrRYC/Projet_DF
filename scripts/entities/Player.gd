@@ -32,7 +32,6 @@ func take_damage(amount):
 
 func defensive_action():
 	self.block -= 1
-	print(self.block)
 	
 	if self.block == 0:
 		#Animation block lost
@@ -53,6 +52,6 @@ func die():
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_new_turn(_new_hand_size):
+func _on_new_turn(_new_hand_size, _is_first_turn):
 	block = 0
 	dodge = 0

@@ -115,4 +115,4 @@ func overkill_animation():
 	die()
 
 func die():
-	queue_free() # ou animation de mort
+	self.queue_free() # ou animation de mort

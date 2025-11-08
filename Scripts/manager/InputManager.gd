@@ -1,8 +1,10 @@
 extends Node2D
 
 #constantes
-const COLLISION_MASK_CARD = 1
-const COLLISION_MASK_PILE = 4 #Masque de collision du deck et de la discard
+const COLLISION_MASK_CARD = 1 #Masque de collision des intentions des cartes
+const COLLISION_MASK_MARKER = 2 #Masque de collision des intentions des opponents
+const COLLISION_MASK_PILE = 4 #Masque de collision des piles (deck, discard, wound et banished)
+const COLLISION_MASK_ENTITY = 5 #Masque de collision du joueur et des opponents
 
 #variables de référence vers autre Node
 @onready var card_manager_ref = $"../CardManager"
@@ -43,23 +45,29 @@ func raycast_at_cursor():
 	if result.size() > 0:
 		var collider = result[0].collider
 		var card_found = collider.get_parent()
-
+		print(collider)
 		# CLIC GAUCHE
+		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
+			pass
+		elif collider.collision_mask == COLLISION_MASK_ENTITY and left_mouse:
+			pass
 		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
 			if card_found.current_area == 2:
-				pass
+				card_manager_ref.remove_card_from_action_zone(card_found)
 			elif card_found:
 				card_manager_ref.start_drag(card_found)
+		elif collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
+			if !is_game_processing:
+				card_manager_ref.show_pile(collider.get_parent().name)
 
 		# CLIC DROIT
 		elif collider.collision_mask == COLLISION_MASK_CARD and right_mouse:
 			if card_found.current_area == 1:
 				card_manager_ref.flip_card_in_hand(card_found)
 
-		# CLIC GAUCHE sur pile = détail
-		elif collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
-			if !is_game_processing:
-				card_manager_ref.show_pile(collider.get_parent().name)
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
 
 func _on_processing(processing):
 	if processing:
