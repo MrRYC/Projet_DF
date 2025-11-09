@@ -37,8 +37,6 @@ func return_card_to_hand(card):
 			card_manager_ref.flip_card_in_hand(c)
 		card_manager_ref.return_card_to_hand(c)
 		remove_card_from_action_zone(c)
-	reset_end_turn_opponent_markers()
-	update_action_zone_positions()
 	
 	#Mise à jour des marqueurs d'intention
 	if intent_markers == null:
@@ -46,9 +44,10 @@ func return_card_to_hand(card):
 	
 	for marker in intent_markers:
 		marker.opponent.attack_order = marker.opponent.attack_order_copy
-		marker.opponent.attack_order_copy = 0
-	
-	end_turn_opponent_marker_ordering()
+
+	reset_end_turn_opponent_markers()
+	update_intent_markers_positions()
+
 
 func remove_card_from_action_zone(card):
 	action_zone.erase(card)
@@ -177,8 +176,6 @@ func end_turn_opponent_marker_ordering():
 		marker.opponent.attack_order = highest_attack_order + offset
 		marker.opponent.update_attack_order()
 		offset += 1
-	
-	offset = 1
 
 # Décalage de tous les éléments vers la droite à partir d'un index donné
 func shift_right_from(start_index: int) -> void:
@@ -232,9 +229,11 @@ func update_intent_markers_positions():
 				highest_attack_order = marker.opponent.attack_order
 
 	if action_zone.size() > highest_attack_order:
+		var diff = action_zone.size() - highest_attack_order
 		for marker in intent_markers:
 			if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-				marker.opponent.attack_order +=1
+				print(marker.opponent.attack_order)
+				marker.opponent.attack_order +=diff
 				marker.opponent.update_attack_order()
 	
 	highest_attack_order = 0
