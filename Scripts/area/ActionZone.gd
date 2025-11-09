@@ -232,7 +232,6 @@ func update_intent_markers_positions():
 		var diff = action_zone.size() - highest_attack_order
 		for marker in intent_markers:
 			if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-				print(marker.opponent.attack_order)
 				marker.opponent.attack_order +=diff
 				marker.opponent.update_attack_order()
 	
