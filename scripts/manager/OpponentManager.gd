@@ -50,6 +50,10 @@ func place_opponent(number, index, opponent_node):
 #                             ACTIONS MANAGEMENT                          #
 ###########################################################################
 
+func threshold_actions(opponent):
+	if !opponent.action_performed:
+		opponent.perform_action()
+
 func end_of_turn_actions():
 	for opponent in match_up:
 		if !opponent.action_performed:

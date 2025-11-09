@@ -5,7 +5,7 @@ var data: OPPONENT_DATA
 var current_hp : int
 var extra_damage : int = 0
 var cards_played_counter: int = 0
-var action_order
+var attack_order : int = 0
 var action_type
 var action_performed = true
 var block : int = 0
@@ -52,6 +52,9 @@ func update_health():
 #                             ACTIONS MANAGEMENT                          #
 ###########################################################################
 
+func update_attack_order():
+	$Attack_Threshold/ThresholdLabel.text = str(self.attack_order)
+
 func update_intent(value):
 	if value == 0:
 		$Intent.text = str(self.data.action_type.keys()[self.action_type])
@@ -61,10 +64,10 @@ func update_intent(value):
 func on_player_card_played():
 	cards_played_counter += 1
 	
-	if cards_played_counter == self.data.attack_threshold:
+	if cards_played_counter == self.attack_order:
 		#Animation de l'ennemi prêt
-		pass
-	elif cards_played_counter < self.data.attack_threshold:
+		return
+	elif cards_played_counter < self.attack_order:
 		#Animation idle
 		return
 

@@ -1,17 +1,17 @@
 extends Node2D
 
 #constantes
-const action_lane1_ZONE_X_POSITION = 125
-const action_lane2_ZONE_X_POSITION = 225
+const ACTION_LANE1_ZONE_X_POSITION = 125
+const ACTION_LANE2_ZONE_X_POSITION = 225
 const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
 #variables de référence
 @onready var card_manager_ref = $"../CardManager"
 
 #variables du script
-var action_zone = []
-var intent_markers = []
-var end_turn_opponent_marker = []
+var action_zone : Array = []
+var intent_markers : Array = []
+var end_turn_opponent_marker : Array = []
 var processing : bool
 var solo_attacker : bool = false
 
@@ -58,7 +58,7 @@ func empty_action_zone():
 
 func update_action_zone_positions():
 	var action_zone_y_position = 150
-	var action_zone_x_position = action_lane1_ZONE_X_POSITION
+	var action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
 	var offset = 0
 
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
@@ -71,22 +71,20 @@ func update_action_zone_positions():
 
 		#gestion du positionnement en cascade des cartes dans l'action zone
 		if (action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone pair et index de la carte pair --> lane 2
-			action_zone_x_position = action_lane2_ZONE_X_POSITION
+			action_zone_x_position = ACTION_LANE2_ZONE_X_POSITION
 		elif (action_zone.size() % 2 == 0) && !(i % 2 == 0): #action zone pair et index de la carte impair --> lane 1
-			action_zone_x_position = action_lane1_ZONE_X_POSITION
+			action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
 		elif !(action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone impair et index de la carte pair --> lane 1
-			action_zone_x_position = action_lane1_ZONE_X_POSITION
+			action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
 		else: #action zone impair et index de la carte impair --> lane 2
-			action_zone_x_position = action_lane2_ZONE_X_POSITION
+			action_zone_x_position = ACTION_LANE2_ZONE_X_POSITION
 
 		var new_position = Vector2(action_zone_x_position, action_zone_y_position+offset)
 		card.starting_position = new_position
 		animate_card_to_position(card, new_position)
 
-		##Gestion de la position des marqueurs d'intentions
-		#if intent_markers[marker_index] != null:
-			#intent_markers[marker_index].position = new_position
-		#marker_index += 1
+		update_intent_markers_positions()
+		update_end_turn_opponent_marker_ordering()
 
 		#Gestion de l'espacement si la carte est inversée
 		if !card.is_flipped:
@@ -123,30 +121,34 @@ func save_intent_markers(incoming_attack):
 	end_turn_opponent_marker_ordering()
 
 func threshold_opponent_marker_ordering(marker):
-	var desired_index = 0
 
-	if marker.array_position > 0:
-		desired_index = marker.array_position-1
-	
 	#Les ennemis qui attaquent à la fin (attack_threshold == 0) sont toujours en dernier
-	if desired_index == 0:
+	if marker.array_position == 0:
 		if solo_attacker:
 			intent_markers.append(marker)
+			marker.opponent.update_attack_order()
 		else:
 			end_turn_opponent_marker.append(marker)
-	else:
-		#Gestion à la volée de la taille de l'array
-		if intent_markers.size() <= desired_index:
-			intent_markers.resize(desired_index + 1)
+		return
 
-		if intent_markers[desired_index] == null:
-			intent_markers[desired_index] = marker
-			marker.array_position = desired_index
-		else:
-			#Si l'ennemi a le même attack_threshold qu'un autre, on ajoute le marqeur dans l'array à partir de 'desired_index'
-			shift_right_from(desired_index + 1)
-			intent_markers[desired_index + 1] = marker
-			marker.array_position = desired_index + 1
+	#Gestion des ennemi avec une attack_threshold
+	var desired_index = marker.array_position-1
+
+	if intent_markers.size() <= desired_index:
+		intent_markers.resize(desired_index + 1)
+
+	if intent_markers[desired_index] == null:
+		intent_markers[desired_index] = marker
+		marker.array_position = desired_index
+		marker.opponent.attack_order = marker.opponent.data.attack_threshold
+	else:
+		#Si l'ennemi a le même attack_threshold qu'un autre, on ajoute le marqeur dans l'array à partir de 'desired_index'
+		shift_right_from(desired_index + 1)
+		intent_markers[desired_index + 1] = marker
+		marker.array_position = desired_index + 1
+		marker.opponent.attack_order = marker.opponent.data.attack_threshold + 1
+	
+	marker.opponent.update_attack_order()
 
 func end_turn_opponent_marker_ordering():
 	if end_turn_opponent_marker.size() == 0:
@@ -154,42 +156,59 @@ func end_turn_opponent_marker_ordering():
 
 	for marker in end_turn_opponent_marker:
 		intent_markers.append(marker)
-	
-	end_turn_opponent_marker.clear()
+
+func update_end_turn_opponent_marker_ordering():
+	if end_turn_opponent_marker == null:
+		return
+
+	for marker in end_turn_opponent_marker:
+		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+			marker.opponent.attack_order = action_zone.size()
+			marker.opponent.update_attack_order()
 
 # Décalage de tous les éléments vers la droite à partir d'un index donné
 func shift_right_from(start_index: int) -> void:
-	#Augmentation de la taille de l'array d'une case pour permettre le shift
-	intent_markers.append(null)
 
-	# décale vers la droite
-	for i in range(intent_markers.size() - 1, start_index, -1):
-		intent_markers[i] = intent_markers[i - 1]
-	# si on a déplacé un marker existant, incrémente sa array_position
+	if start_index < 0:
+		start_index = 0
+	if start_index > intent_markers.size():
+		start_index = intent_markers.size()
+		
+	#Augmentation de la taille de l'array d'une case pour permettre le shift
+	intent_markers.insert(start_index, null)
+
+	# Met à jour array_position pour les markers valides
+	for i in range(start_index, intent_markers.size()):
 		if intent_markers[i] != null:
 			intent_markers[i].array_position = i
 
 func init_markers_position():
 	var marker_y_position = 150
-	var marker_x_position = action_lane1_ZONE_X_POSITION
+	var marker_x_position = ACTION_LANE1_ZONE_X_POSITION
 	var lane1 = true
 
 	#Positionnement initial des marqueurs d'intention
-	for i in intent_markers.size(): 
+	for i in range(intent_markers.size()):
+		var m = intent_markers[i]
+		if m == null:
+			continue # protège contre les trous dans l'array
 		if lane1 :
-			marker_x_position = action_lane1_ZONE_X_POSITION
+			marker_x_position = ACTION_LANE1_ZONE_X_POSITION
 			lane1 = false
 		elif !lane1:
-			marker_x_position = action_lane2_ZONE_X_POSITION
+			marker_x_position = ACTION_LANE2_ZONE_X_POSITION
 			lane1 = true
 
-		intent_markers[i].position = Vector2(marker_x_position, marker_y_position)
-		intent_markers[i].toggle_border(true)
+		m.position = Vector2(marker_x_position, marker_y_position)
+		m.toggle_border(true)
 		
 		marker_y_position += 72
 
+func update_intent_markers_positions():
+	pass
+	
 func remove_null_markers():
-	var new_arr = []
+	var new_arr : Array = []
 	for m in intent_markers:
 		if m != null:
 			m.array_position = new_arr.size()

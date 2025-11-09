@@ -50,7 +50,7 @@ func execute_action_phase():
 	action_zone_copy.reverse()
 	for card in range(action_zone_copy.size()):
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
-		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target)
+		apply_player_actions(card, action_zone_copy[card], action_zone_copy[card].target)
 
 	execute_opponent_death_effect()
 	apply_ai_end_turn_actions()
@@ -61,15 +61,16 @@ func execute_action_phase():
 #                              PLAYER ACTION                              #
 ###########################################################################
 
-func apply_player_actions(card, target):
+func apply_player_actions(index, card, target):
 	if card.is_flipped:
 		check_slots_effect(card)
-		return
-
-	var attack = card.attack
-	
-	if target != null:
+	elif target != null:
+		var attack = card.attack
 		target.extra_damage = target.take_damage(attack)
+		
+	if target is OPPONENT:
+		if target.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD and target.attack_order == index:
+			apply_ai_threshold_actions(target)
 	
 func check_slots_effect(card):
 	
@@ -131,8 +132,11 @@ func wait_before_action(card, time):
 #                               AI ACTION                                 #
 ###########################################################################
 
-func threshold_actions_countdown():
+func action_card_played():
 	opponent_manager_ref.notify_card_played()
+
+func apply_ai_threshold_actions(opponent):
+	opponent_manager_ref.threshold_actions(opponent)
 
 func execute_opponent_death_effect():
 	opponent_manager_ref.opponent_death()
@@ -156,4 +160,4 @@ func _on_ai_attack_performed(amount):
 	apply_player_damage(amount)
 
 func _on_card_played():
-	threshold_actions_countdown()
+	action_card_played()
