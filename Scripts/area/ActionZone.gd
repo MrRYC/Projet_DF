@@ -37,8 +37,18 @@ func return_card_to_hand(card):
 			card_manager_ref.flip_card_in_hand(c)
 		card_manager_ref.return_card_to_hand(c)
 		remove_card_from_action_zone(c)
+	reset_end_turn_opponent_markers()
 	update_action_zone_positions()
-
+	
+	#Mise à jour des marqueurs d'intention
+	if intent_markers == null:
+		return
+	
+	for marker in intent_markers:
+		marker.opponent.attack_order = marker.opponent.attack_order_copy
+		marker.opponent.attack_order_copy = 0
+	
+	end_turn_opponent_marker_ordering()
 
 func remove_card_from_action_zone(card):
 	action_zone.erase(card)
@@ -84,7 +94,6 @@ func update_action_zone_positions():
 		animate_card_to_position(card, new_position)
 
 		update_intent_markers_positions()
-		update_end_turn_opponent_marker_ordering()
 
 		#Gestion de l'espacement si la carte est inversée
 		if !card.is_flipped:
@@ -118,15 +127,13 @@ func save_intent_markers(incoming_attack):
 		#Affichage du marqueur d'intention
 		threshold_opponent_marker_ordering(m)
 
-	end_turn_opponent_marker_ordering()
-
 func threshold_opponent_marker_ordering(marker):
 
 	#Les ennemis qui attaquent à la fin (attack_threshold == 0) sont toujours en dernier
 	if marker.array_position == 0:
 		if solo_attacker:
 			intent_markers.append(marker)
-			marker.opponent.update_attack_order()
+			#marker.opponent.update_attack_order()
 		else:
 			end_turn_opponent_marker.append(marker)
 		return
@@ -151,20 +158,27 @@ func threshold_opponent_marker_ordering(marker):
 	marker.opponent.update_attack_order()
 
 func end_turn_opponent_marker_ordering():
-	if end_turn_opponent_marker.size() == 0:
-		return
-
-	for marker in end_turn_opponent_marker:
-		intent_markers.append(marker)
-
-func update_end_turn_opponent_marker_ordering():
 	if end_turn_opponent_marker == null:
 		return
 
+	#Récupération du numero d'ordre d'attaque le plus haut
+	var highest_attack_order : int = 0
+	var offset : int = 1
+	if intent_markers != null:
+		for m in intent_markers:
+			if highest_attack_order == 0:
+				highest_attack_order = m.opponent.attack_order
+			elif highest_attack_order < m.opponent.attack_order:
+				highest_attack_order = m.opponent.attack_order
+
+	#Insertion du marqueur pour les opponent avec un attack_threshold == 0
 	for marker in end_turn_opponent_marker:
-		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-			marker.opponent.attack_order = action_zone.size()
-			marker.opponent.update_attack_order()
+		intent_markers.append(marker)
+		marker.opponent.attack_order = highest_attack_order + offset
+		marker.opponent.update_attack_order()
+		offset += 1
+	
+	offset = 1
 
 # Décalage de tous les éléments vers la droite à partir d'un index donné
 func shift_right_from(start_index: int) -> void:
@@ -205,8 +219,32 @@ func init_markers_position():
 		marker_y_position += 72
 
 func update_intent_markers_positions():
-	pass
+	if intent_markers == null:
+		return
 	
+	#Récupération de l'opponent avec un attack_treshold == 0 et un numéro d'ordre le plus bas
+	var highest_attack_order : int = 0
+	for marker in intent_markers:
+		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+			if highest_attack_order == 0:
+				highest_attack_order = marker.opponent.attack_order
+			elif highest_attack_order < marker.opponent.attack_order:
+				highest_attack_order = marker.opponent.attack_order
+
+	if action_zone.size() > highest_attack_order:
+		for marker in intent_markers:
+			if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+				marker.opponent.attack_order +=1
+				marker.opponent.update_attack_order()
+	
+	highest_attack_order = 0
+
+func reset_end_turn_opponent_markers():
+	for marker in intent_markers:
+		marker.opponent.attack_order = marker.opponent.attack_order_copy
+		marker.opponent.attack_order_copy = 0
+		marker.opponent.update_attack_order()
+
 func remove_null_markers():
 	var new_arr : Array = []
 	for m in intent_markers:
@@ -231,3 +269,4 @@ func _on_empty_action_zone_button_pressed():
 
 	if intent_markers.size() > 0:
 		init_markers_position()
+		reset_end_turn_opponent_markers()

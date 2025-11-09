@@ -13,7 +13,7 @@ func _ready():
 	EventBus.marker_hovered.connect(_on_marker_hovered)
 	EventBus.marker_hovered_off.connect(_on_marker_hovered_off)
 	
-	spawn_random_opponent_set(5, 5)
+	spawn_random_opponent_set(2, 2)
 
 ###########################################################################
 #                           OPPONENT CREATION                             #
@@ -145,6 +145,7 @@ func _on_new_turn(_deck_size, _is_first_turn):
 
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()
+	action_zone.end_turn_opponent_marker_ordering()
 	action_zone.init_markers_position()
 
 func _on_empty_action_zone_button_pressed() -> void:

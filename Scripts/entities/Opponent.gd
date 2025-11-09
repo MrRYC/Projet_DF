@@ -6,6 +6,7 @@ var current_hp : int
 var extra_damage : int = 0
 var cards_played_counter: int = 0
 var attack_order : int = 0
+var attack_order_copy : int = 0
 var action_type
 var action_performed = true
 var block : int = 0
@@ -53,6 +54,9 @@ func update_health():
 ###########################################################################
 
 func update_attack_order():
+	if self.attack_order_copy == 0 :
+		self.attack_order_copy = self.attack_order
+
 	$Attack_Threshold/ThresholdLabel.text = str(self.attack_order)
 
 func update_intent(value):

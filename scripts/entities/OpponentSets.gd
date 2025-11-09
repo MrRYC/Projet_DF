@@ -34,6 +34,13 @@ const SETS = {
 	},
 	"Trio" : {
 		"opponents_per_set" : {
+			1 : "res://scripts/entities/opponents/girl_fighter.tres",
+			2 : "res://scripts/entities/opponents/girl_fighter.tres",
+			3 : "res://scripts/entities/opponents/men_fighter.tres",
+		}
+	},
+	"Trio_2" : {
+		"opponents_per_set" : {
 			1 : "res://scripts/entities/opponents/men_fighter.tres",
 			2 : "res://scripts/entities/opponents/girl_fighter.tres",
 			3 : "res://scripts/entities/opponents/men_fighter.tres",
