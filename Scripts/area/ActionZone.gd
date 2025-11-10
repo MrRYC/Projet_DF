@@ -66,8 +66,8 @@ func empty_action_zone():
 ###########################################################################
 
 func update_action_zone_positions():
-	var action_zone_y_position = 150
 	var action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
+	var action_zone_y_position = 150
 	var offset = 0
 
 	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
@@ -171,8 +171,8 @@ func shift_right_from(start_index: int) -> void:
 			intent_markers[i].array_position = i
 
 func init_markers_position():
-	var marker_y_position = 150
 	var marker_x_position = ACTION_LANE1_ZONE_X_POSITION
+	var marker_y_position = 150
 	var lane1 = true
 
 	#Positionnement initial des marqueurs d'intention
@@ -198,42 +198,66 @@ func update_opponent_intent():
 		return
 
 	var card_position : Array[Vector2] = []
-
-	for index in range(action_zone.size()):
-		card_position.insert(index,action_zone[index].starting_position)
+	for card in action_zone:
+		card_position.append(card.starting_position)
 	
 	print(card_position)
 	#print(str(card)+" -"+str(action_zone[card])+" -"+str(action_zone[card].starting_position))
 	#print(str(intent_markers[markers].opponent.data.display_name)+" - "+str(intent_markers[markers].opponent.attack_order))
-	#update_markers_position()
+	update_markers_position(card_position)
 	update_opponent_action_turn()
 
-func update_markers_position():
-	var marker_y_position = 0
-	var marker_x_position = 0
-	var lane1 = true
+func update_markers_position(card_position):
+	var marker_x_position : float = 0
+	var marker_y_position : float = 0
+	var next_position = null
+	var end_turn_attacker : bool = false
 
-	#Positionnement initial des marqueurs d'intention
-	for i in range(intent_markers.size()):
-		var marker = intent_markers[i]
-		
-		if action_zone.size() < marker.oppo
+	#Repositionnement des marqueurs d'intention 
+	for marker in intent_markers:
+		var turn_order :int = marker.opponent.attack_order
+		var target_index = card_position.size()-1
+	
+		if target_index < turn_order && marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			if next_position == null:
+				marker_x_position = card_position[0].x
+				marker_y_position = card_position[0].y
+			else:
+				marker_x_position = next_position.x
+				marker_y_position = next_position.y
 
-			marker_x_position = 
-			marker_y_position =
-		else:
-			if lane1 :
-				marker_x_position = ACTION_LANE1_ZONE_X_POSITION
-				lane1 = false
-			elif !lane1:
-				marker_x_position = ACTION_LANE2_ZONE_X_POSITION
-				lane1 = true
+			marker.position = Vector2(marker_x_position,marker_y_position)
 
-		marker.position = Vector2(marker_x_position, marker_y_position)
-		marker.toggle_border(true)
-		
-		marker_y_position += 72
+			#Mise à jour des variables de position pour la prochaine carte jouée
+			if marker_x_position == 125 :
+				marker_x_position = 225
+			elif marker_x_position == 225:
+				marker_x_position = 125
+			marker_y_position += 71
 
+			next_position = Vector2(marker_x_position,marker_y_position)
+
+		elif marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+			end_turn_attacker = true
+
+			if next_position == null:
+				marker_x_position = card_position[0].x
+				marker_y_position = card_position[0].y
+			#elif end_turn_attacker:
+				#pass 
+			else:
+				marker_x_position = next_position.x
+				marker_y_position = next_position.y
+
+			marker.position = Vector2(marker_x_position,marker_y_position)
+
+			if marker_x_position == 125 :
+				marker_x_position = 225
+			elif marker_x_position == 225:
+				marker_x_position = 125
+			marker_y_position += 71
+			
+			next_position = Vector2(marker_x_position,marker_y_position)
 
 func remove_null_markers():
 	var new_arr : Array = []
