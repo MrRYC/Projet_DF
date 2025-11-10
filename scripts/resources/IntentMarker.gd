@@ -7,7 +7,7 @@ class_name MARKER
 
 var opponent : Node2D
 var array_position : int
-#var marker_color : Array[Color] = ["",Color(1, 0, 0),Color(13, 12, 0.0, 1.0),Color(0.6, 0.3, 1.0, 1.0),Color(0.008, 0.0, 0.843, 1.0),Color(0.875, 0.341, 0.043, 1.0)]
+#var marker_color : Array[Color] = [Color(0.0, 0.0, 0.0, 1.0),Color(0.773, 0.0, 0.235, 0.996),Color(0.533, 0.016, 0.145, 1.0),Color(0.953, 0.902, 0.0, 0.996),Color(0.333, 0.918, 0.831, 1.0)]
 
 ###########################################################################
 #                        COlOR RECT MANAGEMENT                            #
@@ -17,9 +17,15 @@ func toggle_border(value:bool):
 	$MarkerBorder.visible = value
 
 func set_color():
+	var marker_corlor : Color
+	
+	if self.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		marker_corlor = Color(0.773, 0.0, 0.235, 0.996)
+	elif self.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+		marker_corlor = Color(0.333, 0.918, 0.831, 1.0)
 	for child in $MarkerBorder.get_children():
 		if child is ColorRect:
-			child.color = Color(1, 0, 0)
+			child.color = marker_corlor
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
