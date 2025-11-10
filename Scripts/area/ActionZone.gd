@@ -200,10 +200,7 @@ func update_opponent_intent():
 	var card_position : Array[Vector2] = []
 	for card in action_zone:
 		card_position.append(card.starting_position)
-	
-	print(card_position)
-	#print(str(card)+" -"+str(action_zone[card])+" -"+str(action_zone[card].starting_position))
-	#print(str(intent_markers[markers].opponent.data.display_name)+" - "+str(intent_markers[markers].opponent.attack_order))
+
 	update_markers_position(card_position)
 	update_opponent_action_turn()
 
@@ -211,7 +208,6 @@ func update_markers_position(card_position):
 	var marker_x_position : float = 0
 	var marker_y_position : float = 0
 	var next_position = null
-	var end_turn_attacker : bool = false
 
 	#Repositionnement des marqueurs d'intention 
 	for marker in intent_markers:
@@ -238,13 +234,13 @@ func update_markers_position(card_position):
 			next_position = Vector2(marker_x_position,marker_y_position)
 
 		elif marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-			end_turn_attacker = true
-
+			
 			if next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
-			#elif end_turn_attacker:
-				#pass 
+			elif card_position.size() < turn_order :
+				marker_x_position = marker.position.x
+				marker_y_position = marker.position.y
 			else:
 				marker_x_position = next_position.x
 				marker_y_position = next_position.y
