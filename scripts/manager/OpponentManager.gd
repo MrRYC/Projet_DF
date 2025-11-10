@@ -145,7 +145,7 @@ func _on_new_turn(_deck_size, _is_first_turn):
 
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()
-	action_zone.end_turn_opponent_marker_ordering()
+	action_zone.init_opponent_action_turn()
 	action_zone.init_markers_position()
 
 func _on_empty_action_zone_button_pressed() -> void:
