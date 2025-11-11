@@ -1,6 +1,9 @@
 extends Node2D
 
 #constantes
+signal remove_card(bool)
+
+#constantes
 const ACTION_LANE1_ZONE_X_POSITION = 125
 const ACTION_LANE2_ZONE_X_POSITION = 225
 const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
@@ -12,9 +15,13 @@ const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 var action_zone : Array = []
 var intent_markers : Array = []
 var end_turn_opponent : Array = []
-
+var card_remove_from_action_zone : bool = false
 var processing : bool
 var solo_attacker : bool = false
+
+
+func _ready() -> void:
+	remove_card.connect(_on_card_removed_from_action_zone)
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -46,9 +53,12 @@ func return_card_to_hand(card):
 	#Remise à zero des marqueurs de tour des ennemis
 	for marker in intent_markers:
 		marker.opponent.attack_order = marker.opponent.attack_order_copy
-
 	reset_end_turn_opponent_action_turn()
+	
+	#Repositionnement des marqueurs d'intentions
+	remove_card.emit(true)
 	update_opponent_intent()
+	remove_card.emit(false)
 
 func remove_card_from_action_zone(card):
 	action_zone.erase(card)
@@ -250,10 +260,12 @@ func update_markers_position(card_position):
 				#Récupération de numero de tour du dernier opponent avec un attak_threshold
 				if last_end_turn_opponent_turn_order == 0:
 					last_end_turn_opponent_turn_order = intent_markers[i-1].opponent.attack_order
-				#Fixation des positions des marqeurs actuels tant que le nombre de carte en zone d'action <= au nombre de marqueurs d'intention
+
+				#Decalage si le marqueur suit la position d'un marqueur d'un opponent avec un attack_threshold 
 				if next_position != null:
 					marker_x_position = next_position.x
-					marker_y_position = next_position.y	
+					marker_y_position = next_position.y
+				#Fixation des positions des marqeurs actuels tant que le nombre de carte en zone d'action <= au nombre de marqueurs d'intention
 				elif action_zone.size() <= intent_markers.size() :
 					marker_x_position = next_position.x
 					marker_y_position = next_position.y
@@ -274,10 +286,29 @@ func update_markers_position(card_position):
 						marker_offset += 1
 					marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
 					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
+
 			#Verification si le premier opponent a un attak_threshold
 			if intent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+				#Gestion des positions des marqeurs en cas de retour d'une carte en main depuis l'action zone (clic gauche)
+				if card_remove_from_action_zone:
+					if action_zone.size() <= intent_markers.size():
+						if next_position == null:
+							marker_offset = action_zone.size()-1
+							marker_x_position = action_zone[marker_offset].position.x
+							marker_y_position = action_zone[marker_offset].position.y
+						else:
+							marker_x_position = next_position.x
+							marker_y_position = next_position.y
+					else:
+						var marker_index = end_turn_opponent_number - i
+						if marker_index == end_turn_opponent_number :
+							marker_offset = 1
+						else:
+							marker_offset += 1
+						marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
+						marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 				#Fixation des positions des marqeurs actuels tant que le nombre de carte en zone d'action <= au nombre de marqueurs d'intention
-				if action_zone.size() <= intent_markers.size() :
+				elif action_zone.size() <= intent_markers.size() :
 					marker_x_position = intent_markers[i].position.x
 					marker_y_position = intent_markers[i].position.y
 				#Gestion de la position des marqueurs quand l'action zone s'garandit
@@ -387,3 +418,9 @@ func _on_empty_action_zone_button_pressed():
 	if intent_markers.size() > 0:
 		init_markers_position()
 		reset_end_turn_opponent_action_turn()
+
+func _on_card_removed_from_action_zone(activated):
+	if activated:
+		card_remove_from_action_zone = true
+	else:
+		card_remove_from_action_zone = false
