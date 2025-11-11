@@ -201,7 +201,11 @@ func update_opponent_intent():
 	for card in action_zone:
 		card_position.append(card.starting_position)
 
-	update_markers_position(card_position)
+	if card_position.size() == 0:
+		init_markers_position()
+	else:
+		update_markers_position(card_position)
+
 	update_opponent_action_turn()
 
 func update_markers_position(card_position):
@@ -238,9 +242,9 @@ func update_markers_position(card_position):
 			if next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
-			elif card_position.size() < turn_order :
-				marker_x_position = marker.position.x
-				marker_y_position = marker.position.y
+			#elif card_position.size() < turn_order :
+				#marker_x_position = marker.position.x
+				#marker_y_position = marker.position.y
 			else:
 				marker_x_position = next_position.x
 				marker_y_position = next_position.y
