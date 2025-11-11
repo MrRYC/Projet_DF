@@ -212,13 +212,15 @@ func update_markers_position(card_position):
 	var marker_x_position : float = 0
 	var marker_y_position : float = 0
 	var next_position = null
+	
+	var end_turn_opponent_number = count_end_turn_opponent()
 
 	#Repositionnement des marqueurs d'intention 
-	for marker in intent_markers:
-		var turn_order :int = marker.opponent.attack_order
+	for i in range(intent_markers.size()):
+		var turn_order :int = intent_markers[i].opponent.attack_order
 		var target_index = card_position.size()-1
 	
-		if target_index < turn_order && marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		if target_index < turn_order && intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			if next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
@@ -226,7 +228,7 @@ func update_markers_position(card_position):
 				marker_x_position = next_position.x
 				marker_y_position = next_position.y
 
-			marker.position = Vector2(marker_x_position,marker_y_position)
+			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
 
 			#Mise à jour des variables de position pour la prochaine carte jouée
 			if marker_x_position == 125 :
@@ -237,19 +239,26 @@ func update_markers_position(card_position):
 
 			next_position = Vector2(marker_x_position,marker_y_position)
 
-		elif marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-			
-			if next_position == null:
+		elif intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+			var offset = action_zone.size() - end_turn_opponent_number
+			print("Index ",i," sur ", intent_markers.size()," opponent fin de tour et superposé à ", action_zone.size()," carte(s) joueur")
+			print(end_turn_opponent_number)
+			print(offset)
+
+			if action_zone.size() <= intent_markers.size() :
+				marker_x_position = intent_markers[i].position.x
+				marker_y_position = intent_markers[i].position.y
+			elif end_turn_opponent_number > 1 :
+				marker_x_position = action_zone[i+offset].position.x
+				marker_y_position = action_zone[i+offset].position.y
+			elif next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
-			#elif card_position.size() < turn_order :
-				#marker_x_position = marker.position.x
-				#marker_y_position = marker.position.y
 			else:
 				marker_x_position = next_position.x
 				marker_y_position = next_position.y
 
-			marker.position = Vector2(marker_x_position,marker_y_position)
+			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
 
 			if marker_x_position == 125 :
 				marker_x_position = 225
@@ -319,6 +328,14 @@ func check_attack_turn_order(m):
 		highest_attack_order = m.opponent.attack_order
 		
 	return highest_attack_order
+
+func count_end_turn_opponent():
+	var end_turn_opponent_number : int = 0
+	for marker in intent_markers:
+		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+			end_turn_opponent_number += 1
+	
+	return end_turn_opponent_number
 
 func reset_end_turn_opponent_action_turn():
 	for marker in intent_markers:
