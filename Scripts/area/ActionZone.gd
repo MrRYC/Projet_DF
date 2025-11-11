@@ -249,6 +249,7 @@ func update_markers_position(card_position):
 				marker_x_position = intent_markers[i].position.x
 				marker_y_position = intent_markers[i].position.y
 			elif end_turn_opponent_number > 1 :
+				print(action_zone[i+offset].position)
 				marker_x_position = action_zone[i+offset].position.x
 				marker_y_position = action_zone[i+offset].position.y
 			elif next_position == null:
