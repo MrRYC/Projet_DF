@@ -214,8 +214,8 @@ func update_markers_position(card_position):
 	var marker_y_position : float = 0
 	var next_position = null
 	var marker_offset : int = 0
-	var threshold_opponent_in_combat : bool = false
 	var end_turn_opponent_number = count_end_turn_opponent()
+	var last_end_turn_opponent_turn_order : int = 0
 
 	#Repositionnement des marqueurs d'intention 
 	for i in range(intent_markers.size()):
@@ -223,7 +223,6 @@ func update_markers_position(card_position):
 		var target_index = card_position.size()-1
 	
 		if target_index < turn_order && intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
-			threshold_opponent_in_combat = true
 			if next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
@@ -243,31 +242,46 @@ func update_markers_position(card_position):
 			next_position = Vector2(marker_x_position,marker_y_position)
 
 		elif intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
-			if action_zone.size() <= intent_markers.size() :
-				marker_x_position = intent_markers[i].position.x
-				marker_y_position = intent_markers[i].position.y
-			#elif next_position == null:
-				#marker_x_position = card_position[0].x
-				#marker_y_position = card_position[0].y
-			else :
-				var marker_index = end_turn_opponent_number - i
-				if marker_index == end_turn_opponent_number :
-					marker_offset = 1
-				else:
-					marker_offset += 1
-				marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
-				marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
+				
+			if intent_markers[0].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+				if last_end_turn_opponent_turn_order == 0:
+					last_end_turn_opponent_turn_order = intent_markers[i-1].opponent.attack_order
 
-			#if !threshold_opponent_in_combat:
-				#if next_position == null:
-					#marker_x_position = card_position[0].x
-					#marker_y_position = card_position[0].y
-				#else:
-					#marker_x_position = next_position.x
-					#marker_y_position = next_position.y
+				if action_zone.size() <= intent_markers.size() :
+					marker_x_position = next_position.x
+					marker_y_position = next_position.y
+				elif action_zone.size() == last_end_turn_opponent_turn_order+1:
+					if next_position == null:
+						marker_x_position = card_position[0].x
+						marker_y_position = card_position[0].y 
+					else:
+						marker_x_position = next_position.x
+						marker_y_position = next_position.y
+				else :
+					var marker_index = end_turn_opponent_number - i
+					if marker_index == end_turn_opponent_number :
+						marker_offset = 1
+					else:
+						marker_offset += 1
+					marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
+					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
+
+			if intent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+				if action_zone.size() <= intent_markers.size() :
+					marker_x_position = intent_markers[i].position.x
+					marker_y_position = intent_markers[i].position.y
+				else :
+					var marker_index = end_turn_opponent_number - i
+					if marker_index == end_turn_opponent_number :
+						marker_offset = 1
+					else:
+						marker_offset += 1
+					marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
+					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 
 			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
-
+#
+			#Utilisation uniquement si threshold_opponent_in_combat == true
 			if marker_x_position == 125 :
 				marker_x_position = 225
 			elif marker_x_position == 225:
