@@ -6,6 +6,7 @@ signal remove_card(bool)
 #constantes
 const ACTION_LANE1_ZONE_X_POSITION = 125
 const ACTION_LANE2_ZONE_X_POSITION = 225
+const ACTION_LANE_ZONE_Y_OFFSET = 71
 const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
 #variables de référence
@@ -105,9 +106,9 @@ func update_action_zone_positions():
 
 		#Gestion de l'espacement si la carte est inversée
 		if !card.is_flipped:
-			action_zone_y_position += 71
+			action_zone_y_position += ACTION_LANE_ZONE_Y_OFFSET
 		else:
-			action_zone_y_position += 72
+			action_zone_y_position += ACTION_LANE_ZONE_Y_OFFSET + 1
 	
 	update_opponent_intent()
 
@@ -203,7 +204,7 @@ func init_markers_position():
 		m.position = Vector2(marker_x_position, marker_y_position)
 		m.toggle_border(true)
 		
-		marker_y_position += 72
+		marker_y_position += ACTION_LANE_ZONE_Y_OFFSET
 
 func update_opponent_intent():
 	if intent_markers == null:
@@ -243,15 +244,7 @@ func update_markers_position(card_position):
 				marker_y_position = next_position.y
 
 			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
-
-			#Mise à jour des variables de position pour la prochaine carte jouée
-			if marker_x_position == 125 :
-				marker_x_position = 225
-			elif marker_x_position == 225:
-				marker_x_position = 125
-			marker_y_position += 71
-
-			next_position = Vector2(marker_x_position,marker_y_position)
+			next_position = next_marker_position(marker_x_position, marker_y_position)
 
 		#Gestion de la position du marqueur pour les opponent qui attaquent à la fin du tour
 		elif intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
@@ -288,7 +281,7 @@ func update_markers_position(card_position):
 					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 
 			#Verification si le premier opponent a un attak_threshold
-			if intent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			elif intent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 				#Gestion des positions des marqeurs en cas de retour d'une carte en main depuis l'action zone (clic gauche)
 				if card_remove_from_action_zone:
 					if action_zone.size() <= intent_markers.size():
@@ -322,15 +315,17 @@ func update_markers_position(card_position):
 					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 
 			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
-#
-			#Utilisation uniquement si threshold_opponent_in_combat == true
-			if marker_x_position == 125 :
-				marker_x_position = 225
-			elif marker_x_position == 225:
-				marker_x_position = 125
-			marker_y_position += 71
-			
-			next_position = Vector2(marker_x_position,marker_y_position)
+			next_position = next_marker_position(marker_x_position, marker_y_position)
+
+
+func next_marker_position(x_position, y_position):
+	if x_position == ACTION_LANE1_ZONE_X_POSITION :
+		x_position = ACTION_LANE2_ZONE_X_POSITION
+	elif x_position == ACTION_LANE2_ZONE_X_POSITION:
+		x_position = ACTION_LANE1_ZONE_X_POSITION
+	y_position += ACTION_LANE_ZONE_Y_OFFSET
+	
+	return Vector2(x_position,y_position)
 
 func remove_null_markers():
 	var new_arr : Array = []
