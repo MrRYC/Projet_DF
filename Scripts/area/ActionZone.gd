@@ -5,7 +5,7 @@ signal remove_card(bool)
 
 #constantes
 const ACTION_LANE1_ZONE_X_POSITION = 125
-const ACTION_LANE2_ZONE_X_POSITION = 225
+const ACTION_LANE2_ZONE_X_POSITION = 235
 const ACTION_LANE_ZONE_Y_OFFSET = 71
 const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
@@ -14,6 +14,7 @@ const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
 #variables du script
 var action_zone : Array = []
+var player_markers : Array = []
 var opponent_markers : Array = []
 var end_turn_opponent : Array = []
 var card_remove_from_action_zone : bool = false
@@ -52,13 +53,12 @@ func return_card_to_hand(card):
 		return
 	
 	#Remise à zero des marqueurs de tour des ennemis
-	for marker in opponent_markers:
-		marker.opponent.attack_order = marker.opponent.attack_order_copy
 	reset_end_turn_opponent_action_turn()
 	
 	#Repositionnement des marqueurs d'intentions
 	remove_card.emit(true)
-	update_opponent_intent()
+	update_player_markers()
+	update_opponent_markers()
 	remove_card.emit(false)
 
 func remove_card_from_action_zone(card):
@@ -102,7 +102,8 @@ func update_action_zone_positions():
 
 		var new_position = Vector2(action_zone_x_position, action_zone_y_position+offset)
 		card.starting_position = new_position
-		await animate_card_to_position(card, new_position)
+		await animate_card_to_position(card, new_position) #pause afin que new_position contienne la position de la carte dans l'action zone 
+		save_player_marker(card)
 
 		#Gestion de l'espacement si la carte est inversée
 		if !card.is_flipped:
@@ -110,12 +111,35 @@ func update_action_zone_positions():
 		else:
 			action_zone_y_position += ACTION_LANE_ZONE_Y_OFFSET + 1
 	
-	update_opponent_intent()
+	update_opponent_markers()
 
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, Global.ACTION_ZONE_DRAW_INTERVAL)
 	await tween.finished
+
+###########################################################################
+#                          PLAYER INTENT MARKER                           #
+###########################################################################
+
+func save_player_marker(card):
+	var m: MARKER = MARKER_SCENE.instantiate()
+	m.opponent = card.target
+	m.position = card.starting_position
+	m.toggle_player_border()
+	add_child(m)
+	player_markers.append(m)
+	
+func update_player_markers():
+	clear_all_player_markers()
+	for card in action_zone:
+		save_player_marker(card)
+
+func clear_all_player_markers():
+	for m in player_markers:
+		if is_instance_valid(m):
+			m.queue_free()
+	player_markers.clear()
 
 ###########################################################################
 #                        OPPONENTS INTENT MARKER                          #
@@ -130,6 +154,7 @@ func save_opponent_markers(incoming_attack):
 
 	for o in incoming_attack:
 		var m: MARKER = MARKER_SCENE.instantiate()
+		m.toggle_opponent_border()
 		m.opponent = o
 		m.array_position = o.data.attack_threshold #Sauvegarde de l'Attack Threshold de l'opponent
 		m.set_color()
@@ -204,7 +229,7 @@ func init_markers_position():
 		m.position = Vector2(marker_x_position, marker_y_position)
 		marker_y_position += ACTION_LANE_ZONE_Y_OFFSET
 
-func update_opponent_intent():
+func update_opponent_markers():
 	if opponent_markers == null:
 		return
 
@@ -333,11 +358,12 @@ func remove_null_markers():
 			new_arr.append(m)
 	opponent_markers = new_arr
 		
-func clear_all_intents():
+func clear_all_opponent_markers():
 	for m in opponent_markers:
 		if is_instance_valid(m):
 			m.queue_free()
 	opponent_markers.clear()
+	reset_end_turn_opponent_action_turn()
 
 ###########################################################################
 #                         OPPONENTS ACTION TURN                           #
@@ -407,6 +433,7 @@ func reset_end_turn_opponent_action_turn():
 func _on_empty_action_zone_button_pressed():
 	if action_zone.size() > 0:
 		empty_action_zone()
+		clear_all_player_markers()
 
 	if opponent_markers.size() > 0:
 		init_markers_position()

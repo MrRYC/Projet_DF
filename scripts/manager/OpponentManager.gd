@@ -107,7 +107,8 @@ func opponent_death():
 ###########################################################################
 
 func _on_new_turn(_deck_size, _is_first_turn):
-	action_zone.clear_all_intents()
+	action_zone.clear_all_player_markers()
+	action_zone.clear_all_opponent_markers()
 	incoming_attack.clear()
 	var label_value : int = 0
 	

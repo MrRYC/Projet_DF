@@ -143,7 +143,7 @@ func execute_opponent_death_effect():
 
 func apply_ai_end_turn_actions():
 	opponent_manager_ref.end_of_turn_actions()
-	action_zone_ref.clear_all_intents()
+	action_zone_ref.clear_all_opponent_markers()
 
 func apply_player_damage(amount):
 	player_ref.take_damage(amount)

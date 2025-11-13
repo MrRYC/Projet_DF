@@ -47,10 +47,10 @@ func raycast_at_cursor():
 		var card_found = collider.get_parent()
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
-			pass
+			return
 		elif collider.collision_mask == COLLISION_MASK_ENTITY and left_mouse:
-			pass
-		if collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
+			return
+		elif collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
 			if card_found.current_area == 2:
 				card_manager_ref.remove_card_from_action_zone(card_found)
 			elif card_found:
