@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b83xyop51gjnd"
-path="res://.godot/imported/Inactive_Augment.png-d2e1cc18f91d8ff2d3e63bd78adec105.ctex"
+uid="uid://chqk2rvicaewt"
+path="res://.godot/imported/Attack_Threshold.png-8f241d838a9f1c139c06dc71117d611e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fighting_style/Inactive_Augment.png"
-dest_files=["res://.godot/imported/Inactive_Augment.png-d2e1cc18f91d8ff2d3e63bd78adec105.ctex"]
+source_file="res://assets/resources/opponent ui/Attack_Threshold.png"
+dest_files=["res://.godot/imported/Attack_Threshold.png-8f241d838a9f1c139c06dc71117d611e.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chqk2rvicaewt"
-path="res://.godot/imported/Attack_Threshold.png-7daabb814bd917fa41b44ba98e252051.ctex"
+uid="uid://su31nwdnhwny"
+path="res://.godot/imported/Deck.png-34cf42501b223ee8afdd4a8a8f31c1e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/resources/Attack_Threshold.png"
-dest_files=["res://.godot/imported/Attack_Threshold.png-7daabb814bd917fa41b44ba98e252051.ctex"]
+source_file="res://assets/resources/piles/Deck.png"
+dest_files=["res://.godot/imported/Deck.png-34cf42501b223ee8afdd4a8a8f31c1e1.ctex"]
 
 [params]
 

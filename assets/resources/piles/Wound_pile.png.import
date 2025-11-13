@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmti7fgd06bnl"
-path="res://.godot/imported/Intent_Marker_Card.png-b35ed0123d26b1f7a4e15295965f368c.ctex"
+uid="uid://cqmtcp5a8w5v0"
+path="res://.godot/imported/Wound_pile.png-8e56db452dbb52ab180467dfcd848aa1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fighting_style/Intent_Marker_Card.png"
-dest_files=["res://.godot/imported/Intent_Marker_Card.png-b35ed0123d26b1f7a4e15295965f368c.ctex"]
+source_file="res://assets/resources/piles/Wound_pile.png"
+dest_files=["res://.godot/imported/Wound_pile.png-8e56db452dbb52ab180467dfcd848aa1.ctex"]
 
 [params]
 

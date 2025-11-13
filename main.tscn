@@ -4,18 +4,18 @@
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
 [ext_resource type="Script" uid="uid://l8hcmukuyrxp" path="res://scripts/area/PlayerHand.gd" id="3_o0gpq"]
 [ext_resource type="Script" uid="uid://bgivc6ermhj22" path="res://scripts/area/Deck.gd" id="4_07t4f"]
-[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/Deck.png" id="5_73sli"]
 [ext_resource type="Script" uid="uid://cob3gcksry37a" path="res://scripts/manager/OpponentManager.gd" id="6_sc1dx"]
 [ext_resource type="Script" uid="uid://dcdlie7yfbbpv" path="res://scripts/area/Discard.gd" id="6_x6f8x"]
-[ext_resource type="Texture2D" uid="uid://cqmtcp5a8w5v0" path="res://assets/resources/Wound_pile.png" id="7_c2ibq"]
 [ext_resource type="Script" uid="uid://chqp58nmtskrf" path="res://scripts/area/Wound.gd" id="7_fpfj3"]
 [ext_resource type="Script" uid="uid://bmpp16khxqdj1" path="res://scripts/manager/TurnManager.gd" id="7_ralk2"]
 [ext_resource type="Texture2D" uid="uid://b4hfvayhylgoh" path="res://assets/resources/Background.jpg" id="8_vtuuf"]
 [ext_resource type="Script" uid="uid://brw8md31axmbx" path="res://scripts/ui/UI.gd" id="9_3uw2j"]
-[ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/Banish_pile.png" id="9_j4qnp"]
+[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/piles/Deck.png" id="9_yaehf"]
 [ext_resource type="Script" uid="uid://b0uxxt4by12e6" path="res://scripts/area/ActionZone.gd" id="10_65qkc"]
 [ext_resource type="Script" uid="uid://bmgjtmwj7dd8t" path="res://scripts/area/Exhaust.gd" id="10_sc1dx"]
+[ext_resource type="Texture2D" uid="uid://cqmtcp5a8w5v0" path="res://assets/resources/piles/Wound_pile.png" id="11_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://wmk2a447h42f" path="res://scenes/Player.tscn" id="11_5vvyt"]
+[ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/piles/Banish_pile.png" id="14_yaehf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
 size = Vector2(106, 158)
@@ -70,7 +70,7 @@ shape = SubResource("RectangleShape2D_lgb7f")
 [node name="Sprite2D" type="Sprite2D" parent="Piles/DeckPile"]
 position = Vector2(-25, 40)
 scale = Vector2(0.6625, 0.6625)
-texture = ExtResource("5_73sli")
+texture = ExtResource("9_yaehf")
 
 [node name="DeckCardCountLabel" type="RichTextLabel" parent="Piles/DeckPile"]
 offset_left = -77.0
@@ -97,7 +97,7 @@ shape = SubResource("CircleShape2D_fpfj3")
 [node name="Sprite2D" type="Sprite2D" parent="Piles/WoundPile"]
 position = Vector2(-25, 45)
 scale = Vector2(0.12, 0.12)
-texture = ExtResource("7_c2ibq")
+texture = ExtResource("11_2cqfq")
 
 [node name="WoundCardCountLabel" type="RichTextLabel" parent="Piles/WoundPile"]
 offset_left = -65.0
@@ -126,7 +126,7 @@ shape = SubResource("RectangleShape2D_hf4xv")
 z_index = -2
 position = Vector2(25, 40)
 scale = Vector2(0.65625, 0.658333)
-texture = ExtResource("5_73sli")
+texture = ExtResource("9_yaehf")
 
 [node name="DiscardCardCountLabel" type="RichTextLabel" parent="Piles/DiscardPile"]
 offset_left = -27.0
@@ -153,7 +153,7 @@ shape = SubResource("CircleShape2D_fpfj3")
 [node name="Sprite2D" type="Sprite2D" parent="Piles/ExhaustPile"]
 position = Vector2(-25, 45)
 scale = Vector2(0.12, 0.12)
-texture = ExtResource("9_j4qnp")
+texture = ExtResource("14_yaehf")
 
 [node name="BanishCardCountLabel" type="RichTextLabel" parent="Piles/ExhaustPile"]
 offset_left = -64.0

@@ -202,8 +202,6 @@ func init_markers_position():
 			lane1 = true
 
 		m.position = Vector2(marker_x_position, marker_y_position)
-		m.toggle_border(true)
-		
 		marker_y_position += ACTION_LANE_ZONE_Y_OFFSET
 
 func update_opponent_intent():
