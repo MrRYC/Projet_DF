@@ -14,7 +14,7 @@ const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
 #variables du script
 var action_zone : Array = []
-var intent_markers : Array = []
+var opponent_markers : Array = []
 var end_turn_opponent : Array = []
 var card_remove_from_action_zone : bool = false
 var processing : bool
@@ -48,11 +48,11 @@ func return_card_to_hand(card):
 		remove_card_from_action_zone(c)
 	
 	#Mise à jour des marqueurs d'intention
-	if intent_markers == null:
+	if opponent_markers == null:
 		return
 	
 	#Remise à zero des marqueurs de tour des ennemis
-	for marker in intent_markers:
+	for marker in opponent_markers:
 		marker.opponent.attack_order = marker.opponent.attack_order_copy
 	reset_end_turn_opponent_action_turn()
 	
@@ -121,7 +121,7 @@ func animate_card_to_position(card, new_position):
 #                        OPPONENTS INTENT MARKER                          #
 ###########################################################################
 
-func save_intent_markers(incoming_attack):
+func save_opponent_markers(incoming_attack):
 
 	if incoming_attack.size() == 1:
 		solo_attacker = true
@@ -141,7 +141,7 @@ func threshold_opponent_marker_ordering(marker):
 	#Placement des ennemis qui attaquent à la fin (attack_threshold == 0) en dernier
 	if marker.array_position == 0:
 		if solo_attacker:
-			intent_markers.append(marker)
+			opponent_markers.append(marker)
 			marker.opponent.attack_order = 1
 			marker.opponent.update_attack_order()
 		else:
@@ -151,17 +151,17 @@ func threshold_opponent_marker_ordering(marker):
 	#Gestion des ennemis avec une attack_threshold
 	var desired_index = marker.array_position-1
 
-	if intent_markers.size() <= desired_index:
-		intent_markers.resize(desired_index + 1)
+	if opponent_markers.size() <= desired_index:
+		opponent_markers.resize(desired_index + 1)
 
-	if intent_markers[desired_index] == null:
-		intent_markers[desired_index] = marker
+	if opponent_markers[desired_index] == null:
+		opponent_markers[desired_index] = marker
 		marker.array_position = desired_index
 		marker.opponent.attack_order = marker.opponent.data.attack_threshold
 	else:
 		#Gestion des ennemis avec le même attack_threshold
 		shift_right_from(desired_index + 1)
-		intent_markers[desired_index + 1] = marker
+		opponent_markers[desired_index + 1] = marker
 		marker.array_position = desired_index + 1
 		marker.opponent.attack_order = marker.opponent.data.attack_threshold + 1
 	
@@ -172,16 +172,16 @@ func shift_right_from(start_index: int) -> void:
 
 	if start_index < 0:
 		start_index = 0
-	if start_index > intent_markers.size():
-		start_index = intent_markers.size()
+	if start_index > opponent_markers.size():
+		start_index = opponent_markers.size()
 		
 	#Augmentation de la taille de l'array d'une case pour permettre le shift
-	intent_markers.insert(start_index, null)
+	opponent_markers.insert(start_index, null)
 
 	# Mise à jour de l'array_position pour les markers valides
-	for i in range(start_index, intent_markers.size()):
-		if intent_markers[i] != null:
-			intent_markers[i].array_position = i
+	for i in range(start_index, opponent_markers.size()):
+		if opponent_markers[i] != null:
+			opponent_markers[i].array_position = i
 
 func init_markers_position():
 	var marker_x_position = ACTION_LANE1_ZONE_X_POSITION
@@ -189,8 +189,8 @@ func init_markers_position():
 	var lane1 = true
 
 	#Positionnement initial des marqueurs d'intention
-	for i in range(intent_markers.size()):
-		var m = intent_markers[i]
+	for i in range(opponent_markers.size()):
+		var m = opponent_markers[i]
 		#if m == null:
 			#continue # protège contre les trous dans l'array
 
@@ -205,7 +205,7 @@ func init_markers_position():
 		marker_y_position += ACTION_LANE_ZONE_Y_OFFSET
 
 func update_opponent_intent():
-	if intent_markers == null:
+	if opponent_markers == null:
 		return
 
 	var card_position : Array[Vector2] = []
@@ -228,12 +228,12 @@ func update_markers_position(card_position):
 	var last_end_turn_opponent_turn_order : int = 0
 
 	#Repositionnement des marqueurs d'intention 
-	for i in range(intent_markers.size()):
-		var turn_order :int = intent_markers[i].opponent.attack_order
+	for i in range(opponent_markers.size()):
+		var turn_order :int = opponent_markers[i].opponent.attack_order
 		var target_index = card_position.size()-1
 	
 		#Gestion de la position du marqueur pour les opponent qui ont un atack_threshold
-		if target_index < turn_order && intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+		if target_index < turn_order && opponent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 			if next_position == null:
 				marker_x_position = card_position[0].x
 				marker_y_position = card_position[0].y
@@ -241,23 +241,23 @@ func update_markers_position(card_position):
 				marker_x_position = next_position.x
 				marker_y_position = next_position.y
 
-			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
+			opponent_markers[i].position = Vector2(marker_x_position,marker_y_position)
 			next_position = next_marker_position(marker_x_position, marker_y_position)
 
 		#Gestion de la position du marqueur pour les opponent qui attaquent à la fin du tour
-		elif intent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
+		elif opponent_markers[i].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
 			#Verification si le premier opponent a un attak_threshold
-			if intent_markers[0].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			if opponent_markers[0].opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 				#Récupération de numero de tour du dernier opponent avec un attak_threshold
 				if last_end_turn_opponent_turn_order == 0:
-					last_end_turn_opponent_turn_order = intent_markers[i-1].opponent.attack_order
+					last_end_turn_opponent_turn_order = opponent_markers[i-1].opponent.attack_order
 
 				#Decalage si le marqueur suit la position d'un marqueur d'un opponent avec un attack_threshold 
 				if next_position != null:
 					marker_x_position = next_position.x
 					marker_y_position = next_position.y
 				#Fixation des positions des marqeurs actuels tant que le nombre de carte en zone d'action <= au nombre de marqueurs d'intention
-				elif action_zone.size() <= intent_markers.size() :
+				elif action_zone.size() <= opponent_markers.size() :
 					marker_x_position = next_position.x
 					marker_y_position = next_position.y
 				#Comparaison de la position du dernier opponent avec un attack_threshold à la taille de l'action zone
@@ -279,10 +279,10 @@ func update_markers_position(card_position):
 					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 
 			#Verification si le premier opponent a un attak_threshold
-			elif intent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
+			elif opponent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 				#Gestion des positions des marqeurs en cas de retour d'une carte en main depuis l'action zone (clic gauche)
 				if card_remove_from_action_zone:
-					if action_zone.size() <= intent_markers.size():
+					if action_zone.size() <= opponent_markers.size():
 						if next_position == null:
 							marker_offset = action_zone.size()-1
 							marker_x_position = action_zone[marker_offset].position.x
@@ -299,9 +299,9 @@ func update_markers_position(card_position):
 						marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
 						marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 				#Fixation des positions des marqeurs actuels tant que le nombre de carte en zone d'action <= au nombre de marqueurs d'intention
-				elif action_zone.size() <= intent_markers.size() :
-					marker_x_position = intent_markers[i].position.x
-					marker_y_position = intent_markers[i].position.y
+				elif action_zone.size() <= opponent_markers.size() :
+					marker_x_position = opponent_markers[i].position.x
+					marker_y_position = opponent_markers[i].position.y
 				#Gestion de la position des marqueurs quand l'action zone s'garandit
 				else :
 					var marker_index = end_turn_opponent_number - i
@@ -312,7 +312,7 @@ func update_markers_position(card_position):
 					marker_x_position = action_zone[end_turn_opponent_number-marker_offset].position.x
 					marker_y_position = action_zone[end_turn_opponent_number-marker_offset].position.y
 
-			intent_markers[i].position = Vector2(marker_x_position,marker_y_position)
+			opponent_markers[i].position = Vector2(marker_x_position,marker_y_position)
 			next_position = next_marker_position(marker_x_position, marker_y_position)
 
 
@@ -327,17 +327,17 @@ func next_marker_position(x_position, y_position):
 
 func remove_null_markers():
 	var new_arr : Array = []
-	for m in intent_markers:
+	for m in opponent_markers:
 		if m != null:
 			m.array_position = new_arr.size()
 			new_arr.append(m)
-	intent_markers = new_arr
+	opponent_markers = new_arr
 		
 func clear_all_intents():
-	for m in intent_markers:
+	for m in opponent_markers:
 		if is_instance_valid(m):
 			m.queue_free()
-	intent_markers.clear()
+	opponent_markers.clear()
 
 ###########################################################################
 #                         OPPONENTS ACTION TURN                           #
@@ -350,13 +350,13 @@ func init_opponent_action_turn():
 	#Récupération du numero d'ordre d'attaque le plus haut
 	var highest_attack_order : int = 0
 	var offset : int = 1
-	if intent_markers != null:
-		for marker in intent_markers:
+	if opponent_markers != null:
+		for marker in opponent_markers:
 			highest_attack_order = check_attack_turn_order(marker)
 
 	#Insertion du marqueur pour les opponent avec un attack_threshold == 0
 	for marker in end_turn_opponent:
-		intent_markers.append(marker)
+		opponent_markers.append(marker)
 		marker.opponent.attack_order = highest_attack_order + offset
 		marker.opponent.update_attack_order()
 		offset += 1
@@ -365,13 +365,13 @@ func update_opponent_action_turn():
 	var highest_attack_order : int = 0
 	
 	#Récupération du numero d'ordre d'attaque le plus haut
-	for marker in intent_markers:
+	for marker in opponent_markers:
 		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
 			highest_attack_order = check_attack_turn_order(marker)
 
 	if action_zone.size() > highest_attack_order:
 		var diff = action_zone.size() - highest_attack_order
-		for marker in intent_markers:
+		for marker in opponent_markers:
 			if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
 				marker.opponent.attack_order +=diff
 				marker.opponent.update_attack_order()
@@ -388,14 +388,14 @@ func check_attack_turn_order(m):
 
 func count_end_turn_opponent():
 	var end_turn_opponent_number : int = 0
-	for marker in intent_markers:
+	for marker in opponent_markers:
 		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
 			end_turn_opponent_number += 1
 	
 	return end_turn_opponent_number
 
 func reset_end_turn_opponent_action_turn():
-	for marker in intent_markers:
+	for marker in opponent_markers:
 		marker.opponent.attack_order = marker.opponent.attack_order_copy
 		marker.opponent.attack_order_copy = 0
 		marker.opponent.update_attack_order()
@@ -408,7 +408,7 @@ func _on_empty_action_zone_button_pressed():
 	if action_zone.size() > 0:
 		empty_action_zone()
 
-	if intent_markers.size() > 0:
+	if opponent_markers.size() > 0:
 		init_markers_position()
 		reset_end_turn_opponent_action_turn()
 

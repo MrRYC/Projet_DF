@@ -1,25 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://drfimj53amceh"]
+[gd_scene load_steps=4 format=3 uid="uid://drfimj53amceh"]
 
 [ext_resource type="Script" uid="uid://py8f72067g3o" path="res://scripts/resources/IntentMarker.gd" id="1_3igax"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfx3h"]
+size = Vector2(42, 254)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
-size = Vector2(43.636368, 240)
+size = Vector2(38.18182, 230.90909)
 
 [node name="IntentMarker" type="Node2D"]
 z_index = 2
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_3igax")
 
-[node name="MarkerArea2D" type="Area2D" parent="."]
-scale = Vector2(1.1, 1.1)
-collision_layer = 2
-collision_mask = 2
+[node name="PlayerMarkerArea2D" type="Area2D" parent="."]
+visible = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MarkerArea2D"]
-position = Vector2(58.181816, 0)
-shape = SubResource("RectangleShape2D_nx35t")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerMarkerArea2D"]
+position = Vector2(-70, -1)
+shape = SubResource("RectangleShape2D_sfx3h")
 
 [node name="PlayerMarkerBorder" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -29,197 +31,35 @@ metadata/_edit_use_anchors_ = true
 [node name="Marker1" type="ColorRect" parent="PlayerMarkerBorder"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
+anchor_top = -0.3
+anchor_bottom = 5.4
 offset_left = -80.0
 offset_top = -108.0
 offset_right = -76.0
 offset_bottom = -96.0
-metadata/_edit_use_anchors_ = true
 
 [node name="Marker2" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -92.0
-offset_right = -76.0
-offset_bottom = -80.0
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+offset_left = -76.0
+offset_top = -120.0
+offset_right = -64.0
+offset_bottom = -116.0
 
 [node name="Marker3" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -76.0
-offset_right = -76.0
-offset_bottom = -64.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker4" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -60.0
-offset_right = -76.0
-offset_bottom = -48.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker5" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -44.0
-offset_right = -76.0
-offset_bottom = -32.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker6" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -28.0
-offset_right = -76.0
-offset_bottom = -16.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker7" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = -12.0
-offset_right = -76.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker8" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 4.0
-offset_right = -76.0
-offset_bottom = 16.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker9" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 20.0
-offset_right = -76.0
-offset_bottom = 32.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker10" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 36.0
-offset_right = -76.0
-offset_bottom = 48.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker11" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 52.0
-offset_right = -76.0
-offset_bottom = 64.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker12" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 68.0
-offset_right = -76.0
-offset_bottom = 80.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker13" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 84.0
-offset_right = -76.0
-offset_bottom = 96.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker14" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = -80.0
-offset_top = 100.0
-offset_right = -76.0
-offset_bottom = 112.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker31" type="ColorRect" parent="PlayerMarkerBorder"]
 layout_mode = 0
-offset_left = -78.0
-offset_top = -120.0
-offset_right = -66.0
-offset_bottom = -116.0
-
-[node name="Marker32" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 0
-offset_left = -62.0
-offset_top = -120.0
-offset_right = -50.0
-offset_bottom = -116.0
-
-[node name="Marker33" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 0
-offset_left = -46.0
-offset_top = -120.0
-offset_right = -34.0
-offset_bottom = -116.0
-
-[node name="Marker41" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 0
-offset_left = -78.0
+offset_left = -76.0
 offset_top = 116.0
-offset_right = -66.0
+offset_right = -64.0
 offset_bottom = 120.0
 
-[node name="Marker42" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 0
-offset_left = -62.0
-offset_top = 116.0
-offset_right = -50.0
-offset_bottom = 120.0
+[node name="OpponentMarkerArea2D" type="Area2D" parent="."]
+scale = Vector2(1.1, 1.1)
+collision_layer = 2
+collision_mask = 2
 
-[node name="Marker43" type="ColorRect" parent="PlayerMarkerBorder"]
-layout_mode = 0
-offset_left = -46.0
-offset_top = 116.0
-offset_right = -34.0
-offset_bottom = 120.0
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OpponentMarkerArea2D"]
+position = Vector2(62.72728, -0.90909207)
+shape = SubResource("RectangleShape2D_nx35t")
 
 [node name="OpponentMarkerBorder" type="Control" parent="."]
 layout_mode = 3
@@ -228,200 +68,29 @@ offset_right = 40.0
 offset_bottom = 40.0
 metadata/_edit_use_anchors_ = true
 
-[node name="Marker16" type="ColorRect" parent="OpponentMarkerBorder"]
+[node name="Marker1" type="ColorRect" parent="OpponentMarkerBorder"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = -0.05
 anchor_bottom = -0.05
 offset_left = 76.0
-offset_top = -108.0
+offset_top = -118.0
 offset_right = 80.0
-offset_bottom = -96.0
-metadata/_edit_use_anchors_ = true
+offset_bottom = 122.0
 
-[node name="Marker17" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -92.0
-offset_right = 80.0
-offset_bottom = -80.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker18" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -76.0
-offset_right = 80.0
-offset_bottom = -64.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker19" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -60.0
-offset_right = 80.0
-offset_bottom = -48.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker20" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -44.0
-offset_right = 80.0
-offset_bottom = -32.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker21" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -28.0
-offset_right = 80.0
-offset_bottom = -16.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker22" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = -12.0
-offset_right = 80.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker23" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 4.0
-offset_right = 80.0
-offset_bottom = 16.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker24" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 20.0
-offset_right = 80.0
-offset_bottom = 32.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker25" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 36.0
-offset_right = 80.0
-offset_bottom = 48.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker26" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 52.0
-offset_right = 80.0
-offset_bottom = 64.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker27" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 68.0
-offset_right = 80.0
-offset_bottom = 80.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker28" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 84.0
-offset_right = 80.0
-offset_bottom = 96.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker29" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.05
-anchor_bottom = -0.05
-offset_left = 76.0
-offset_top = 100.0
-offset_right = 80.0
-offset_bottom = 112.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Marker38" type="ColorRect" parent="OpponentMarkerBorder"]
+[node name="Marker2" type="ColorRect" parent="OpponentMarkerBorder"]
 layout_mode = 0
-offset_left = 34.0
+offset_left = 64.0
 offset_top = -120.0
-offset_right = 46.0
+offset_right = 76.0
 offset_bottom = -116.0
 
-[node name="Marker39" type="ColorRect" parent="OpponentMarkerBorder"]
+[node name="Marker3" type="ColorRect" parent="OpponentMarkerBorder"]
 layout_mode = 0
-offset_left = 50.0
-offset_top = -120.0
-offset_right = 62.0
-offset_bottom = -116.0
-
-[node name="Marker40" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 0
-offset_left = 66.0
-offset_top = -120.0
-offset_right = 78.0
-offset_bottom = -116.0
-
-[node name="Marker48" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 0
-offset_left = 34.0
+offset_left = 64.0
 offset_top = 116.0
-offset_right = 46.0
+offset_right = 76.0
 offset_bottom = 120.0
 
-[node name="Marker49" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 0
-offset_left = 50.0
-offset_top = 116.0
-offset_right = 62.0
-offset_bottom = 120.0
-
-[node name="Marker50" type="ColorRect" parent="OpponentMarkerBorder"]
-layout_mode = 0
-offset_left = 66.0
-offset_top = 116.0
-offset_right = 78.0
-offset_bottom = 120.0
-
-[connection signal="mouse_entered" from="MarkerArea2D" to="." method="_on_marker_area_2d_mouse_entered"]
-[connection signal="mouse_exited" from="MarkerArea2D" to="." method="_on_marker_area_2d_mouse_exited"]
+[connection signal="mouse_entered" from="OpponentMarkerArea2D" to="." method="_on_marker_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="OpponentMarkerArea2D" to="." method="_on_marker_area_2d_mouse_exited"]

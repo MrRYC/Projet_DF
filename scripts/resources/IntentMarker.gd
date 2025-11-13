@@ -10,7 +10,8 @@ var array_position : int
 #var color_palet : Array[Color] = [Color(0.0, 0.0, 0.0, 1.0),Color(0.773, 0.0, 0.235, 0.996),Color(0.953, 0.902, 0.0, 0.996),Color(0.333, 0.918, 0.831, 1.0),Color(0.059, 0.584, 0.584, 1.0),Color(0.757, 0.067, 0.353, 1.0),Color(0.761, 0.322, 0.882, 1.0)]
 
 
-func toggle_border(value:bool):
+func toggle_player_border(value:bool):
+	$PlayerMarkerArea2D.visible = value
 	$PlayerMarkerBorder.visible = value
 
 ###########################################################################

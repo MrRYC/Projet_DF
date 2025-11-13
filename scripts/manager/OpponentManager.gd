@@ -65,25 +65,25 @@ func notify_card_played():
 			opponent.on_player_card_played()
 
 ###########################################################################
-#                            DIMM MANAGEMENT                              #
+#                       OPPONENT IMAGE MANAGEMENT                         #
 ###########################################################################
 
-# applique le dim à tous sauf "except_opponent"
+# applique l'effet d'estompe sur les opponent à l'exception de celui concerné par l'attaque
 func dim_all_except(except_opponent):
-	undim_all() # nettoyer d'abord pour éviter doublons
-	for op in match_up:
-		if not is_instance_valid(op):
+	undim_all()
+	for opponent in match_up:
+		if not is_instance_valid(opponent):
 			continue
-		if op == except_opponent:
+		if opponent == except_opponent:
 			continue
 			
-		op.apply_dim_to()
-		dimmed_opponents.append(op)
+		opponent.apply_dim_to()
+		dimmed_opponents.append(opponent)
 
 func undim_all():
-	for op in dimmed_opponents:
-		if is_instance_valid(op):
-			op.remove_dim_from()
+	for opponent in dimmed_opponents:
+		if is_instance_valid(opponent):
+			opponent.remove_dim_from()
 	dimmed_opponents.clear()
 
 ###########################################################################
@@ -141,7 +141,7 @@ func _on_new_turn(_deck_size, _is_first_turn):
 			incoming_attack.append(opponent)
 	
 	if incoming_attack.size()>0:
-		action_zone.save_intent_markers(incoming_attack)
+		action_zone.save_opponent_markers(incoming_attack)
 
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()
@@ -160,8 +160,5 @@ func _on_marker_hovered(opponent):
 	dim_all_except(opponent)
 
 func _on_marker_hovered_off():
-	#if current_hovered_opponent != opponent:
-		#return
-		
 	undim_all()
 	current_hovered_opponent = null
