@@ -12,17 +12,23 @@ signal marker_hovered_off()
 signal left_mouse_clicked()
 signal left_mouse_released()
 
-#signals from TurnManager to CardManager, OpponentManager et DeckPile
+#signals from TurnManager to CardManager, OpponentManager & DeckPile
 signal new_turn(int, bool)  #bool = true si premier tour
 
 #signals from TurnManager to UserInterface et DeckPile
 signal turn_increased(int)
 
-#signals from TurnManager to UserInterface, InputManager & ActionZone + Deck to UserInterface
+#signals from TurnManager to UserInterface
+signal activate_action_timer()
+
+#signals from TurnManager to UserInterface, InputManager, ActionZone, DeckPile & UserInterface
 signal processing(bool)
 
 #signals from TurnManager to Player
 signal player_health_updated(int)
+
+#signals from UserInterface to Playerhand and ActionZone
+signal action_timer_timeout(bool)
 
 #signals from CardManager to CardTargetSelector
 signal aim_started()

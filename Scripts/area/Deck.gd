@@ -24,9 +24,12 @@ func _ready() -> void:
 ###########################################################################
 func new_turn(new_hand_size):
 	EventBus.processing.emit(true)
+	EventBus.action_timer_timeout.emit(true)
 	for i in range(new_hand_size):
 		await draw()
 	EventBus.processing.emit(false)
+	#Démarrage du timer d'action
+	EventBus.activate_action_timer.emit()
 
 ###########################################################################
 #                               DECK CREATION                             #

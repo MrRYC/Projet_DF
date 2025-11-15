@@ -11,17 +11,19 @@ const COLLISION_MASK_ENTITY = 5 #Masque de collision du joueur et des opponents
 @onready var player_hand_ref = $"../PlayerHand"
 
 #variables du script
-var left_mouse
-var right_mouse
-var is_game_processing
+var left_mouse : bool = false
+var right_mouse : bool = false
+var is_game_processing : bool = false
+var action_timer_timeout : bool = false
 
 func _ready() -> void:
 	EventBus.processing.connect(_on_processing)
+	EventBus.action_timer_timeout.connect(_on_action_timer_timeout)
 
 func _input(event):
 	left_mouse = false
 	right_mouse = false
-	
+
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			EventBus.emit_signal("left_mouse_clicked")
@@ -45,6 +47,13 @@ func raycast_at_cursor():
 	if result.size() > 0:
 		var collider = result[0].collider
 		var card_found = collider.get_parent()
+		
+		#Seule les piles sont sélectionnables si le timer action est à 0
+		if action_timer_timeout:
+			if collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
+				card_manager_ref.show_pile(collider.get_parent().name)
+			return
+		
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
 			return
@@ -73,3 +82,6 @@ func _on_processing(processing):
 		is_game_processing = true
 	else:
 		is_game_processing = false
+
+func _on_action_timer_timeout(locked):
+	action_timer_timeout = locked
