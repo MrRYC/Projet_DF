@@ -359,10 +359,18 @@ func remove_null_markers():
 	opponent_markers = new_arr
 		
 func clear_all_opponent_markers():
+	#Effacement de l'array contenant la position des marqueurs ennemis
 	for m in opponent_markers:
 		if is_instance_valid(m):
 			m.queue_free()
 	opponent_markers.clear()
+	
+	#Effacement de l'array intermédiaire contenant la position des marqueurs ennemis avec un attack_threshold == 0 
+	for m in end_turn_opponent:
+		if is_instance_valid(m):
+			m.queue_free()
+	end_turn_opponent.clear()
+	
 	reset_end_turn_opponent_action_turn()
 
 ###########################################################################
@@ -370,9 +378,9 @@ func clear_all_opponent_markers():
 ###########################################################################
 
 func init_opponent_action_turn():
-	if end_turn_opponent == null:
+	if end_turn_opponent.size() == 0:
 		return
-
+	
 	#Récupération du numero d'ordre d'attaque le plus haut
 	var highest_attack_order : int = 0
 	var offset : int = 1

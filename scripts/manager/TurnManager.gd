@@ -22,10 +22,6 @@ func _ready() -> void:
 	EventBus.card_played.connect(_on_card_played)
 	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
 
-func _on_phase_button_pressed() -> void:
-	await execute_action_phase()
-	new_turn()
-
 ###########################################################################
 #                             TURN MANAGEMENT                             #
 ###########################################################################
@@ -152,6 +148,10 @@ func apply_player_damage(amount):
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
+func _on_phase_button_pressed() -> void:
+	await execute_action_phase()
+	new_turn()
+	
 func _on_deck_loaded(deck_size):
 	player_ref.set_starting_health(deck_size)
 	EventBus.new_turn.emit(START_HAND_SIZE, true) #true étant donné que c'est le premier tour

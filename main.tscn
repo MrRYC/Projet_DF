@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cqv835cjdmk24"]
+[gd_scene load_steps=23 format=3 uid="uid://cqv835cjdmk24"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://cqmtcp5a8w5v0" path="res://assets/resources/piles/Wound_pile.png" id="11_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://wmk2a447h42f" path="res://scenes/Player.tscn" id="11_5vvyt"]
 [ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/piles/Banish_pile.png" id="14_yaehf"]
+[ext_resource type="Texture2D" uid="uid://fcyudt8h0pa5" path="res://assets/resources/ui/timer_ring_black.png" id="17_074og"]
+[ext_resource type="Texture2D" uid="uid://gb2hk6i6y1hd" path="res://assets/resources/ui/timer_ring_blue.png" id="18_cegan"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
 size = Vector2(106, 158)
@@ -221,27 +223,44 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ActionTimer" type="Control" parent="UserInterface"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/ActionTimer"]
-layout_mode = 0
-offset_left = 897.0
-offset_top = 78.0
-offset_right = 981.0
-offset_bottom = 132.0
-text = "0
-"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="ActionTimer" type="TextureProgressBar" parent="UserInterface"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -493.0
+offset_right = 312.0
+offset_bottom = -135.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+step = 0.1
+fill_mode = 5
+texture_under = ExtResource("17_074og")
+texture_progress = ExtResource("18_cegan")
 
 [node name="FightingTimer" type="Timer" parent="UserInterface/ActionTimer"]
 wait_time = 15.0
 one_shot = true
 
+[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/ActionTimer"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 112.0
+offset_right = 130.27692
+offset_bottom = 145.6
+scale = Vector2(4, 4)
+theme_override_font_sizes/normal_font_size = 20
+text = "15:0
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="pressed" from="UserInterface/ActionButton" to="TurnManager" method="_on_phase_button_pressed"]
+[connection signal="pressed" from="UserInterface/ActionButton" to="UserInterface" method="_on_action_button_pressed"]
 [connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="OpponentManager" method="_on_empty_action_zone_button_pressed"]
 [connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="ActionZone" method="_on_empty_action_zone_button_pressed"]
