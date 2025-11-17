@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cqv835cjdmk24"]
+[gd_scene load_steps=23 format=3 uid="uid://djv7cwrt55ctt"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
@@ -249,13 +249,13 @@ one_shot = true
 
 [node name="TimerLabel" type="RichTextLabel" parent="UserInterface/ActionTimer"]
 layout_mode = 0
-offset_left = 76.0
+offset_left = 40.0
 offset_top = 112.0
-offset_right = 130.27692
+offset_right = 109.0
 offset_bottom = 145.6
 scale = Vector2(4, 4)
-theme_override_font_sizes/normal_font_size = 20
-text = "15:0
+theme_override_font_sizes/normal_font_size = 18
+text = "15 : 00
 "
 horizontal_alignment = 1
 vertical_alignment = 1
