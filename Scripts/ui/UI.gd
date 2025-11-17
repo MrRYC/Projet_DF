@@ -1,6 +1,6 @@
 extends Node 
 
-const max_value : float = 12.0
+const max_value : float = 15.0
 
 @onready var ring_progress_bar : TextureProgressBar = $ActionTimer
 @onready var timer = $ActionTimer/FightingTimer
@@ -42,6 +42,9 @@ func update_action_ui():
 	var milliseconds = round(int((time - seconds) * 100))
 	ring_progress_bar.value = time
 	timer_label.text = "%02d : %02d" % [seconds, milliseconds]
+	
+	if seconds < 5:
+		ring_progress_bar.texture_progress = load("res://assets/resources/ui/timer_ring_red.png")
 
 ###########################################################################
 #                         COMBO METER MANAGEMENT                         #
@@ -67,6 +70,7 @@ func _on_processing(processing):
 
 func _on_action_time():
 	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_black.png")
+	ring_progress_bar.texture_progress = load("res://assets/resources/ui/timer_ring_blue.png")
 	timer_label.text = str(timer_new_max_value)
 	ring_progress_bar.max_value = timer_new_max_value
 	timer.wait_time = timer_new_max_value
@@ -75,8 +79,8 @@ func _on_action_time():
 	EventBus.action_timer_timeout.emit(false)
 	
 func _on_action_timer_timeout():
-	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_red.png")
 	timer_label.text = "Fight"
+	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_red.png")
 	timer.stop()
 	$EmptyActionZoneButton.disabled = true
 	EventBus.action_timer_timeout.emit(true)
