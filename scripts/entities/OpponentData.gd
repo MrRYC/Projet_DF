@@ -10,7 +10,7 @@ class_name OPPONENT_DATA
 @export var damage : int
 
 #Gestion de l'IA
-enum action_type { FAILED_ATTACK, ATTACK, SIMPLE_BLOCK, DOUBLE_BLOCK, CANCEL_COMBO, BUFF } 
+enum action_type { FAILED_ATTACK, ATTACK, SIMPLE_BLOCK, DOUBLE_BLOCK, ALTER_COMBO, BUFF } 
 @export var action_1 : action_type
 @export var action_2 : action_type
 @export var action_3 : action_type

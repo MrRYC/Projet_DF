@@ -164,4 +164,5 @@ func _on_card_played():
 	action_card_played()
 
 func _on_matchup_over():
+	print(Global.global_score)
 	get_tree().quit() #quit the game

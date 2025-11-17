@@ -6,4 +6,4 @@ const ACTION_ZONE_DRAW_INTERVAL = 0.025
 const HAND_DRAW_INTERVAL = 0.35
 const HAND_DISCARD_INTERVAL = 1.00
 
-var globa_score : int = 0
+var global_score : int = 0

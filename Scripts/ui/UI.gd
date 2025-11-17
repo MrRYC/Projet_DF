@@ -97,6 +97,7 @@ func _on_combo_meter_cancelled():
 	
 func _on_combo_meter_increased():
 	combo_meter += 1
+	Global.global_score = combo_meter
 	update_combo_meter()
 
 func _on_combo_meter_altered(_value):

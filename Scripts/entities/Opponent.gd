@@ -102,7 +102,7 @@ func perform_action():
 			EventBus.ai_attack_performed.emit(self.data.damage)
 			print(str(self.data.display_name)+" "+str(self.data.action_type.keys()[self.action_type])+" : "+str(self.data.damage))
 			#Animation attack
-		"CANCEL_COMBO":
+		"ALTER_COMBO":
 			self.cancel_combo = true
 			print(str(self.data.display_name)+" Combo meter altéré = "+str(self.cancel_combo))
 			#Animation cancel
