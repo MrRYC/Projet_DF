@@ -45,3 +45,8 @@ signal deck_loaded(int)
 
 #signals from Opponent_Data to Player
 signal ai_attack_performed(int)
+
+#signals from Opponent to UserInterface
+signal combo_meter_cancelled()
+signal combo_meter_increased()
+signal combo_meter_altered(int)

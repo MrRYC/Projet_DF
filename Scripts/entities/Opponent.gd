@@ -10,7 +10,7 @@ var attack_order_copy : int = 0
 var action_type
 var action_performed = true
 var block : int = 0
-var cancel_combo : bool = false
+var is_dead : bool = false
 
 func init_from_data(d: OPPONENT_DATA):
 	data = d
@@ -29,8 +29,10 @@ func take_damage(amount):
 		update_intent(self.block)
 	else:
 		current_hp -= amount
+		EventBus.combo_meter_increased.emit()
 
 	if current_hp < 0:
+		is_dead = true
 		current_hp = 0
 		extra_damage += amount
 		#Animation étourdi
@@ -90,6 +92,9 @@ func set_defensive_action():
 	#Animaion block gain
 
 func perform_action():
+	if is_dead:
+		return
+	
 	match self.data.action_type.keys()[self.action_type]:
 		"ATTACK":
 			EventBus.ai_attack_performed.emit(self.data.damage)
@@ -97,8 +102,8 @@ func perform_action():
 			#Animation attack
 		"CANCEL_COMBO":
 			self.cancel_combo = true
-			print(str(self.data.display_name)+" Cancel Combo activé = "+str(self.cancel_combo))
-			#ANimation cancel
+			print(str(self.data.display_name)+" Combo meter altéré = "+str(self.cancel_combo))
+			#Animation cancel
 		"BUFF":
 			print(str(self.data.display_name)+" "+str(action_type)+" activé")
 			#Animation buff

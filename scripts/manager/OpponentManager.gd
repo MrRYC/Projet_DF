@@ -118,7 +118,6 @@ func _on_new_turn(_deck_size, _is_first_turn):
 		opponent.cards_played_counter = 0
 		opponent.action_performed = false
 		opponent.block = 0
-		opponent.cancel_combo = false
 		
 		#Génération de l'action du tour
 		opponent.data.init_action_list()

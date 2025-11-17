@@ -22,6 +22,8 @@ func take_damage(amount):
 		defensive_action()
 	else:
 		current_health -= amount
+		EventBus.combo_meter_cancelled.emit()
+
 	if current_health < 0:
 		current_health = 0
 
