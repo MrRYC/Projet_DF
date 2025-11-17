@@ -50,3 +50,5 @@ signal ai_attack_performed(int)
 signal combo_meter_cancelled()
 signal combo_meter_increased()
 signal combo_meter_altered(int)
+
+signal matchup_over()

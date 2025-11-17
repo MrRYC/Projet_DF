@@ -31,10 +31,9 @@ func take_damage(amount):
 		current_hp -= amount
 		EventBus.combo_meter_increased.emit()
 
-	if current_hp < 0:
+	if current_hp <= 0:
 		is_dead = true
-		current_hp = 0
-		extra_damage += amount
+		extra_damage = current_hp*-1
 		#Animation étourdi
 
 	update_health()
@@ -49,7 +48,10 @@ func defensive_action():
 		pass
 
 func update_health():
-	$HealthLabel.text = str(current_hp)
+	if current_hp < 0:
+		$HealthLabel.text = "0"
+	else:
+		$HealthLabel.text = str(current_hp)
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
@@ -126,12 +128,8 @@ func remove_dim_from():
 func death_check():
 	if extra_damage >= self.data.overkill_limit :
 		overkill_animation()
-		return true
-	elif current_hp == 0 :
+	elif current_hp <= 0 :
 		die()
-		return true
-	else:
-		return false
 
 func overkill_animation():
 	print("animation overkill")

@@ -93,14 +93,12 @@ func undim_all():
 func opponent_death():
 	var match_up_duplicate : Array = match_up.duplicate()
 	for opponent in match_up_duplicate:
-		var dead : bool = false
-		dead = opponent.death_check()
-		
-		if dead:
+		if opponent.is_dead:
+			opponent.death_check()
 			match_up.erase(opponent)
 		
 		if match_up.size() == 0:
-			get_tree().quit() #quit the game
+			EventBus.matchup_over.emit()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

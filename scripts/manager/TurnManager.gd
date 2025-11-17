@@ -21,6 +21,7 @@ func _ready() -> void:
 	EventBus.deck_loaded.connect(_on_deck_loaded)
 	EventBus.card_played.connect(_on_card_played)
 	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
+	EventBus.matchup_over.connect(_on_matchup_over)
 
 ###########################################################################
 #                             TURN MANAGEMENT                             #
@@ -161,3 +162,6 @@ func _on_ai_attack_performed(amount):
 
 func _on_card_played():
 	action_card_played()
+
+func _on_matchup_over():
+	get_tree().quit() #quit the game

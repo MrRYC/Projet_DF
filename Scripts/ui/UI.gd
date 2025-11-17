@@ -20,7 +20,8 @@ func _ready() -> void:
 
 	timer.timeout.connect(_on_action_timer_timeout)
 
-	_on_action_button_pressed() 
+	timer_label.text = str(int(timer_new_max_value)," : 00")
+	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_blue.png")
 
 func _process(_delta: float) -> void:
 	if timer.time_left > 0:
@@ -86,8 +87,6 @@ func _on_action_timer_timeout():
 	EventBus.action_timer_timeout.emit(true)
 
 func _on_action_button_pressed() -> void:
-	timer_label.text = str(int(timer_new_max_value)," : 00")
-	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_blue.png")
 	timer.stop()
 	$EmptyActionZoneButton.disabled = true
 	EventBus.action_timer_timeout.emit(true)
