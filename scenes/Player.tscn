@@ -18,7 +18,7 @@ collision_mask = 8
 position = Vector2(1, 1)
 shape = SubResource("CapsuleShape2D_gyqbi")
 
-[node name="Sprite2D" type="Sprite2D" parent="." groups=["Entity", "Player"]]
+[node name="Image" type="Sprite2D" parent="." groups=["Entity", "Player"]]
 scale = Vector2(0.372084, 0.372083)
 texture = ExtResource("2_v6fml")
 

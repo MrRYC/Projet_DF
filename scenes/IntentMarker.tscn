@@ -3,20 +3,21 @@
 [ext_resource type="Script" uid="uid://py8f72067g3o" path="res://scripts/resources/IntentMarker.gd" id="1_3igax"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sfx3h"]
-size = Vector2(54, 254)
+size = Vector2(50, 254)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
-size = Vector2(49.09091, 230.90909)
+size = Vector2(44.18181, 230.90909)
 
 [node name="IntentMarker" type="Node2D"]
-z_index = 2
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_3igax")
 
 [node name="PlayerMarkerArea2D" type="Area2D" parent="."]
+visible = false
+z_index = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerMarkerArea2D"]
-position = Vector2(-69, -1)
+position = Vector2(-75, -1)
 shape = SubResource("RectangleShape2D_sfx3h")
 
 [node name="PlayerMarkerBorder" type="Control" parent="."]
@@ -32,32 +33,37 @@ layout_mode = 1
 anchors_preset = -1
 anchor_top = -0.3
 anchor_bottom = 5.4
-offset_left = -84.0
+offset_left = -90.0
 offset_top = -108.0
-offset_right = -80.0
+offset_right = -86.0
 offset_bottom = -96.0
+mouse_filter = 2
 
 [node name="Marker2" type="ColorRect" parent="PlayerMarkerBorder"]
 layout_mode = 0
-offset_left = -80.0
+offset_left = -86.0
 offset_top = -120.0
-offset_right = -68.0
+offset_right = -74.0
 offset_bottom = -116.0
+mouse_filter = 2
 
 [node name="Marker3" type="ColorRect" parent="PlayerMarkerBorder"]
 layout_mode = 0
-offset_left = -80.0
+offset_left = -86.0
 offset_top = 116.0
-offset_right = -68.0
+offset_right = -74.0
 offset_bottom = 120.0
+mouse_filter = 2
 
 [node name="OpponentMarkerArea2D" type="Area2D" parent="."]
+visible = false
+z_index = 2
 scale = Vector2(1.1, 1.1)
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OpponentMarkerArea2D"]
-position = Vector2(60.90909, -0.90909207)
+position = Vector2(68, -1)
 shape = SubResource("RectangleShape2D_nx35t")
 
 [node name="OpponentMarkerBorder" type="Control" parent="."]
@@ -73,32 +79,35 @@ layout_mode = 1
 anchors_preset = -1
 anchor_top = -0.05
 anchor_bottom = -0.05
-offset_left = 80.0
+offset_left = 86.0
 offset_top = -118.0
-offset_right = 84.0
+offset_right = 90.0
 offset_bottom = 122.0
+mouse_filter = 2
 
 [node name="Marker2" type="ColorRect" parent="OpponentMarkerBorder"]
 layout_mode = 0
-offset_left = 68.0
+offset_left = 74.0
 offset_top = -120.0
-offset_right = 80.0
+offset_right = 86.0
 offset_bottom = -116.0
+mouse_filter = 2
 
 [node name="Marker3" type="ColorRect" parent="OpponentMarkerBorder"]
 layout_mode = 0
-offset_left = 68.0
+offset_left = 74.0
 offset_top = 116.0
-offset_right = 80.0
+offset_right = 86.0
 offset_bottom = 120.0
+mouse_filter = 2
 
 [node name="Card_Shadow" type="ColorRect" parent="."]
 visible = false
-z_index = -2
 offset_left = -74.0
 offset_top = -114.0
 offset_right = 74.0
 offset_bottom = 114.0
+mouse_filter = 2
 color = Color(0.81960785, 0.92156863, 0.9529412, 0.24313726)
 
 [connection signal="mouse_entered" from="PlayerMarkerArea2D" to="." method="_on_player_marker_area_2d_mouse_entered"]

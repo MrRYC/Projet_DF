@@ -44,16 +44,13 @@ func set_color():
 ###########################################################################
 
 func _on_opponent_marker_area_2d_mouse_entered() -> void:
-	EventBus.marker_hovered.emit(opponent)
-
+	EventBus.opponent_marker_hovered.emit(opponent)
 
 func _on_opponent_marker_area_2d_mouse_exited() -> void:
-	EventBus.marker_hovered_off.emit()
-
+	EventBus.opponent_marker_hovered_off.emit()
 
 func _on_player_marker_area_2d_mouse_entered():
-	EventBus.marker_hovered.emit(opponent)
-
+	EventBus.player_marker_hovered.emit(opponent)
 
 func _on_player_marker_area_2d_mouse_exited():
-	EventBus.marker_hovered_off.emit()
+	EventBus.player_marker_hovered_off.emit()

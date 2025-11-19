@@ -7,6 +7,8 @@ var dodge : int = 0
 
 func _ready() -> void:
 	EventBus.new_turn.connect(_on_new_turn)
+	EventBus.dim_player.connect(_on_dimmed_player)
+	EventBus.undim_player.connect(_on_undimmed_player)
 
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
@@ -72,3 +74,9 @@ func die():
 func _on_new_turn(_new_hand_size, _is_first_turn):
 	block = 0
 	dodge = 0
+	
+func _on_dimmed_player():
+	$Image.modulate = Color(0.275, 0.803, 0.496, 1.0)
+
+func _on_undimmed_player():
+	$Image.modulate = Color(1.0, 1.0, 1.0)

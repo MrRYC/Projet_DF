@@ -112,12 +112,18 @@ func perform_action():
 #                            DIMM MANAGEMENT                              #
 ###########################################################################
 
-# fonctions concrètes d'application/removal du layer sombre
-func apply_dim_to():
-	$Image.texture = self.data.dimmed_image
+func apply_attacker_color():
+	$Image.modulate = Color(1.0, 0.548, 0.495, 1.0)
 
-func remove_dim_from():
-	$Image.texture = self.data.image
+func apply_player_target_color():
+	$Image.modulate = Color(0.038, 0.735, 0.796, 1.0)
+
+#Modification de l'image
+func apply_dim():
+	$Image.modulate = Color(0.073, 0.073, 0.073, 0.294)
+
+func remove_dim():
+	$Image.modulate = Color(1.0, 1.0, 1.0)
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #

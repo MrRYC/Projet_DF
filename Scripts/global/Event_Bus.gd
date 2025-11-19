@@ -5,8 +5,10 @@ signal hovered()
 signal hovered_off()
 
 #signals from IntentMarker to ActionZone
-signal marker_hovered(opponent:OPPONENT)
-signal marker_hovered_off()
+signal opponent_marker_hovered(opponent:OPPONENT)
+signal opponent_marker_hovered_off()
+signal player_marker_hovered(target)
+signal player_marker_hovered_off()
 
 #signals from InputManager to CardManager
 signal left_mouse_clicked()
@@ -56,4 +58,6 @@ signal combo_meter_increased()
 signal combo_meter_altered(int)
 
 #signals from Player to PlayerHand
+signal dim_player()
+signal undim_player()
 signal drop_combo_cards()

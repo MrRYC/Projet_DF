@@ -10,8 +10,10 @@ var dimmed_opponents := [] # array of opponents currently dimmed
 
 func _ready():
 	EventBus.new_turn.connect(_on_new_turn)
-	EventBus.marker_hovered.connect(_on_marker_hovered)
-	EventBus.marker_hovered_off.connect(_on_marker_hovered_off)
+	EventBus.opponent_marker_hovered.connect(_on_opponent_marker_hovered)
+	EventBus.opponent_marker_hovered_off.connect(_on_opponent_marker_hovered_off)
+	EventBus.player_marker_hovered.connect(_on_player_marker_hovered)
+	EventBus.player_marker_hovered_off.connect(_on_player_marker_hovered_off)
 	
 	spawn_random_opponent_set(0,5)
 
@@ -69,22 +71,26 @@ func notify_card_played():
 ###########################################################################
 
 # applique l'effet d'estompe sur les opponent à l'exception de celui concerné par l'attaque
-func dim_all_except(except_opponent):
+func dim_all_except(except_opponent, marker_type):
 	undim_all()
 	for opponent in match_up:
 		if not is_instance_valid(opponent):
 			continue
+		
 		if opponent == except_opponent:
-			continue
+			if marker_type == "opponent":
+				opponent.apply_attacker_color()
+				continue
+			elif marker_type == "player":
+				opponent.apply_player_target_color()
+				continue
 			
-		opponent.apply_dim_to()
-		dimmed_opponents.append(opponent)
+		opponent.apply_dim()
 
 func undim_all():
-	for opponent in dimmed_opponents:
+	for opponent in match_up:
 		if is_instance_valid(opponent):
-			opponent.remove_dim_from()
-	dimmed_opponents.clear()
+			opponent.remove_dim()
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
@@ -150,13 +156,28 @@ func _on_empty_action_zone_button_pressed() -> void:
 	for opponent in match_up:
 		opponent.cards_played_counter = 0
 
-func _on_marker_hovered(opponent):
+func _on_opponent_marker_hovered(opponent):
 	if current_hovered_opponent == opponent:
 		return
 		
 	current_hovered_opponent = opponent
-	dim_all_except(opponent)
+	dim_all_except(opponent,"opponent")
 
-func _on_marker_hovered_off():
+func _on_opponent_marker_hovered_off():
+	undim_all()
+	current_hovered_opponent = null
+
+func _on_player_marker_hovered(target):
+	if current_hovered_opponent == target:
+		return
+	elif target is PLAYER:
+		EventBus.dim_player.emit()
+		return
+		
+	current_hovered_opponent = target
+	dim_all_except(target,"player")
+
+func _on_player_marker_hovered_off():
+	EventBus.undim_player.emit()
 	undim_all()
 	current_hovered_opponent = null
