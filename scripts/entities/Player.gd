@@ -18,7 +18,9 @@ func set_starting_health(health):
 
 func take_damage(amount):
 	
-	if self.block != 0:
+	if self.dodge != 0:
+		evasive_action()
+	elif self.block != 0:
 		defensive_action()
 	else:
 		current_health -= amount
@@ -38,6 +40,19 @@ func defensive_action():
 	if self.block == 0:
 		#Animation block lost
 		pass
+
+func evasive_action():
+	self.dodge -= 1
+	
+	if self.dodge == 0:
+		#Animation block lost
+		pass
+
+func check_evasive_action():
+	if self.dodge != 0:
+		evasive_action()
+	else:
+		EventBus.drop_combo_cards.emit()
 
 func update_health():
 	$HealthLabel.text = str(current_health)

@@ -152,7 +152,7 @@ func create_card_in_hand(card_data):
 
 	#Ajout de l'image
 	if effect_inactive:
-		card.get_node("CardFrontImage").texture = load("res://assets/fighting_style/Inactive_Augment.png")
+		card.get_node("CardFrontImage").texture = load("res://assets/fighting_style/Inactive_Augment_Card.png")
 	elif updated_data.has("image"):
 		card.get_node("CardFrontImage").texture = load(updated_data["image"])
 

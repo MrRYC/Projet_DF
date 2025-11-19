@@ -100,11 +100,9 @@ func perform_action():
 	match self.data.action_type.keys()[self.action_type]:
 		"ATTACK":
 			EventBus.ai_attack_performed.emit(self.data.damage)
-			print(str(self.data.display_name)+" "+str(self.data.action_type.keys()[self.action_type])+" : "+str(self.data.damage))
 			#Animation attack
-		"ALTER_COMBO":
-			self.cancel_combo = true
-			print(str(self.data.display_name)+" Combo meter altéré = "+str(self.cancel_combo))
+		"CANCEL_COMBO":
+			EventBus.ai_cancel_combo_performed.emit()
 			#Animation cancel
 		"BUFF":
 			print(str(self.data.display_name)+" "+str(action_type)+" activé")

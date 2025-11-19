@@ -7,9 +7,13 @@ const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 #variables du script
 @onready var center_screen_x = get_viewport().size.x / 2
 var speed = Global.HAND_DRAW_INTERVAL
-var player_hand = []
-var hand_x_position_min = 0.0
-var hand_x_position_max = 0.0
+var player_hand : Array = []
+var combo_cards : Array = []
+var hand_x_position_min : float = 0.0
+var hand_x_position_max : float = 0.0
+
+func _ready():
+	EventBus.drop_combo_cards.connect(_on_drop_combo_cards)
 
 ###########################################################################
 #                              HAND MANAGEMENT                            #
@@ -85,3 +89,17 @@ func calculate_card_position(index):
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, speed)
+
+###########################################################################
+#                          SIGNALS INTERCEPTION                           #
+###########################################################################
+
+func _on_drop_combo_cards():
+	if combo_cards.size() == 0:
+		print("Acune carte de combo")
+		return
+	
+	for card in combo_cards:
+		combo_cards.erase(card)
+		update_hand_positions()
+		print("Combo cards perdues")

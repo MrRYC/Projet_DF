@@ -92,6 +92,8 @@ func check_destination_pile(card):
 					send_card_to_wound(card)
 				else:
 					send_card_to_discard(card)
+			else:
+				send_card_to_discard(card)
 	
 	card.current_area = card.board_area.IN_PILE
 
@@ -172,7 +174,6 @@ func flip_card_in_hand(card):
 
 	if card.slot_number == 1:
 		if card.effect_per_slot[0]["uses"] == 0 && card.effect_per_slot[0]["side_effect"] == "inactivate":
-			print("effet inactivé")
 			card.get_node("CardErrorAnimation").play("tilt_error")
 			return
 

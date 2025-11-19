@@ -21,6 +21,7 @@ func _ready() -> void:
 	EventBus.deck_loaded.connect(_on_deck_loaded)
 	EventBus.card_played.connect(_on_card_played)
 	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
+	EventBus.ai_cancel_combo_performed.connect(_on_cancel_combo_performed)
 	EventBus.matchup_over.connect(_on_matchup_over)
 
 ###########################################################################
@@ -77,23 +78,22 @@ func check_slots_effect(card):
 	#application de l'effet sur le joueur
 	for slot_effect in card.effect_per_slot:
 		if card.effect_per_slot[slot_effect]["uses"] == null:
-			print(apply_slots_effect(card.effect_per_slot[slot_effect]["id"]))
+			apply_slots_effect(card.effect_per_slot[slot_effect])
 		elif card.effect_per_slot[slot_effect]["uses"] == 0:
 			return
 		else :
-			print(apply_slots_effect(card.effect_per_slot[slot_effect]["id"]))
+			apply_slots_effect(card.effect_per_slot[slot_effect])
 			card.effect_per_slot[slot_effect]["uses"] -= 1
+			print(card.effect_per_slot[slot_effect]["uses"])
 
 func apply_slots_effect(slot_effect):
 	var player_effect_txt : String
 
-	if slot_effect == "Block":
-		player_ref.block += 1
-		player_effect_txt = "block appliqué +"+str(player_ref.block)
-	elif slot_effect == "Dodge":
-		player_ref.dodge += 1
-		player_effect_txt = "esquive appliquée +"+str(player_ref.dodge)
-	elif slot_effect == "Breath":
+	if slot_effect["id"] == "Block":
+		player_ref.block += slot_effect["value"]
+	elif slot_effect["id"] == "Dodge":
+		player_ref.dodge += slot_effect["value"]
+	elif slot_effect["id"] == "Breath":
 		player_effect_txt = "respiration activée"
 	else:
 		player_effect_txt = "Effet inconnu"
@@ -145,6 +145,9 @@ func apply_ai_end_turn_actions():
 func apply_player_damage(amount):
 	player_ref.take_damage(amount)
 
+func apply_cancel_combo():
+	player_ref.check_evasive_action()
+
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
@@ -159,10 +162,13 @@ func _on_deck_loaded(deck_size):
 
 func _on_ai_attack_performed(amount):
 	apply_player_damage(amount)
+	
+func _on_cancel_combo_performed():
+	apply_cancel_combo()
 
 func _on_card_played():
 	action_card_played()
 
 func _on_matchup_over():
-	print(Global.global_score)
+	print("Score final : ",Global.global_score)
 	get_tree().quit() #quit the game

@@ -43,12 +43,17 @@ signal shuffle_back_discard(bool)
 #signals from DeckPile to TurnManager
 signal deck_loaded(int)
 
-#signals from Opponent_Data to Player
+#signals from Opponent_Manager to TurnManager
+signal matchup_over()
+
+#signals from Opponent to TurnManager
 signal ai_attack_performed(int)
+signal ai_cancel_combo_performed()
 
 #signals from Opponent to UserInterface
 signal combo_meter_cancelled()
 signal combo_meter_increased()
 signal combo_meter_altered(int)
 
-signal matchup_over()
+#signals from Player to PlayerHand
+signal drop_combo_cards()
