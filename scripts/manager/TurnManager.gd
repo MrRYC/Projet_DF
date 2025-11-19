@@ -84,7 +84,6 @@ func check_slots_effect(card):
 		else :
 			apply_slots_effect(card.effect_per_slot[slot_effect])
 			card.effect_per_slot[slot_effect]["uses"] -= 1
-			print(card.effect_per_slot[slot_effect]["uses"])
 
 func apply_slots_effect(slot_effect):
 	var player_effect_txt : String

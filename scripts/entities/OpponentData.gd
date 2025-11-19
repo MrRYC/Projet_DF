@@ -6,7 +6,6 @@ class_name OPPONENT_DATA
 @export var max_hp: int
 @export var overkill_limit:int = 0
 @export var image: Texture2D
-@export var dimmed_image: Texture2D
 @export var damage : int
 
 #Gestion de l'IA
