@@ -7,8 +7,8 @@ const COLLISION_MASK_PILE = 4 #Masque de collision des piles (deck, discard, wou
 const COLLISION_MASK_ENTITY = 5 #Masque de collision du joueur et des opponents
 
 #variables de référence vers autre Node
-@onready var card_manager_ref = $"../CardManager"
-@onready var player_hand_ref = $"../PlayerHand"
+@onready var card_manager_ref : Node2D = $"../CardManager"
+@onready var player_hand_ref : Node2D = $"../PlayerHand"
 
 #variables du script
 var left_mouse : bool = false
@@ -54,6 +54,7 @@ func raycast_at_cursor():
 				card_manager_ref.show_pile(collider.get_parent().name)
 			return
 		
+		print(collider.collision_mask)
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
 			return

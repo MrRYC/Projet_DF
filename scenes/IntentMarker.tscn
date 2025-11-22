@@ -6,7 +6,7 @@
 size = Vector2(50, 254)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
-size = Vector2(44.18181, 230.90909)
+size = Vector2(46.454544, 230.90909)
 
 [node name="IntentMarker" type="Node2D"]
 scale = Vector2(0.5, 0.5)
@@ -14,7 +14,9 @@ script = ExtResource("1_3igax")
 
 [node name="PlayerMarkerArea2D" type="Area2D" parent="."]
 visible = false
-z_index = 2
+z_index = 1
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerMarkerArea2D"]
 position = Vector2(-75, -1)
@@ -56,14 +58,13 @@ offset_bottom = 120.0
 mouse_filter = 2
 
 [node name="OpponentMarkerArea2D" type="Area2D" parent="."]
-visible = false
-z_index = 2
+z_index = 1
 scale = Vector2(1.1, 1.1)
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OpponentMarkerArea2D"]
-position = Vector2(68, -1)
+position = Vector2(66.86363, -1)
 shape = SubResource("RectangleShape2D_nx35t")
 
 [node name="OpponentMarkerBorder" type="Control" parent="."]
