@@ -47,14 +47,13 @@ func raycast_at_cursor():
 	if result.size() > 0:
 		var collider = result[0].collider
 		var card_found = collider.get_parent()
-		
+
 		#Seule les piles sont sélectionnables si le timer action est à 0
 		if action_timer_timeout:
 			if collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
 				card_manager_ref.show_pile(collider.get_parent().name)
 			return
-		
-		print(collider.collision_mask)
+
 		# CLIC GAUCHE
 		if collider.collision_mask == COLLISION_MASK_MARKER and left_mouse:
 			return
