@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 #constantes
 signal remove_card(bool)
@@ -17,13 +17,13 @@ var action_zone : Array = []
 var player_markers : Array = []
 var opponent_markers : Array = []
 var end_turn_opponent : Array = []
-var card_remove_from_action_zone : bool = false
+var card_removed : bool = false
 var processing : bool
 var solo_attacker : bool = false
 
 
 func _ready() -> void:
-	remove_card.connect(_on_card_removed_from_action_zone)
+	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -56,10 +56,10 @@ func return_card_to_hand(card):
 	reset_end_turn_opponent_action_turn()
 	
 	#Repositionnement des marqueurs d'intentions
-	remove_card.emit(true)
+	EventBus.card_removed_from_action_zone.emit(true)
 	update_player_markers()
 	update_opponent_markers()
-	remove_card.emit(false)
+	EventBus.card_removed_from_action_zone.emit(false)
 
 func remove_card_from_action_zone(card):
 	action_zone.erase(card)
@@ -306,7 +306,7 @@ func update_markers_position(card_position):
 			#Verification si le premier opponent a un attak_threshold
 			elif opponent_markers[0].opponent.data.behavior_type != OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD:
 				#Gestion des positions des marqeurs en cas de retour d'une carte en main depuis l'action zone (clic gauche)
-				if card_remove_from_action_zone:
+				if card_removed:
 					if action_zone.size() <= opponent_markers.size():
 						if next_position == null:
 							marker_offset = action_zone.size()-1
@@ -447,8 +447,8 @@ func _on_empty_action_zone_button_pressed():
 		init_markers_position()
 		reset_end_turn_opponent_action_turn()
 
-func _on_card_removed_from_action_zone(activated):
-	if activated:
-		card_remove_from_action_zone = true
+func _on_card_removed_from_action_zone(removed):
+	if removed:
+		card_removed = true
 	else:
-		card_remove_from_action_zone = false
+		card_removed = false

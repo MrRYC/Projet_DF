@@ -9,7 +9,8 @@ func _ready() -> void:
 	EventBus.new_turn.connect(_on_new_turn)
 	EventBus.dim_player.connect(_on_dimmed_player)
 	EventBus.undim_player.connect(_on_undimmed_player)
-
+	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
+	
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
@@ -80,3 +81,6 @@ func _on_dimmed_player():
 
 func _on_undimmed_player():
 	$Image.modulate = Color(1.0, 1.0, 1.0)
+
+func _on_card_removed_from_action_zone(_removed):
+	_on_undimmed_player()

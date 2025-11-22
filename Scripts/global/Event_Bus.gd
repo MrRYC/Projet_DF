@@ -10,6 +10,9 @@ signal opponent_marker_hovered_off()
 signal player_marker_hovered(target)
 signal player_marker_hovered_off()
 
+#signals from ActionZone to IntentMarker
+signal card_removed_from_action_zone(bool)
+
 #signals from InputManager to CardManager
 signal left_mouse_clicked()
 signal left_mouse_released()

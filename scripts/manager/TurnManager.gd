@@ -4,10 +4,10 @@ extends Node
 const START_HAND_SIZE = 6 #main de départ maximum
 
 #variables de référence vers un autre Node
-@onready var card_manager_ref = $"../CardManager"
-@onready var action_zone_ref = $"../ActionZone"
-@onready var player_ref = $"../Player"
-@onready var opponent_manager_ref = $"../OpponentManager"
+@onready var card_manager_ref : Node2D = $"../CardManager"
+@onready var action_zone_ref : Node = $"../ActionZone"
+@onready var player_ref : Node2D = $"../Player"
+@onready var opponent_manager_ref : Node2D = $"../OpponentManager"
 
 #variables du script
 var new_hand_max_size = START_HAND_SIZE

@@ -9,7 +9,7 @@ const ENEMY_COLLISION_MASK = 1
 
 #variables de référence vers un autre Node
 @onready var player_hand_ref: Node2D = $"../PlayerHand"
-@onready var action_zone_ref: Node2D = $"../ActionZone"
+@onready var action_zone_ref: Node = $"../ActionZone"
 @onready var deck_pile_ref: Node2D = $"../Piles/DeckPile"
 @onready var wound_pile_ref: Node2D = $"../Piles/WoundPile"
 @onready var discard_pile_ref: Node2D = $"../Piles/DiscardPile"

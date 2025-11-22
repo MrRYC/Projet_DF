@@ -51,7 +51,7 @@ script = ExtResource("6_sc1dx")
 [node name="PlayerHand" type="Node2D" parent="."]
 script = ExtResource("3_o0gpq")
 
-[node name="ActionZone" type="Node2D" parent="."]
+[node name="ActionZone" type="Node" parent="."]
 script = ExtResource("10_65qkc")
 
 [node name="Piles" type="Node2D" parent="."]

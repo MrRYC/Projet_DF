@@ -1,14 +1,13 @@
 extends Node2D
 class_name MARKER
 
-###########################################################################
-#                             MARKER STATE                                #
-###########################################################################
-
 var opponent : Node2D
 var array_position : int
 #var color_palet : Array[Color] = [Color(0.0, 0.0, 0.0, 1.0),Color(0.773, 0.0, 0.235, 0.996),Color(0.953, 0.902, 0.0, 0.996),Color(0.333, 0.918, 0.831, 1.0),Color(0.059, 0.584, 0.584, 1.0),Color(0.757, 0.067, 0.353, 1.0),Color(0.761, 0.322, 0.882, 1.0)]
 
+###########################################################################
+#                             MARKER STATE                                #
+###########################################################################
 
 func toggle_player_border():
 	$PlayerMarkerArea2D.visible = true
@@ -22,7 +21,7 @@ func toggle_opponent_border():
 	$OpponentMarkerArea2D.visible = true
 	$OpponentMarkerBorder.visible = true
 	$Card_Shadow.visible = true
-	
+
 ###########################################################################
 #                        COlOR RECT MANAGEMENT                            #
 ###########################################################################

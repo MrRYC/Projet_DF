@@ -1,7 +1,7 @@
 extends Node
 
 @export var opponent_scene: PackedScene = preload("res://scenes/Opponent.tscn")
-@onready var action_zone: Node2D = $"../ActionZone"
+@onready var action_zone: Node = $"../ActionZone"
 
 var match_up: Array = [] # instances Opponent en jeu
 var incoming_attack: Array = [] # liste des opponent qui attaquent ce tour
@@ -14,6 +14,7 @@ func _ready():
 	EventBus.opponent_marker_hovered_off.connect(_on_opponent_marker_hovered_off)
 	EventBus.player_marker_hovered.connect(_on_player_marker_hovered)
 	EventBus.player_marker_hovered_off.connect(_on_player_marker_hovered_off)
+	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 	
 	spawn_random_opponent_set(0,5)
 
@@ -181,3 +182,6 @@ func _on_player_marker_hovered_off():
 	EventBus.undim_player.emit()
 	undim_all()
 	current_hovered_opponent = null
+
+func _on_card_removed_from_action_zone(_removed):
+	undim_all()
