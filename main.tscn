@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://djv7cwrt55ctt"]
+[gd_scene load_steps=25 format=3 uid="uid://dut6bo1el3xs8"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/piles/Banish_pile.png" id="14_yaehf"]
 [ext_resource type="Texture2D" uid="uid://fcyudt8h0pa5" path="res://assets/resources/ui/timer_ring_black.png" id="17_074og"]
 [ext_resource type="Texture2D" uid="uid://gb2hk6i6y1hd" path="res://assets/resources/ui/timer_ring_blue.png" id="18_cegan"]
+[ext_resource type="Script" uid="uid://caty4rft3csx8" path="res://scripts/ui/MiniEqualizer.gd" id="19_2gh4u"]
+[ext_resource type="Script" uid="uid://clhdj1qykpjoq" path="res://scripts/manager/SoundManager.gd" id="19_5tuhn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
 size = Vector2(106, 158)
@@ -170,23 +172,6 @@ metadata/_edit_use_anchors_ = true
 [node name="UserInterface" type="Node" parent="."]
 script = ExtResource("9_3uw2j")
 
-[node name="BackgroundImage" type="Sprite2D" parent="UserInterface"]
-self_modulate = Color(0.817521, 0.817521, 0.817521, 1)
-z_index = -5
-position = Vector2(1.00012, -5.99994)
-scale = Vector2(1.07031, 1.07031)
-texture = ExtResource("8_vtuuf")
-centered = false
-metadata/_edit_lock_ = true
-
-[node name="TurnLabel" type="RichTextLabel" parent="UserInterface"]
-offset_left = 1723.0
-offset_top = 715.0
-offset_right = 1793.0
-offset_bottom = 739.0
-scale = Vector2(1.2, 1.2)
-text = "Turn 1"
-
 [node name="ActionButton" type="Button" parent="UserInterface"]
 offset_left = 1651.0
 offset_top = 660.0
@@ -213,17 +198,9 @@ offset_right = 225.0
 offset_bottom = 69.0
 text = "Cancel"
 
-[node name="ComboMeter" type="RichTextLabel" parent="UserInterface"]
-offset_left = 1636.0
-offset_top = 89.0
-offset_right = 1870.0
-offset_bottom = 167.0
-theme_override_font_sizes/normal_font_size = 48
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="BattleHUD" type="Node" parent="UserInterface"]
 
-[node name="ActionTimer" type="TextureProgressBar" parent="UserInterface"]
+[node name="ActionTimer" type="TextureProgressBar" parent="UserInterface/BattleHUD"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -243,11 +220,11 @@ fill_mode = 5
 texture_under = ExtResource("17_074og")
 texture_progress = ExtResource("18_cegan")
 
-[node name="FightingTimer" type="Timer" parent="UserInterface/ActionTimer"]
+[node name="FightingTimer" type="Timer" parent="UserInterface/BattleHUD/ActionTimer"]
 wait_time = 15.0
 one_shot = true
 
-[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/ActionTimer"]
+[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/BattleHUD/ActionTimer"]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 112.0
@@ -259,6 +236,63 @@ text = "15 : 00
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ComboMeter" type="RichTextLabel" parent="UserInterface/BattleHUD"]
+offset_left = 1636.0
+offset_top = 89.0
+offset_right = 1870.0
+offset_bottom = 167.0
+theme_override_font_sizes/normal_font_size = 48
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnLabel" type="RichTextLabel" parent="UserInterface/BattleHUD"]
+offset_left = 1723.0
+offset_top = 715.0
+offset_right = 1793.0
+offset_bottom = 739.0
+scale = Vector2(1.2, 1.2)
+text = "Turn 1"
+
+[node name="BackgroundImage" type="Sprite2D" parent="UserInterface/BattleHUD"]
+self_modulate = Color(0.817521, 0.817521, 0.817521, 1)
+z_index = -5
+position = Vector2(1.00012, -5.99994)
+scale = Vector2(1.07031, 1.07031)
+texture = ExtResource("8_vtuuf")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="TrackHUD" type="Node" parent="UserInterface"]
+
+[node name="TrackLabel" type="Label" parent="UserInterface/TrackHUD"]
+offset_left = 1637.0
+offset_top = 5.0
+offset_right = 1891.0
+offset_bottom = 22.0
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 12
+text = "track_name"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="MiniEqualizer" type="HBoxContainer" parent="UserInterface/TrackHUD"]
+custom_minimum_size = Vector2(24, 18)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -24.0
+offset_bottom = 18.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="MiniEqualizer" type="Control" parent="UserInterface/TrackHUD/MiniEqualizer"]
+layout_mode = 2
+script = ExtResource("19_2gh4u")
+
+[node name="SoundManager" type="Node" parent="."]
+script = ExtResource("19_5tuhn")
 
 [connection signal="pressed" from="UserInterface/ActionButton" to="TurnManager" method="_on_phase_button_pressed"]
 [connection signal="pressed" from="UserInterface/ActionButton" to="UserInterface" method="_on_action_button_pressed"]

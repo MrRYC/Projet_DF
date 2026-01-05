@@ -64,3 +64,6 @@ signal combo_meter_altered(int)
 signal dim_player()
 signal undim_player()
 signal drop_combo_cards()
+
+#signals from SoundManager to UserInterface
+signal track_played(String)

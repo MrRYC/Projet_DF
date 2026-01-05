@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://gt6dpklrh0y7"
+path="res://.godot/imported/background_Spin It On My Soul (Extend).mp3-b7269c65656bf3a8fa4e0d7c8dbad77a.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/background/background_Spin It On My Soul (Extend).mp3"
+dest_files=["res://.godot/imported/background_Spin It On My Soul (Extend).mp3-b7269c65656bf3a8fa4e0d7c8dbad77a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

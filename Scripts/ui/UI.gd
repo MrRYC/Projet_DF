@@ -2,10 +2,13 @@ extends Node
 
 const max_value : float = 15.0
 
-@onready var ring_progress_bar : TextureProgressBar = $ActionTimer
-@onready var timer = $ActionTimer/FightingTimer
-@onready var timer_label = $ActionTimer/TimerLabel
+#variables de référence vers un autre Node
+@onready var ring_progress_bar : TextureProgressBar = $BattleHUD/ActionTimer
+@onready var timer = $BattleHUD/ActionTimer/FightingTimer
+@onready var timer_label = $BattleHUD/ActionTimer/TimerLabel
+@onready var track_label = $TrackHUD/TrackLabel
 
+#variables du script
 var timer_new_max_value : float = max_value
 var combo_meter : int = 0
 var multiplicator : float = 0.0
@@ -17,6 +20,7 @@ func _ready() -> void:
 	EventBus.combo_meter_cancelled.connect(_on_combo_meter_cancelled)
 	EventBus.combo_meter_increased.connect(_on_combo_meter_increased)
 	EventBus.combo_meter_altered.connect(_on_combo_meter_altered)
+	EventBus.track_played.connect(_on_track_played)
 
 	timer.timeout.connect(_on_action_timer_timeout)
 
@@ -102,3 +106,6 @@ func _on_combo_meter_increased():
 
 func _on_combo_meter_altered(_value):
 	pass
+
+func _on_track_played(track_name):
+	track_label.text = track_name

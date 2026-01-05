@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Daily Fighters_1 action phase"
-run/main_scene="uid://djv7cwrt55ctt"
+run/main_scene="uid://dut6bo1el3xs8"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
