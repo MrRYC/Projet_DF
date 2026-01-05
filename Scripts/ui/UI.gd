@@ -56,14 +56,14 @@ func update_action_ui():
 ###########################################################################
 
 func update_combo_meter():
-	$ComboMeter.text = str(combo_meter)
+	$BattleHUD/ComboMeter.text = str(combo_meter)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
 func _on_turn_increased(turn):
-	$TurnLabel.text = str("Turn ",turn)
+	$BattleHUD/TurnLabel.text = str("Turn ",turn)
 
 func _on_processing(processing):
 	if processing:

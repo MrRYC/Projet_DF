@@ -35,6 +35,7 @@ func add_card_to_action_zone(card):
 		card.current_area = card.board_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
+		EventBus.opponent_incoming_damage_updated.emit()
 
 func return_card_to_hand(card):
 	var action_zone_copy = action_zone.duplicate()
@@ -54,6 +55,7 @@ func return_card_to_hand(card):
 	
 	#Remise à zero des marqueurs de tour des ennemis
 	reset_end_turn_opponent_action_turn()
+	EventBus.opponent_incoming_damage_updated.emit()
 	
 	#Repositionnement des marqueurs d'intentions
 	EventBus.card_removed_from_action_zone.emit(true)
@@ -72,6 +74,7 @@ func empty_action_zone():
 		card_manager_ref.return_card_to_hand(card)
 
 	action_zone.clear()
+	EventBus.opponent_incoming_damage_updated.emit()
 
 ###########################################################################
 #                              CARDS POSITION                             #

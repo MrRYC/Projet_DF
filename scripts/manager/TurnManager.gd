@@ -36,6 +36,7 @@ func new_turn():
 	EventBus.turn_increased.emit(nb_turn)
 	update_max_hand_size()
 	EventBus.new_turn.emit(new_hand_max_size, false) #false étant donné que ce n'est pas le premier tour
+	EventBus.opponent_incoming_damage_updated.emit()
 
 ###########################################################################
 #                            BATTLE EXECUTION                             #
@@ -90,6 +91,7 @@ func apply_slots_effect(slot_effect):
 
 	if slot_effect["id"] == "Block":
 		player_ref.block += slot_effect["value"]
+		EventBus.player_defense_updated.emit()
 	elif slot_effect["id"] == "Dodge":
 		player_ref.dodge += slot_effect["value"]
 	elif slot_effect["id"] == "Breath":

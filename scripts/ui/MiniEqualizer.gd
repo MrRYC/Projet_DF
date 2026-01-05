@@ -13,11 +13,6 @@ var bar_radius: float = 0.5
 var _inst: AudioEffectSpectrumAnalyzerInstance
 var bar_levels: PackedFloat32Array
 
-@export var color_green: Color = Color(0.2, 1.0, 0.2, 1.0)
-@export var color_yellow: Color = Color(1.0, 1.0, 0.2, 1.0)
-@export var color_orange: Color = Color(1.0, 0.6, 0.2, 1.0)
-@export var color_red: Color = Color(1.0, 0.2, 0.2, 1.0)
-
 func _ready() -> void:
 	custom_minimum_size = Vector2(24, 16)
 	bar_levels = PackedFloat32Array()
@@ -64,14 +59,31 @@ func update_bar_levels(delta: float) -> void:
 		# Lissage (plus smooth est grand, plus c’est “nerveux” mais stable)
 		bar_levels[i] = lerp(bar_levels[i], target, clamp(delta * smooth, 0.0, 1.0))
 
-func color_transition(a: Color, b: Color, t: float) -> Color:
-	return Color(
-		a.r + (b.r - a.r) * t,
-		a.g + (b.g - a.g) * t,
-		a.b + (b.b - a.b) * t,
-		a.a + (b.a - a.a) * t
-	)
-	
+func _draw() -> void:
+	var width: float = size.x
+	var height: float = size.y
+	if bars <= 0:
+		return
+
+	if _inst == null:
+		draw_rect(Rect2(0, 0, width, height), Color(1,1,1,0.25), false)
+		return
+		
+	var total_gap: float = bar_gap * float(bars - 1)
+	var bar_w: float = (width - total_gap) / float(bars)
+	if bar_w <= 1.0:
+		return
+
+	for i in range(bars):
+		var level: float = bar_levels[i]
+		var bar_h: float = max(2.0, height * level)
+		var x: float = float(i) * (bar_w + bar_gap)
+		var y: float = height - bar_h
+		
+		var c: Color = palette(level)
+		
+		draw_rect(Rect2(x, y, bar_w, bar_h), c, true)
+
 func palette(t: float) -> Color:
 	# t attendu 0..1
 	var x: float = t
@@ -79,6 +91,11 @@ func palette(t: float) -> Color:
 		x = 0.0
 	elif x > 1.0:
 		x = 1.0
+
+	var color_green: Color = Color(0.2, 1.0, 0.2, 1.0)
+	var color_yellow: Color = Color(1.0, 1.0, 0.2, 1.0)
+	var color_orange: Color = Color(1.0, 0.6, 0.2, 1.0)
+	var color_red: Color = Color(1.0, 0.2, 0.2, 1.0)
 
 	# 0.00-0.33: vert->jaune
 	if x < 0.33:
@@ -90,30 +107,13 @@ func palette(t: float) -> Color:
 	else:
 		return color_transition(color_orange, color_red, (x - 0.66) / 0.34)
 
-func _draw() -> void:
-	var w: float = size.x
-	var h: float = size.y
-	if bars <= 0:
-		return
-
-	if _inst == null:
-		draw_rect(Rect2(0, 0, w, h), Color(1,1,1,0.25), false)
-		return
-		
-	var total_gap: float = bar_gap * float(bars - 1)
-	var bar_w: float = (w - total_gap) / float(bars)
-	if bar_w <= 1.0:
-		return
-
-	for i in range(bars):
-		var level: float = bar_levels[i]
-		var bar_h: float = max(2.0, h * level)
-		var x: float = float(i) * (bar_w + bar_gap)
-		var y: float = h - bar_h
-		
-		var c: Color = palette(level)
-		
-		draw_rect(Rect2(x, y, bar_w, bar_h), c, true)
+func color_transition(a: Color, b: Color, t: float) -> Color:
+	return Color(
+		a.r + (b.r - a.r) * t,
+		a.g + (b.g - a.g) * t,
+		a.b + (b.b - a.b) * t,
+		a.a + (b.a - a.a) * t
+	)
 
 func draw_round_rect(rect: Rect2, _rx: float, _ry: float, color: Color) -> void:
 	# draw_style_box est plus “theme friendly” mais ici on garde minimal:

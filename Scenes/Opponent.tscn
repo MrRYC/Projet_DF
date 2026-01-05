@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3vs7n1efdpym"]
+[gd_scene load_steps=6 format=3 uid="uid://b3vs7n1efdpym"]
 
 [ext_resource type="Script" uid="uid://bmpbet4eaqcvj" path="res://scripts/entities/Opponent.gd" id="1_kivkk"]
 [ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_fav6y"]
 [ext_resource type="Texture2D" uid="uid://chqk2rvicaewt" path="res://assets/resources/opponent ui/Attack_Threshold.png" id="3_1ucok"]
+[ext_resource type="Script" uid="uid://mtdmpxe7rr4a" path="res://scripts/ui/HealthPips.gd" id="4_8onbh"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -41,15 +42,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="HealthLabel" type="RichTextLabel" parent="." groups=["Entity", "Opponent"]]
-offset_left = -35.0
-offset_top = 177.0
-offset_right = 25.0
-offset_bottom = 203.0
-scale = Vector2(1.2, 1.2)
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="HealthPips" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -54.0
+offset_top = 180.0
+offset_right = 84.0
+offset_bottom = 210.0
+script = ExtResource("4_8onbh")
 
 [node name="Intent" type="RichTextLabel" parent="."]
 offset_left = -88.0

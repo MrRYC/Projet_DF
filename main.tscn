@@ -200,6 +200,15 @@ text = "Cancel"
 
 [node name="BattleHUD" type="Node" parent="UserInterface"]
 
+[node name="BackgroundImage" type="Sprite2D" parent="UserInterface/BattleHUD"]
+self_modulate = Color(0.817521, 0.817521, 0.817521, 1)
+z_index = -5
+position = Vector2(1.00012, -5.99994)
+scale = Vector2(1.07031, 1.07031)
+texture = ExtResource("8_vtuuf")
+centered = false
+metadata/_edit_lock_ = true
+
 [node name="ActionTimer" type="TextureProgressBar" parent="UserInterface/BattleHUD"]
 anchors_preset = 8
 anchor_left = 0.5
@@ -254,15 +263,6 @@ offset_right = 1793.0
 offset_bottom = 739.0
 scale = Vector2(1.2, 1.2)
 text = "Turn 1"
-
-[node name="BackgroundImage" type="Sprite2D" parent="UserInterface/BattleHUD"]
-self_modulate = Color(0.817521, 0.817521, 0.817521, 1)
-z_index = -5
-position = Vector2(1.00012, -5.99994)
-scale = Vector2(1.07031, 1.07031)
-texture = ExtResource("8_vtuuf")
-centered = false
-metadata/_edit_lock_ = true
 
 [node name="TrackHUD" type="Node" parent="UserInterface"]
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://wmk2a447h42f"]
+[gd_scene load_steps=5 format=3 uid="uid://wmk2a447h42f"]
 
 [ext_resource type="Script" uid="uid://bckca1l0c66rg" path="res://scripts/entities/Player.gd" id="1_v6fml"]
 [ext_resource type="Texture2D" uid="uid://c30vuraays10t" path="res://assets/entities/player/Player.png" id="2_v6fml"]
+[ext_resource type="Script" uid="uid://mtdmpxe7rr4a" path="res://scripts/ui/HealthPips.gd" id="3_3li8b"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -22,12 +23,11 @@ shape = SubResource("CapsuleShape2D_gyqbi")
 scale = Vector2(0.372084, 0.372083)
 texture = ExtResource("2_v6fml")
 
-[node name="HealthLabel" type="RichTextLabel" parent="."]
-offset_left = -37.0
-offset_top = 171.0
-offset_right = 23.0
-offset_bottom = 197.0
-scale = Vector2(1.2, 1.2)
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="HealthPips" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -78.0
+offset_top = 179.0
+offset_right = 73.0
+offset_bottom = 205.0
+script = ExtResource("3_3li8b")

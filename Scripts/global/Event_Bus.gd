@@ -67,3 +67,8 @@ signal drop_combo_cards()
 
 #signals from SoundManager to UserInterface
 signal track_played(String)
+
+#signals between Player and Opponents
+signal player_incoming_damage_updated(amount: int)
+signal opponent_incoming_damage_updated()
+signal player_defense_updated()

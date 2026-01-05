@@ -15,6 +15,7 @@ func _ready():
 	EventBus.player_marker_hovered.connect(_on_player_marker_hovered)
 	EventBus.player_marker_hovered_off.connect(_on_player_marker_hovered_off)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
+	EventBus.opponent_incoming_damage_updated.connect(_on_incoming_damage)
 	
 	spawn_random_opponent_set(0,5)
 
@@ -148,6 +149,11 @@ func _on_new_turn(_deck_size, _is_first_turn):
 	if incoming_attack.size()>0:
 		action_zone.save_opponent_markers(incoming_attack)
 
+	var total_incoming: int = 0
+	for opp in incoming_attack:
+		total_incoming += opp.data.damage
+	EventBus.player_incoming_damage_updated.emit(total_incoming)
+	
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()
 	action_zone.init_opponent_action_turn()
@@ -185,3 +191,31 @@ func _on_player_marker_hovered_off():
 
 func _on_card_removed_from_action_zone(_removed):
 	undim_all()
+
+func _on_incoming_damage():
+	#Reset des preview sur tous les opponents
+	for opponent in match_up:
+		if is_instance_valid(opponent):
+			opponent.clear_pending_damage_preview()
+
+	#Cumul les dégâts des cartes en action zone par opponent
+	var dmg_by_opp: Dictionary = {} # key: OPPONENT, value: int
+
+	for card in action_zone.action_zone:
+		if card == null:
+			continue
+		if card.is_flipped:
+			continue # flipped = slots/defense, pas une attaque
+		if card.target == null:
+			continue
+		if card.target is OPPONENT:
+			var o: OPPONENT = card.target
+			var prev: int = 0
+			if dmg_by_opp.has(o):
+				prev = int(dmg_by_opp[o])
+			dmg_by_opp[o] = prev + int(card.attack)
+
+	#Affichage des previews sur les opponents
+	for o in dmg_by_opp.keys():
+		if is_instance_valid(o):
+			o.set_pending_damage_preview(int(dmg_by_opp[o]))  # ou o.get_node("HealthPips").set_preview_damage(...)

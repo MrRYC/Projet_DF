@@ -1,6 +1,7 @@
 extends Node2D
 class_name PLAYER
 
+var max_health : int = 0
 var current_health : int = 0
 var block : int = 0
 var dodge : int = 0
@@ -10,12 +11,15 @@ func _ready() -> void:
 	EventBus.dim_player.connect(_on_dimmed_player)
 	EventBus.undim_player.connect(_on_undimmed_player)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
+	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
+	EventBus.player_defense_updated.connect(_on_player_defense_changed)
 	
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
 
 func set_starting_health(health):
+	max_health = health
 	current_health = health
 	update_health()
 
@@ -58,8 +62,16 @@ func check_evasive_action():
 		EventBus.drop_combo_cards.emit()
 
 func update_health():
-	$HealthLabel.text = str(current_health)
+	$HealthPips.set_health(current_health, max_health)
 
+func set_incoming_damage_preview(dmg):
+	$HealthPips.set_preview_damage(dmg)
+	$HealthPips.set_preview_block(block)
+
+func clear_incoming_damage_preview():
+	$HealthPips.set_preview_damage(0)
+	$HealthPips.set_preview_block(0)
+	
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
 ###########################################################################
@@ -84,3 +96,9 @@ func _on_undimmed_player():
 
 func _on_card_removed_from_action_zone(_removed):
 	_on_undimmed_player()
+
+func _on_incoming_damage(amount):
+	$HealthPips.set_preview_damage(amount)
+
+func _on_player_defense_changed():
+	set_incoming_damage_preview($HealthPips.pending_damage)

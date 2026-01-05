@@ -48,10 +48,13 @@ func defensive_action():
 		pass
 
 func update_health():
-	if current_hp < 0:
-		$HealthLabel.text = "0"
-	else:
-		$HealthLabel.text = str(current_hp)
+	$HealthPips.set_health(current_hp, data.max_hp)
+	
+func set_pending_damage_preview(dmg: int) -> void:
+	$HealthPips.set_preview_damage(dmg)
+
+func clear_pending_damage_preview() -> void:
+	$HealthPips.clear_preview()
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
