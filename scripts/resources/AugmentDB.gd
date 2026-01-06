@@ -20,9 +20,9 @@ const AUGMENTS = {
 		"value" : 1,
 		"uses" : 2
 	}, 
-	"Breath_Augment" : {
-		"id" : "Breath",
-		"description" : "add 2.5 recovery",
+	"Feint_Augment" : {
+		"id" : "Feint",
+		"description" : "execute 1 feint",
 		"side_effect" : "exhaust",
 		"time_cost" : 1.0,
 		"value" : 1,

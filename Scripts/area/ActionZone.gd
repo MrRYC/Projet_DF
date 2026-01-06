@@ -29,7 +29,7 @@ func _ready() -> void:
 #                          ACTION ZONE MANAGEMENT                         #
 ###########################################################################
 
-func add_card_to_action_zone(card):
+func add_card_to_action_zone(card) -> void:
 	if card not in action_zone:
 		action_zone.insert(0,card)
 		card.current_area = card.board_area.IN_ACTION_ZONE
@@ -37,7 +37,7 @@ func add_card_to_action_zone(card):
 		update_action_zone_positions()
 		EventBus.opponent_incoming_damage_updated.emit()
 
-func return_card_to_hand(card):
+func return_card_to_hand(card) -> void:
 	var action_zone_copy = action_zone.duplicate()
 	var index = action_zone.find(card)
 	
@@ -63,10 +63,10 @@ func return_card_to_hand(card):
 	update_opponent_markers()
 	EventBus.card_removed_from_action_zone.emit(false)
 
-func remove_card_from_action_zone(card):
+func remove_card_from_action_zone(card) -> void:
 	action_zone.erase(card)
 
-func empty_action_zone():
+func empty_action_zone() -> void:
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
 		if card.is_flipped:
@@ -80,7 +80,7 @@ func empty_action_zone():
 #                              CARDS POSITION                             #
 ###########################################################################
 
-func update_action_zone_positions():
+func update_action_zone_positions() -> void:
 	var action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
 	var action_zone_y_position = 150
 	var offset = 0
@@ -116,7 +116,7 @@ func update_action_zone_positions():
 	
 	update_opponent_markers()
 
-func animate_card_to_position(card, new_position):
+func animate_card_to_position(card, new_position) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, Global.ACTION_ZONE_DRAW_INTERVAL)
 	await tween.finished
@@ -125,7 +125,7 @@ func animate_card_to_position(card, new_position):
 #                          PLAYER INTENT MARKER                           #
 ###########################################################################
 
-func save_player_marker(card):
+func save_player_marker(card) -> void:
 	var m: MARKER = MARKER_SCENE.instantiate()
 	m.opponent = card.target
 	m.position = card.starting_position
@@ -133,12 +133,12 @@ func save_player_marker(card):
 	add_child(m)
 	player_markers.append(m)
 	
-func update_player_markers():
+func update_player_markers() -> void:
 	clear_all_player_markers()
 	for card in action_zone:
 		save_player_marker(card)
 
-func clear_all_player_markers():
+func clear_all_player_markers() -> void:
 	for m in player_markers:
 		if is_instance_valid(m):
 			m.queue_free()
@@ -148,7 +148,7 @@ func clear_all_player_markers():
 #                        OPPONENTS INTENT MARKER                          #
 ###########################################################################
 
-func save_opponent_markers(incoming_attack):
+func save_opponent_markers(incoming_attack) -> void:
 
 	if incoming_attack.size() == 1:
 		solo_attacker = true
@@ -165,7 +165,7 @@ func save_opponent_markers(incoming_attack):
 		threshold_opponent_marker_ordering(m)
 
 #Affichage du marqueur d'intention
-func threshold_opponent_marker_ordering(marker):
+func threshold_opponent_marker_ordering(marker) -> void:
 	#Placement des ennemis qui attaquent à la fin (attack_threshold == 0) en dernier
 	if marker.array_position == 0:
 		if solo_attacker:
@@ -211,7 +211,7 @@ func shift_right_from(start_index: int) -> void:
 		if opponent_markers[i] != null:
 			opponent_markers[i].array_position = i
 
-func init_markers_position():
+func init_markers_position() -> void:
 	var marker_x_position = ACTION_LANE1_ZONE_X_POSITION
 	var marker_y_position = 150
 	var lane1 = true
@@ -232,7 +232,7 @@ func init_markers_position():
 		m.position = Vector2(marker_x_position, marker_y_position)
 		marker_y_position += ACTION_LANE_ZONE_Y_OFFSET
 
-func update_opponent_markers():
+func update_opponent_markers() -> void:
 	if opponent_markers == null:
 		return
 
@@ -247,7 +247,7 @@ func update_opponent_markers():
 
 	update_opponent_action_turn()
 
-func update_markers_position(card_position):
+func update_markers_position(card_position) -> void:
 	var marker_x_position : float = 0
 	var marker_y_position : float = 0
 	var next_position = null
@@ -353,7 +353,7 @@ func next_marker_position(x_position, y_position):
 	
 	return Vector2(x_position,y_position)
 
-func remove_null_markers():
+func remove_null_markers() -> void:
 	var new_arr : Array = []
 	for m in opponent_markers:
 		if m != null:
@@ -361,7 +361,7 @@ func remove_null_markers():
 			new_arr.append(m)
 	opponent_markers = new_arr
 		
-func clear_all_opponent_markers():
+func clear_all_opponent_markers() -> void:
 	#Effacement de l'array contenant la position des marqueurs ennemis
 	for m in opponent_markers:
 		if is_instance_valid(m):
@@ -380,7 +380,7 @@ func clear_all_opponent_markers():
 #                         OPPONENTS ACTION TURN                           #
 ###########################################################################
 
-func init_opponent_action_turn():
+func init_opponent_action_turn() -> void:
 	if end_turn_opponent.size() == 0:
 		return
 	
@@ -398,7 +398,7 @@ func init_opponent_action_turn():
 		marker.opponent.update_attack_order()
 		offset += 1
 
-func update_opponent_action_turn():
+func update_opponent_action_turn() -> void:
 	var highest_attack_order : int = 0
 	
 	#Récupération du numero d'ordre d'attaque le plus haut
@@ -413,7 +413,7 @@ func update_opponent_action_turn():
 				marker.opponent.attack_order +=diff
 				marker.opponent.update_attack_order()
 
-func check_attack_turn_order(m):
+func check_attack_turn_order(m) -> int:
 	var highest_attack_order : int = 0
 	
 	if highest_attack_order == 0:
@@ -423,7 +423,7 @@ func check_attack_turn_order(m):
 		
 	return highest_attack_order
 
-func count_end_turn_opponent():
+func count_end_turn_opponent() -> int:
 	var end_turn_opponent_number : int = 0
 	for marker in opponent_markers:
 		if marker.opponent.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THE_END:
@@ -431,7 +431,7 @@ func count_end_turn_opponent():
 	
 	return end_turn_opponent_number
 
-func reset_end_turn_opponent_action_turn():
+func reset_end_turn_opponent_action_turn() -> void:
 	for marker in opponent_markers:
 		marker.opponent.attack_order = marker.opponent.attack_order_copy
 		marker.opponent.attack_order_copy = 0
@@ -441,7 +441,7 @@ func reset_end_turn_opponent_action_turn():
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_empty_action_zone_button_pressed():
+func _on_empty_action_zone_button_pressed() -> void:
 	if action_zone.size() > 0:
 		empty_action_zone()
 		clear_all_player_markers()
@@ -450,7 +450,7 @@ func _on_empty_action_zone_button_pressed():
 		init_markers_position()
 		reset_end_turn_opponent_action_turn()
 
-func _on_card_removed_from_action_zone(removed):
+func _on_card_removed_from_action_zone(removed) -> void:
 	if removed:
 		card_removed = true
 	else:

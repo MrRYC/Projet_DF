@@ -81,24 +81,13 @@ func check_slots_effect(card):
 		if card.effect_per_slot[slot_effect]["uses"] == null:
 			apply_slots_effect(card.effect_per_slot[slot_effect])
 		elif card.effect_per_slot[slot_effect]["uses"] == 0:
-			return
+			continue
 		else :
 			apply_slots_effect(card.effect_per_slot[slot_effect])
 			card.effect_per_slot[slot_effect]["uses"] -= 1
 
-func apply_slots_effect(slot_effect):
-	var player_effect_txt : String
-
-	if slot_effect["id"] == "Block":
-		player_ref.block += slot_effect["value"]
-	elif slot_effect["id"] == "Dodge":
-		player_ref.dodge += slot_effect["value"]
-	elif slot_effect["id"] == "Breath":
-		player_effect_txt = "respiration activée"
-	else:
-		player_effect_txt = "Effet inconnu"
-
-	return player_effect_txt
+func apply_slots_effect(slot_effect: Dictionary) -> void:
+	$SlotEffectManager.apply(slot_effect, player_ref)
 
 func wait_before_action(card, time):
 	#détermination de la vitesse de l'animation Fade In

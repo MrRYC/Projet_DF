@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dut6bo1el3xs8"]
+[gd_scene load_steps=26 format=3 uid="uid://dut6bo1el3xs8"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://gb2hk6i6y1hd" path="res://assets/resources/ui/timer_ring_blue.png" id="18_cegan"]
 [ext_resource type="Script" uid="uid://caty4rft3csx8" path="res://scripts/ui/MiniEqualizer.gd" id="19_2gh4u"]
 [ext_resource type="Script" uid="uid://clhdj1qykpjoq" path="res://scripts/manager/SoundManager.gd" id="19_5tuhn"]
+[ext_resource type="Script" uid="uid://dahnkad0w7irc" path="res://scripts/resources/SlotEffectManager.gd" id="21_devvj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
 size = Vector2(106, 158)
@@ -40,6 +41,9 @@ position = Vector2(625, 605)
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("7_ralk2")
+
+[node name="SlotEffectManager" type="Node" parent="TurnManager"]
+script = ExtResource("21_devvj")
 
 [node name="InputManager" type="Node2D" parent="."]
 script = ExtResource("1_kdgm2")

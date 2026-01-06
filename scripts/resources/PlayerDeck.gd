@@ -113,7 +113,7 @@ const CARDS = {
 		"reach" : 1,
 		"slot_number" : 1,
 		"effect_per_slot" : {
-				0 : "Breath_Augment",
+				0 : "Feint_Augment",
 				#1 : "Dodge",
 			}
 	}

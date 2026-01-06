@@ -5,6 +5,7 @@ class_name HealthPips
 var max_hp: int = 10
 var current_hp: int = 10
 var pending_damage: int = 0
+var pending_blocked_damage: int = 0
 var pip_height: float = 10.0
 var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
@@ -12,11 +13,11 @@ var pip_gap: float = 1.0
 var outline: bool = true
 var color_full: Color = Color(0, 0.7, 0.7, 1.0)
 var color_empty: Color = Color(1, 1, 1, 0.2)
-var color_preview: Color = Color(0.8, 0.1, 0, 1)
-#var color_block: Color = Color(0, 0.2, 0.9, 1)
-#var color_dodge: Color = Color(0.0, 0.7, 0.7, 0.4)
+var color_damage: Color = Color(0.8, 0.1, 0, 1)
+var color_block: Color = Color(0, 0.2, 0.9, 1)
+var color_dodge: Color = Color(0.0, 0.7, 0.7, 0.4)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
-var blink_min_alpha: float = 0.55 # intensité minimale
+var blink_min_alpha: float = 0.25 # intensité minimale
 var blink: float = 0.0
 
 func _process(delta: float) -> void:
@@ -38,6 +39,10 @@ func set_preview_damage(dmg: int) -> void:
 		blink = 0.0
 	if pending_damage == 0:
 		blink = 0.0
+	queue_redraw()
+
+func set_blocked_damage_preview(amount: int) -> void:
+	pending_blocked_damage = max(0, amount)
 	queue_redraw()
 
 func clear_preview() -> void:
@@ -93,10 +98,14 @@ func _draw() -> void:
 		var x: float = start_x + float(i) * (pip_w + pip_gap)
 		var rect := Rect2(x, y, pip_w, pip_height)
 
-		var c: Color = color_full if i < current_hp else color_empty
+		var c: Color 
+		if i < current_hp:
+			c = color_full
+		else :
+			c = color_empty
 
 		if i >= preview_start and i <= preview_end:
-			c = Color(color_preview.r, color_preview.g, color_preview.b, preview_alpha)
+			c = Color(color_damage.r, color_damage.g, color_damage.b, preview_alpha)
 
 		draw_rect(rect, c, true)
 

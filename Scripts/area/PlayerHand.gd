@@ -96,10 +96,10 @@ func animate_card_to_position(card, new_position):
 
 func _on_drop_combo_cards():
 	if combo_cards.size() == 0:
-		print("Acune carte de combo")
+		print("Aucune carte de combo")
 		return
 	
 	for card in combo_cards:
 		combo_cards.erase(card)
 		update_hand_positions()
-		print("Combo cards perdues")
+		print("Carte(s) de combo perdue(s)")
