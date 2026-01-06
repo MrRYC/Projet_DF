@@ -28,10 +28,10 @@ func _ready() -> void:
 #                             TURN MANAGEMENT                             #
 ###########################################################################
 
-func update_max_hand_size():
+func update_max_hand_size()-> void:
 	new_hand_max_size = START_HAND_SIZE #To be adapt based on skill cards effect
 
-func new_turn():
+func new_turn()-> void:
 	nb_turn += 1
 	EventBus.turn_increased.emit(nb_turn)
 	update_max_hand_size()
@@ -42,14 +42,16 @@ func new_turn():
 #                            BATTLE EXECUTION                             #
 ###########################################################################
 
-func execute_action_phase():
+func execute_action_phase()-> void:
 	EventBus.processing.emit(true)
-	
+	var index : int = 0
 	var action_zone_copy = action_zone_ref.action_zone.duplicate()
 	action_zone_copy.reverse()
 	for card in range(action_zone_copy.size()):
+		index += 1
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
-		apply_player_actions(card, action_zone_copy[card], action_zone_copy[card].target)
+		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target)
+		execute_ai_threshold_action(index)
 
 	execute_opponent_death_effect()
 	apply_ai_end_turn_actions()
@@ -60,18 +62,14 @@ func execute_action_phase():
 #                              PLAYER ACTION                              #
 ###########################################################################
 
-func apply_player_actions(index, card, target):
+func apply_player_actions(card, target)-> void:
 	if card.is_flipped:
 		check_slots_effect(card)
 	elif target != null:
 		var attack = card.attack
 		target.extra_damage = target.take_damage(attack)
-		
-	if target is OPPONENT:
-		if target.data.behavior_type == OPPONENT_DATA.behaviors.ATTACK_AT_THRESHOLD and target.attack_order == index:
-			apply_ai_threshold_actions(target)
-	
-func check_slots_effect(card):
+
+func check_slots_effect(card)-> void:
 	
 	if !card.slot_number:
 		return
@@ -89,7 +87,7 @@ func check_slots_effect(card):
 func apply_slots_effect(slot_effect: Dictionary) -> void:
 	$SlotEffectManager.apply(slot_effect, player_ref)
 
-func wait_before_action(card, time):
+func wait_before_action(card, time)-> void:
 	#détermination de la vitesse de l'animation Fade In
 	var fade_in_animation = card.get_node("CardFadeInAnimation")
 	var speed
@@ -118,23 +116,23 @@ func wait_before_action(card, time):
 #                               AI ACTION                                 #
 ###########################################################################
 
-func action_card_played():
+func action_card_played()-> void:
 	opponent_manager_ref.notify_card_played()
 
-func apply_ai_threshold_actions(opponent):
-	opponent_manager_ref.threshold_actions(opponent)
+func execute_ai_threshold_action(index)-> void:
+	opponent_manager_ref.threshold_actions(index)
 
-func execute_opponent_death_effect():
+func execute_opponent_death_effect()-> void:
 	opponent_manager_ref.opponent_death()
 
-func apply_ai_end_turn_actions():
+func apply_ai_end_turn_actions()-> void:
 	opponent_manager_ref.end_of_turn_actions()
 	action_zone_ref.clear_all_opponent_markers()
 
-func apply_player_damage(amount):
+func apply_player_damage(amount)-> void:
 	player_ref.take_damage(amount)
 
-func apply_cancel_combo():
+func apply_cancel_combo()-> void:
 	player_ref.check_evasive_action()
 
 ###########################################################################
@@ -145,19 +143,19 @@ func _on_phase_button_pressed() -> void:
 	await execute_action_phase()
 	new_turn()
 	
-func _on_deck_loaded(deck_size):
+func _on_deck_loaded(deck_size)-> void:
 	player_ref.set_starting_health(deck_size)
 	EventBus.new_turn.emit(START_HAND_SIZE, true) #true étant donné que c'est le premier tour
 
-func _on_ai_attack_performed(amount):
+func _on_ai_attack_performed(amount)-> void:
 	apply_player_damage(amount)
 	
-func _on_cancel_combo_performed():
+func _on_cancel_combo_performed()-> void:
 	apply_cancel_combo()
 
-func _on_card_played():
+func _on_card_played()-> void:
 	action_card_played()
 
-func _on_matchup_over():
+func _on_matchup_over()-> void:
 	print("Score final : ",Global.global_score)
 	get_tree().quit() #quit the game

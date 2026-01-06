@@ -35,13 +35,13 @@ func _process(_delta: float) -> void:
 #                         ACTION TIMER MANAGEMENT                         #
 ###########################################################################
 
-func update_max_timer_value(new_value : float):
+func update_max_timer_value(new_value : float)-> void:
 	if new_value == max_value:
 		timer_new_max_value = new_value
 	else:
 		timer_new_max_value = new_value
 
-func update_action_ui():
+func update_action_ui()-> void:
 	var time = timer.time_left
 	var seconds = int(time)
 	var milliseconds = round(int((time - seconds) * 100))
@@ -55,17 +55,17 @@ func update_action_ui():
 #                         COMBO METER MANAGEMENT                         #
 ###########################################################################
 
-func update_combo_meter():
+func update_combo_meter()-> void:
 	$BattleHUD/ComboMeter.text = str(combo_meter)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_turn_increased(turn):
+func _on_turn_increased(turn)-> void:
 	$BattleHUD/TurnLabel.text = str("Turn ",turn)
 
-func _on_processing(processing):
+func _on_processing(processing)-> void:
 	if processing:
 		$ActionButton.disabled = true
 		$EmptyActionZoneButton.disabled = true
@@ -73,7 +73,7 @@ func _on_processing(processing):
 		$ActionButton.disabled = false
 		$EmptyActionZoneButton.disabled = false
 
-func _on_action_time():
+func _on_action_time()-> void:
 	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_black.png")
 	ring_progress_bar.texture_progress = load("res://assets/resources/ui/timer_ring_blue.png")
 	timer_label.text = str(timer_new_max_value)
@@ -83,7 +83,7 @@ func _on_action_time():
 	$EmptyActionZoneButton.disabled = false
 	EventBus.action_timer_timeout.emit(false)
 	
-func _on_action_timer_timeout():
+func _on_action_timer_timeout()-> void:
 	timer_label.text = "Fight"
 	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_red.png")
 	timer.stop()
@@ -95,17 +95,17 @@ func _on_action_button_pressed() -> void:
 	$EmptyActionZoneButton.disabled = true
 	EventBus.action_timer_timeout.emit(true)
 
-func _on_combo_meter_cancelled():
+func _on_combo_meter_cancelled()-> void:
 	combo_meter = 0
 	update_combo_meter()
 	
-func _on_combo_meter_increased():
+func _on_combo_meter_increased()-> void:
 	combo_meter += 1
 	Global.global_score = combo_meter
 	update_combo_meter()
 
-func _on_combo_meter_altered(_value):
+func _on_combo_meter_altered(_value)-> void:
 	pass
 
-func _on_track_played(track_name):
+func _on_track_played(track_name)-> void:
 	track_label.text = track_name

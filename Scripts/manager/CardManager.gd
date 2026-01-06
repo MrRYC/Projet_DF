@@ -42,15 +42,15 @@ func _process(_delta: float) -> void:
 #                          ACTION ZONE MOVEMENT                           #
 ###########################################################################
 
-func return_card_to_hand(card):
+func return_card_to_hand(card)-> void:
 	card.target = null
 	player_hand_ref.add_card_to_hand(card)
 	update_card_size(card)
 	
-func remove_card_from_action_zone(card):
+func remove_card_from_action_zone(card)-> void:
 	action_zone_ref.return_card_to_hand(card)
 
-func send_card_to_action_zone(card, opponent):
+func send_card_to_action_zone(card, opponent)-> void:
 	card.target = opponent
 	action_zone_ref.add_card_to_action_zone(card)
 	player_hand_ref.remove_card_from_hand(card)
@@ -59,7 +59,7 @@ func send_card_to_action_zone(card, opponent):
 #                             TURN MANAGEMENT                             #
 ###########################################################################
 
-func new_turn(_max_hand_size):
+func new_turn(_max_hand_size)-> void:
 	if action_zone_ref.action_zone.size() > 0:
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
@@ -76,7 +76,7 @@ func new_turn(_max_hand_size):
 #                             PILE MANAGEMENT                             #
 ###########################################################################
 
-func check_destination_pile(card):
+func check_destination_pile(card)-> void:
 	var card_side_effect = card.effect_per_slot
 	
 	if !card_side_effect:
@@ -97,7 +97,7 @@ func check_destination_pile(card):
 	
 	card.current_area = card.board_area.IN_PILE
 
-func send_card_to_discard(card):
+func send_card_to_discard(card)-> void:
 	card.target = null
 	discard_pile_ref.add_card_to_pile(card)
 		
@@ -106,7 +106,7 @@ func send_card_to_discard(card):
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
-func send_card_to_exhaust(card):
+func send_card_to_exhaust(card)-> void:
 	card.target = null
 	exhaust_pile_ref.add_card_to_pile(card)
 
@@ -115,7 +115,7 @@ func send_card_to_exhaust(card):
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
-func send_card_to_wound(card):
+func send_card_to_wound(card)-> void:
 	card.target = null
 	wound_pile_ref.add_card_to_pile(card)
 
@@ -124,10 +124,10 @@ func send_card_to_wound(card):
 	else:
 		action_zone_ref.remove_card_from_action_zone(card)
 
-func deck_size():
+func deck_size()-> int:
 	return deck_pile_ref.deck_size
 
-func show_pile(pile):
+func show_pile(pile)-> void:
 	if pile == "DeckPile":
 		deck_pile_ref.show_pile()
 	elif pile == "DiscardPile":
@@ -141,12 +141,12 @@ func show_pile(pile):
 #                            CARDS MANAGEMENT                             #
 ###########################################################################
 
-func start_drag(card):
+func start_drag(card) -> void:
 	card_being_dragged = card
 	card.scale = Vector2(1.0,1.0)
 	EventBus.aim_started.emit(card)
 
-func finish_drag():
+func finish_drag() -> void:
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	EventBus.aim_ended.emit(card_being_dragged)
 
@@ -166,7 +166,7 @@ func finish_drag():
 	
 	card_being_dragged = null
 
-func flip_card_in_hand(card):
+func flip_card_in_hand(card) -> void:
 	if !card.slot_number :
 		print("carte sans effet")
 		card.get_node("CardErrorAnimation").play("tilt_error")
@@ -185,7 +185,7 @@ func flip_card_in_hand(card):
 	
 	card.card_is_flipped()
 
-func highlight_card(card, hovered):
+func highlight_card(card, hovered) -> void:
 	if not (card is CARD_DATA):
 		return
 
@@ -197,7 +197,7 @@ func highlight_card(card, hovered):
 	else:
 		update_card_size(card)
 
-func update_card_size(card):
+func update_card_size(card) -> void:
 	if card.current_area == 2:
 		card.scale = Vector2(0.5, 0.5)
 		card.z_index = 1
@@ -260,16 +260,16 @@ func get_upfront_card(cards):
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_left_mouse_released():
+func _on_left_mouse_released()-> void:
 	if card_being_dragged:
 		finish_drag()
 	
-func _on_hovered_over_card(card):
+func _on_hovered_over_card(card)-> void:
 	if !card_being_dragged:
 		is_hovering_on_card = true
 		highlight_card(card,true)
 	
-func _on_hovered_off_card(card):
+func _on_hovered_off_card(card)-> void:
 	if !card_being_dragged:
 		highlight_card(card,false)
 	
@@ -279,5 +279,5 @@ func _on_hovered_off_card(card):
 	else:
 		is_hovering_on_card = false
 
-func _on_new_turn(new_hand_size, _is_first_turn):
+func _on_new_turn(new_hand_size, _is_first_turn)-> void:
 	new_turn(new_hand_size)

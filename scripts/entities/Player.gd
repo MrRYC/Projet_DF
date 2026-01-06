@@ -17,13 +17,12 @@ func _ready() -> void:
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
 
-func set_starting_health(health):
+func set_starting_health(health)-> void:
 	max_health = health
 	current_health = health
 	update_health()
 
-func take_damage(amount):
-	
+func take_damage(amount)-> void:
 	if self.dodge != 0:
 		evasive_action()
 	elif self.block != 0:
@@ -40,34 +39,35 @@ func take_damage(amount):
 	if current_health <= 0:
 		die()
 
-func defensive_action():
+func defensive_action()-> void:
 	self.block -= 1
+	update_block()
 	
 	if self.block == 0:
 		#Animation block lost
 		pass
 
-func evasive_action():
+func evasive_action()-> void:
 	self.dodge -= 1
 	
 	if self.dodge == 0:
 		#Animation block lost
 		pass
 
-func check_evasive_action():
+func check_evasive_action()-> void:
 	if self.dodge != 0:
 		evasive_action()
 	else:
 		EventBus.drop_combo_cards.emit()
 
-func update_health():
+func update_health()-> void:
 	$HealthPips.set_health(current_health, max_health)
 
-func set_incoming_damage_preview(dmg):
-	$HealthPips.set_preview_damage(dmg)
+func set_incoming_damage_preview(damage)-> void:
+	$HealthPips.set_preview_damage(damage)
 	$HealthPips.set_preview_block(self.block)
 
-func clear_incoming_damage_preview():
+func clear_incoming_damage_preview()-> void:
 	$HealthPips.set_preview_damage(0)
 	$HealthPips.set_preview_block(0)
 
@@ -78,7 +78,7 @@ func update_block() -> void:
 #                           DEATH MANAGEMENT                              #
 ###########################################################################
 
-func die():
+func die()-> void:
 	queue_free() # ou animation de mort
 	get_tree().quit() #quit the game
 
@@ -86,19 +86,19 @@ func die():
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_new_turn(_new_hand_size, _is_first_turn):
+func _on_new_turn(_new_hand_size, _is_first_turn)-> void:
 	self.block = 0
 	self.dodge = 0
 	update_block()
 	
-func _on_dimmed_player():
+func _on_dimmed_player()-> void:
 	$Image.modulate = Color(0.275, 0.803, 0.496, 1.0)
 
-func _on_undimmed_player():
+func _on_undimmed_player()-> void:
 	$Image.modulate = Color(1.0, 1.0, 1.0)
 
-func _on_card_removed_from_action_zone(_removed):
+func _on_card_removed_from_action_zone(_removed)-> void:
 	_on_undimmed_player()
 
-func _on_incoming_damage(amount):
+func _on_incoming_damage(amount)-> void:
 	$HealthPips.set_preview_damage(amount)
