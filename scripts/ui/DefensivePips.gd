@@ -15,7 +15,7 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(0.0, pip_height)
 
 func set_charges(value: int) -> void:
-	charges = max(0, value)
+	charges = value
 	queue_redraw()
 
 func clear() -> void:

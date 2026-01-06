@@ -65,18 +65,14 @@ func update_health():
 
 func set_incoming_damage_preview(dmg):
 	$HealthPips.set_preview_damage(dmg)
-	$HealthPips.set_preview_block(block)
+	$HealthPips.set_preview_block(self.block)
 
 func clear_incoming_damage_preview():
 	$HealthPips.set_preview_damage(0)
 	$HealthPips.set_preview_block(0)
 
-func set_block(value: int) -> void:
-	block = max(0, value)
-	$HealthPips.set_block_charges(block)
-
-func add_block(delta: int) -> void:
-	set_block(block + delta)
+func update_block() -> void:
+	$HealthPips.set_block_charges(self.block)
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
@@ -91,8 +87,9 @@ func die():
 ###########################################################################
 
 func _on_new_turn(_new_hand_size, _is_first_turn):
-	block = 0
-	dodge = 0
+	self.block = 0
+	self.dodge = 0
+	update_block()
 	
 func _on_dimmed_player():
 	$Image.modulate = Color(0.275, 0.803, 0.496, 1.0)
