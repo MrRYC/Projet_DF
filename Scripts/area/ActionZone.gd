@@ -35,7 +35,10 @@ func add_card_to_action_zone(card) -> void:
 		card.current_area = card.board_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
-		EventBus.opponent_incoming_damage_updated.emit()
+		if card.is_flipped:
+			EventBus.defense_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
+		else:
+			EventBus.opponent_incoming_damage_updated.emit()
 
 func return_card_to_hand(card) -> void:
 	var action_zone_copy = action_zone.duplicate()

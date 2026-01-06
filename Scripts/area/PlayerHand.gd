@@ -12,14 +12,14 @@ var combo_cards : Array = []
 var hand_x_position_min : float = 0.0
 var hand_x_position_max : float = 0.0
 
-func _ready():
+func _ready() -> void:
 	EventBus.drop_combo_cards.connect(_on_drop_combo_cards)
 
 ###########################################################################
 #                              HAND MANAGEMENT                            #
 ###########################################################################
 
-func add_card_to_hand(card):
+func add_card_to_hand(card) -> void:
 	if card not in player_hand:
 		player_hand.insert(0,card)
 		card.current_area = card.board_area.IN_HAND
@@ -27,7 +27,7 @@ func add_card_to_hand(card):
 	else:
 		animate_card_to_position(card, card.starting_position)
 
-func remove_card_from_hand(card):
+func remove_card_from_hand(card) -> void:
 	if card in player_hand:
 		player_hand.erase(card)
 		update_hand_positions()
@@ -36,7 +36,7 @@ func remove_card_from_hand(card):
 #                           PLAYER HAND POSITION                          #
 ###########################################################################
 
-func calculate_hand_size(cards_x_position : Array):
+func calculate_hand_size(cards_x_position : Array) -> void:
 	if cards_x_position.size() > 0:
 		hand_x_position_min = float(cards_x_position.min())
 		hand_x_position_max = float(cards_x_position.max())
@@ -48,7 +48,7 @@ func calculate_hand_size(cards_x_position : Array):
 #                              CARDS POSITION                             #
 ###########################################################################
 
-func update_hand_positions():
+func update_hand_positions() -> void:
 	if player_hand.size() == 0:
 		hand_x_position_min = 0.0
 		hand_x_position_max = 0.0
@@ -68,25 +68,25 @@ func update_hand_positions():
 		
 	calculate_hand_size(cards_x_position)
 
-func get_drop_index(mouse_pos_x):
+func get_drop_index(mouse_pos_x) -> int:
 	for i in range(player_hand.size()):
 		var card_x = calculate_card_position(i)
 		if mouse_pos_x < card_x + CARD_WIDTH / 2.0:
 			return i
 	return player_hand.size()
 
-func move_card_to_index(card, target_index):
+func move_card_to_index(card, target_index) -> void:
 	if card in player_hand:
 		player_hand.erase(card)
 		player_hand.insert(target_index, card)
 		update_hand_positions()
 
-func calculate_card_position(index):
+func calculate_card_position(index) -> float:
 	var total_width = (player_hand.size() - 1) * CARD_WIDTH
 	var x_offset = center_screen_x + index * CARD_WIDTH - total_width / 2.0
 	return x_offset
 
-func animate_card_to_position(card, new_position):
+func animate_card_to_position(card, new_position) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, speed)
 
@@ -94,7 +94,7 @@ func animate_card_to_position(card, new_position):
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_drop_combo_cards():
+func _on_drop_combo_cards() -> void:
 	if combo_cards.size() == 0:
 		print("Aucune carte de combo")
 		return
