@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://wmk2a447h42f"]
+[gd_scene load_steps=6 format=3 uid="uid://wmk2a447h42f"]
 
 [ext_resource type="Script" uid="uid://bckca1l0c66rg" path="res://scripts/entities/Player.gd" id="1_v6fml"]
 [ext_resource type="Texture2D" uid="uid://c30vuraays10t" path="res://assets/entities/player/Player.png" id="2_v6fml"]
 [ext_resource type="Script" uid="uid://mtdmpxe7rr4a" path="res://scripts/ui/HealthPips.gd" id="3_3li8b"]
+[ext_resource type="Script" uid="uid://tpm67bm0t6x3" path="res://scripts/ui/DefensivePips.gd" id="4_mdl7e"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -28,6 +29,13 @@ layout_mode = 3
 anchors_preset = 0
 offset_left = -78.0
 offset_top = 179.0
-offset_right = 73.0
-offset_bottom = 205.0
+offset_right = 78.0
+offset_bottom = 197.0
 script = ExtResource("3_3li8b")
+
+[node name="DefensivePips" type="Control" parent="HealthPips"]
+anchors_preset = 0
+offset_top = 15.0
+offset_right = 156.0
+offset_bottom = 32.0
+script = ExtResource("4_mdl7e")

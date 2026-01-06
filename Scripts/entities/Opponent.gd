@@ -54,7 +54,14 @@ func set_pending_damage_preview(dmg: int) -> void:
 	$HealthPips.set_preview_damage(dmg)
 
 func clear_pending_damage_preview() -> void:
-	$HealthPips.clear_preview()
+	$HealthPips.clear_all_previews()
+
+func set_block(value: int) -> void:
+	block = max(0, value)
+	$HealthPips.set_block_charges(block)
+
+func add_block(delta: int) -> void:
+	set_block(block + delta)
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #

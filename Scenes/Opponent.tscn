@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b3vs7n1efdpym"]
+[gd_scene load_steps=7 format=3 uid="uid://b3vs7n1efdpym"]
 
 [ext_resource type="Script" uid="uid://bmpbet4eaqcvj" path="res://scripts/entities/Opponent.gd" id="1_kivkk"]
 [ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_fav6y"]
 [ext_resource type="Texture2D" uid="uid://chqk2rvicaewt" path="res://assets/resources/opponent ui/Attack_Threshold.png" id="3_1ucok"]
 [ext_resource type="Script" uid="uid://mtdmpxe7rr4a" path="res://scripts/ui/HealthPips.gd" id="4_8onbh"]
+[ext_resource type="Script" uid="uid://tpm67bm0t6x3" path="res://scripts/ui/DefensivePips.gd" id="5_w48xx"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -48,8 +49,15 @@ anchors_preset = 0
 offset_left = -54.0
 offset_top = 180.0
 offset_right = 84.0
-offset_bottom = 210.0
+offset_bottom = 198.0
 script = ExtResource("4_8onbh")
+
+[node name="DefensivePips" type="Control" parent="HealthPips"]
+anchors_preset = 0
+offset_top = 16.0
+offset_right = 138.0
+offset_bottom = 35.0
+script = ExtResource("5_w48xx")
 
 [node name="Intent" type="RichTextLabel" parent="."]
 offset_left = -88.0

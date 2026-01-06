@@ -1,11 +1,11 @@
 extends Control
 class_name HealthPips
 
-#variables du script
-var max_hp: int = 10
-var current_hp: int = 10
-var pending_damage: int = 0
-var pending_blocked_damage: int = 0
+@onready var defensive_pips = $DefensivePips
+
+#variables des points de vie
+var max_hp: int = 0
+var current_hp: int = 0
 var pip_height: float = 10.0
 var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
@@ -13,9 +13,10 @@ var pip_gap: float = 1.0
 var outline: bool = true
 var color_full: Color = Color(0, 0.7, 0.7, 1.0)
 var color_empty: Color = Color(1, 1, 1, 0.2)
+
+#variables des dégats
+var pending_damage: int = 0
 var color_damage: Color = Color(0.8, 0.1, 0, 1)
-var color_block: Color = Color(0, 0.2, 0.9, 1)
-var color_dodge: Color = Color(0.0, 0.7, 0.7, 0.4)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
 var blink_min_alpha: float = 0.25 # intensité minimale
 var blink: float = 0.0
@@ -41,13 +42,13 @@ func set_preview_damage(dmg: int) -> void:
 		blink = 0.0
 	queue_redraw()
 
-func set_blocked_damage_preview(amount: int) -> void:
-	pending_blocked_damage = max(0, amount)
-	queue_redraw()
+func set_block_charges(charges: int) -> void:
+	defensive_pips.set_charges(charges)
 
-func clear_preview() -> void:
+func clear_all_previews() -> void:
 	pending_damage = 0
 	blink = 0.0
+	defensive_pips.clear()
 	queue_redraw()
 
 func _draw() -> void:

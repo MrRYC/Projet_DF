@@ -70,7 +70,14 @@ func set_incoming_damage_preview(dmg):
 func clear_incoming_damage_preview():
 	$HealthPips.set_preview_damage(0)
 	$HealthPips.set_preview_block(0)
-	
+
+func set_block(value: int) -> void:
+	block = max(0, value)
+	$HealthPips.set_block_charges(block)
+
+func add_block(delta: int) -> void:
+	set_block(block + delta)
+
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
 ###########################################################################
