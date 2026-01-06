@@ -91,7 +91,6 @@ func apply_slots_effect(slot_effect):
 
 	if slot_effect["id"] == "Block":
 		player_ref.block += slot_effect["value"]
-		EventBus.player_defense_updated.emit()
 	elif slot_effect["id"] == "Dodge":
 		player_ref.dodge += slot_effect["value"]
 	elif slot_effect["id"] == "Breath":

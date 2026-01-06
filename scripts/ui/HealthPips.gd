@@ -5,7 +5,6 @@ class_name HealthPips
 var max_hp: int = 10
 var current_hp: int = 10
 var pending_damage: int = 0
-var pending_block: int = 0
 var pip_height: float = 10.0
 var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
@@ -14,8 +13,8 @@ var outline: bool = true
 var color_full: Color = Color(0, 0.7, 0.7, 1.0)
 var color_empty: Color = Color(1, 1, 1, 0.2)
 var color_preview: Color = Color(0.8, 0.1, 0, 1)
-var color_block: Color = Color(0, 0.2, 0.9, 1)
-var color_dodge: Color = Color(0.0, 0.7, 0.7, 0.4)
+#var color_block: Color = Color(0, 0.2, 0.9, 1)
+#var color_dodge: Color = Color(0.0, 0.7, 0.7, 0.4)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
 var blink_min_alpha: float = 0.55 # intensité minimale
 var blink: float = 0.0
@@ -39,10 +38,6 @@ func set_preview_damage(dmg: int) -> void:
 		blink = 0.0
 	if pending_damage == 0:
 		blink = 0.0
-	queue_redraw()
-
-func set_preview_block(block):
-	pending_block = max(0, block)
 	queue_redraw()
 
 func clear_preview() -> void:
@@ -84,21 +79,9 @@ func _draw() -> void:
 	var damage_preview: int = pending_damage
 	if damage_preview > current_hp:
 		damage_preview = current_hp
-
-	var block_preview: int = pending_block
-	if block_preview > damage_preview:
-		block_preview = damage_preview
 	
 	var preview_start: int = current_hp - damage_preview
-	#var preview_end: int = current_hp - 1
-
-	#Coloration des pips des dégâts bloqués
-	var blocked_start: int = current_hp - block_preview
-	var blocked_end: int = current_hp - 1
-	
-	#Coloration des pips des dégâts bloqués
-	var damaged_start: int = preview_start
-	var damaged_end: int = blocked_start - 1
+	var preview_end: int = current_hp - 1
 
 	#Scientillement des dégats
 	var preview_alpha: float = 1.0
@@ -112,10 +95,8 @@ func _draw() -> void:
 
 		var c: Color = color_full if i < current_hp else color_empty
 
-		if i >= damaged_start and i <= damaged_end:
+		if i >= preview_start and i <= preview_end:
 			c = Color(color_preview.r, color_preview.g, color_preview.b, preview_alpha)
-		elif i >= blocked_start and i <= blocked_end:
-			c = Color(color_block.r, color_block.g, color_block.b, preview_alpha)
 
 		draw_rect(rect, c, true)
 

@@ -12,7 +12,6 @@ func _ready() -> void:
 	EventBus.undim_player.connect(_on_undimmed_player)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
-	EventBus.player_defense_updated.connect(_on_player_defense_changed)
 	
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
@@ -99,6 +98,3 @@ func _on_card_removed_from_action_zone(_removed):
 
 func _on_incoming_damage(amount):
 	$HealthPips.set_preview_damage(amount)
-
-func _on_player_defense_changed():
-	set_incoming_damage_preview($HealthPips.pending_damage)
