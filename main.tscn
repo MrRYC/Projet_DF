@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dut6bo1el3xs8"]
+[gd_scene load_steps=28 format=3 uid="uid://dut6bo1el3xs8"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
@@ -17,9 +17,11 @@
 [ext_resource type="PackedScene" uid="uid://wmk2a447h42f" path="res://scenes/Player.tscn" id="11_5vvyt"]
 [ext_resource type="Texture2D" uid="uid://d0kp2vrv47k6d" path="res://assets/resources/piles/Banish_pile.png" id="14_yaehf"]
 [ext_resource type="Texture2D" uid="uid://fcyudt8h0pa5" path="res://assets/resources/ui/timer_ring_black.png" id="17_074og"]
+[ext_resource type="FontFile" uid="uid://us2mlcj4d3h0" path="res://assets/resources/fonts/Fighting Spirit 2.otf" id="17_bg4s2"]
 [ext_resource type="Texture2D" uid="uid://gb2hk6i6y1hd" path="res://assets/resources/ui/timer_ring_blue.png" id="18_cegan"]
 [ext_resource type="Script" uid="uid://caty4rft3csx8" path="res://scripts/ui/MiniEqualizer.gd" id="19_2gh4u"]
 [ext_resource type="Script" uid="uid://clhdj1qykpjoq" path="res://scripts/manager/SoundManager.gd" id="19_5tuhn"]
+[ext_resource type="FontFile" uid="uid://bxhg54gbieyil" path="res://assets/resources/fonts/DS-Digital.TTF" id="20_3b0ty"]
 [ext_resource type="Script" uid="uid://dahnkad0w7irc" path="res://scripts/resources/SlotEffectManager.gd" id="21_devvj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgb7f"]
@@ -182,6 +184,8 @@ offset_top = 660.0
 offset_right = 1782.0
 offset_bottom = 694.0
 scale = Vector2(1.5, 1.5)
+theme_override_fonts/font = ExtResource("17_bg4s2")
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_bcfpu")
@@ -193,7 +197,7 @@ theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/focus = SubResource("StyleBoxFlat_bcfpu")
-text = "Fight"
+text = "FIGHT"
 
 [node name="EmptyActionZoneButton" type="Button" parent="UserInterface"]
 offset_left = 125.0
@@ -244,7 +248,8 @@ offset_top = 112.0
 offset_right = 109.0
 offset_bottom = 145.6
 scale = Vector2(4, 4)
-theme_override_font_sizes/normal_font_size = 18
+theme_override_fonts/normal_font = ExtResource("20_3b0ty")
+theme_override_font_sizes/normal_font_size = 23
 text = "15 : 00
 "
 horizontal_alignment = 1
