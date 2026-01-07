@@ -12,7 +12,7 @@ var action_performed = true
 var block : int = 0
 var is_dead : bool = false
 
-func init_from_data(d: OPPONENT_DATA):
+func init_from_data(d: OPPONENT_DATA) -> void:
 	data = d
 	current_hp = d.max_hp
 	$Image.texture = d.image
@@ -22,7 +22,7 @@ func init_from_data(d: OPPONENT_DATA):
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
 
-func take_damage(amount):
+func take_damage(amount) -> int:
 	
 	if self.block != 0:
 		defensive_action()
@@ -40,18 +40,18 @@ func take_damage(amount):
 	
 	return extra_damage
 
-func defensive_action():
+func defensive_action() -> void:
 	self.block -= 1
 	
 	if self.block == 0:
 		#Animation block lost
 		pass
 
-func update_health():
+func update_health() -> void:
 	$HealthPips.set_health(current_hp, data.max_hp)
 	
-func set_pending_damage_preview(dmg: int) -> void:
-	$HealthPips.set_preview_damage(dmg)
+func set_pending_damage_preview(damage: int) -> void:
+	$HealthPips.set_preview_damage(damage)
 
 func clear_pending_damage_preview() -> void:
 	$HealthPips.clear_all_previews()
@@ -67,13 +67,13 @@ func add_block(delta: int) -> void:
 #                             ACTIONS MANAGEMENT                          #
 ###########################################################################
 
-func update_attack_order():
+func update_attack_order() -> void:
 	if self.attack_order_copy == 0 :
 		self.attack_order_copy = self.attack_order
 
 	$Attack_Threshold/ThresholdLabel.text = str(self.attack_order)
 
-func update_intent(value):
+func update_intent(value) -> void:
 	if value == 0:
 		$Intent.text = str(self.data.action_type.keys()[self.action_type])
 	else:
@@ -103,7 +103,7 @@ func set_defensive_action():
 
 	#Animaion block gain
 
-func perform_action():
+func perform_action() -> void:
 	if is_dead:
 		return
 	
@@ -118,36 +118,38 @@ func perform_action():
 			print(str(self.data.display_name)+" "+str(action_type)+" activé")
 			#Animation buff
 
+	self.action_performed = true
+
 ###########################################################################
 #                            DIMM MANAGEMENT                              #
 ###########################################################################
 
-func apply_attacker_color():
+func apply_attacker_color() -> void:
 	$Image.modulate = Color(1.0, 0.548, 0.495, 1.0)
 
-func apply_player_target_color():
+func apply_player_target_color() -> void:
 	$Image.modulate = Color(0.038, 0.735, 0.796, 1.0)
 
 #Modification de l'image
-func apply_dim():
+func apply_dim() -> void:
 	$Image.modulate = Color(0.073, 0.073, 0.073, 0.294)
 
-func remove_dim():
+func remove_dim() -> void:
 	$Image.modulate = Color(1.0, 1.0, 1.0)
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
 ###########################################################################
 
-func death_check():
+func death_check() -> void:
 	if extra_damage >= self.data.overkill_limit :
 		overkill_animation()
 	elif current_hp <= 0 :
 		die()
 
-func overkill_animation():
+func overkill_animation() -> void:
 	print("animation overkill")
 	die()
 
-func die():
+func die() -> void:
 	self.queue_free() # ou animation de mort

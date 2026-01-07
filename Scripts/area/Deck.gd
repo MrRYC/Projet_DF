@@ -22,7 +22,7 @@ func _ready() -> void:
 ###########################################################################
 #                             TURN MANAGEMENT                             #
 ###########################################################################
-func new_turn(new_hand_size):
+func new_turn(new_hand_size) -> void:
 	EventBus.processing.emit(true)
 	EventBus.action_timer_timeout.emit(true)
 	for i in range(new_hand_size):
@@ -35,7 +35,7 @@ func new_turn(new_hand_size):
 #                               DECK CREATION                             #
 ###########################################################################
 
-func load_player_deck():
+func load_player_deck() -> void:
 	for card_id in PLAYERDECK.CARDS.keys():
 		var card = build_card_from_dictionaries(card_id)
 		player_deck.append(card)
@@ -91,7 +91,7 @@ func add_augments(card_id):
 #                               DRAW ENGINE                               #
 ###########################################################################
 
-func add_card(card):
+func add_card(card) -> void:
 	player_deck.append(card)
 
 func draw():
@@ -162,7 +162,7 @@ func create_card_in_hand(card_data):
 #                               CARD ENGINE                               #
 ###########################################################################
 
-func show_pile():
+func show_pile() -> void:
 	if player_deck.is_empty():
 		print("Deck pile vide")
 		return
@@ -171,18 +171,18 @@ func show_pile():
 	for card in player_deck:
 		print(card)
 
-func shuffle():
+func shuffle() -> void:
 	player_deck.shuffle()
 
-func update_label(cards_in_deck):
+func update_label(cards_in_deck) -> void:
 	$DeckCardCountLabel.text = str(cards_in_deck)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_turn_increase(turn):
+func _on_turn_increase(turn) -> void:
 	nb_turn = turn
 
-func _on_new_turn(new_hand_size, _is_first_turn):
+func _on_new_turn(new_hand_size, _is_first_turn) -> void:
 	new_turn(new_hand_size)
