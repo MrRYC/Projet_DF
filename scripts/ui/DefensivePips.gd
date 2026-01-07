@@ -2,23 +2,33 @@ extends Control
 class_name DefensivePips
 
 #variables du script
-var combat_in_progress: bool = false
+var entity: Node = null
+var is_new_card_in_action_zone: bool = false
+var is_resolving_action_zone: bool = false
 var charges: int = 0
 var pip_height: float = 6.0
 var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
 var pip_gap: float = 1.0
 var outline: bool = true
-var color_preview_block: Color = Color(0.0, 0.2, 0.902, 0.541)
+
+#variables spécifiques pour les blocks
+var color_preview_block: Color = Color(0.279, 0.496, 1.0, 0.353)
 var color_active_block: Color = Color(0, 0.2, 0.9, 1)
+var broken_block_count: int = 0
+var color_broken_block: Color = Color(0.549, 0.549, 0.549, 1.0)
 
 func _ready() -> void:
 	EventBus.processing.connect(_on_processing)
-	EventBus.defense_preview.connect(_on_player_defense_preview)
+	EventBus.player_defensive_actions_preview.connect(_on_player_defensive_action_preview)
 	custom_minimum_size = Vector2(0.0, pip_height)
 
 func set_charges(value: int) -> void:
 	charges = value
+	queue_redraw()
+
+func set_broken_block(count: int) -> void:
+	broken_block_count = max(count, 0)
 	queue_redraw()
 
 func clear() -> void:
@@ -51,14 +61,24 @@ func _draw() -> void:
 
 	var y: float = (height - pip_height) * 0.5
 
+	#gestion de la couleur de preview pour le player
+	var c:Color
+	if entity is PLAYER && !is_resolving_action_zone:
+		c = color_preview_block
+		entity = null
+	else:
+		c = color_active_block
+
+	#gestion des pips grisés
+	var broken:int = clamp(broken_block_count, 0, charges)
+	
 	for i in range(charges):
 		var x: float = start_x + float(i) * (pip_w + pip_gap)
 		var rect := Rect2(x, y, pip_w, pip_height)
-		var c:Color
-		if combat_in_progress:
-			c = color_active_block
-		else:
-			c = color_preview_block
+
+		# Si tu veux casser les pips "de gauche à droite"
+		c = color_broken_block if i < broken else color_active_block
+		
 		draw_rect(rect, c, true)
 
 		if outline:
@@ -70,11 +90,24 @@ func _draw() -> void:
 
 func _on_processing(processing)-> void:
 	if processing:
-		combat_in_progress = true
+		is_resolving_action_zone = true
 	else:
-		combat_in_progress = false
+		is_resolving_action_zone = false
 
-func _on_player_defense_preview(type,value)-> void:
+func _on_player_defensive_action_preview(type, value)-> void:
+	entity = self.get_parent().get_parent()
+	if !(entity is PLAYER):
+		return
+
+	if type == "Block":
+		charges = value
+		queue_redraw()
+
+func _on_opponent_defensive_action_preview(type, value)-> void:
+	entity = self.get_parent().get_parent()
+	if !(entity is OPPONENT):
+		return
+
 	if type == "Block":
 		charges = value
 		queue_redraw()

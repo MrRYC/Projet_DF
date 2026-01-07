@@ -41,7 +41,7 @@ func take_damage(amount)-> void:
 
 func defensive_action()-> void:
 	self.block -= 1
-	update_block()
+	update_player_pips_block()
 	
 	if self.block == 0:
 		#Animation block lost
@@ -60,18 +60,14 @@ func check_evasive_action()-> void:
 	else:
 		EventBus.drop_combo_cards.emit()
 
+###########################################################################
+#                              PIPS MANAGEMENT                            #
+###########################################################################
+
 func update_health()-> void:
 	$HealthPips.set_health(current_health, max_health)
 
-func set_incoming_damage_preview(damage)-> void:
-	$HealthPips.set_preview_damage(damage)
-	$HealthPips.set_preview_block(self.block)
-
-func clear_incoming_damage_preview()-> void:
-	$HealthPips.set_preview_damage(0)
-	$HealthPips.set_preview_block(0)
-
-func update_block() -> void:
+func update_player_pips_block() -> void:
 	$HealthPips.set_block_charges(self.block)
 
 ###########################################################################
@@ -89,7 +85,7 @@ func die()-> void:
 func _on_new_turn(_new_hand_size, _is_first_turn)-> void:
 	self.block = 0
 	self.dodge = 0
-	update_block()
+	update_player_pips_block()
 	
 func _on_dimmed_player()-> void:
 	$Image.modulate = Color(0.275, 0.803, 0.496, 1.0)

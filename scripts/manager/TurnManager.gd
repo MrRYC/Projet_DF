@@ -66,8 +66,9 @@ func apply_player_actions(card, target)-> void:
 	if card.is_flipped:
 		check_slots_effect(card)
 	elif target != null:
-		var attack = card.attack
-		target.extra_damage = target.take_damage(attack)
+		var damage: int = card.attack
+		target.consume_damage_preview(damage)
+		target.extra_damage = target.take_damage(damage)
 
 func check_slots_effect(card)-> void:
 	

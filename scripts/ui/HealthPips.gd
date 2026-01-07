@@ -15,6 +15,7 @@ var color_full: Color = Color(0, 0.7, 0.7, 1.0)
 var color_empty: Color = Color(1, 1, 1, 0.2)
 
 #variables des dégats
+var preview_damage: int = 0
 var pending_damage: int = 0
 var color_damage: Color = Color(0.8, 0.1, 0, 1)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
@@ -33,23 +34,9 @@ func set_health(new_current: int, new_max: int = -1) -> void:
 	current_hp = clampi(new_current, 0, max_hp)
 	queue_redraw()
 
-func set_preview_damage(dmg: int) -> void:
-	var old: int = pending_damage
-	pending_damage = max(0, dmg)
-	if old == 0 and pending_damage > 0:
-		blink = 0.0
-	if pending_damage == 0:
-		blink = 0.0
-	queue_redraw()
-
-func set_block_charges(charges: int) -> void:
-	defensive_pips.set_charges(charges)
-
-func clear_all_previews() -> void:
-	pending_damage = 0
-	blink = 0.0
-	defensive_pips.clear()
-	queue_redraw()
+###########################################################################
+#                                DRAW PIPS                                #
+###########################################################################
 
 func _draw() -> void:
 	if max_hp <= 0:
@@ -112,3 +99,50 @@ func _draw() -> void:
 
 		if outline:
 			draw_rect(rect, Color(0, 0, 0, 0.35), false)
+
+###########################################################################
+#                          HEALTH PIPS MANAGEMENT                         #
+###########################################################################
+
+func set_preview_damage(dmg: int) -> void:
+	var old: int = pending_damage
+	pending_damage = max(0, dmg)
+	if old == 0 and pending_damage > 0:
+		blink = 0.0
+
+	if pending_damage == 0:
+		blink = 0.0
+
+	queue_redraw()
+
+func consume_damage_preview(damage: int, block: int) -> void:
+	if pending_damage <= 0:
+		return
+
+	if block < 0:
+		pending_damage = max(0, pending_damage - max(damage, 0))
+
+	queue_redraw()
+
+###########################################################################
+#                          BLOCK PIPS MANAGEMENT                         #
+###########################################################################
+
+func set_block_charges(charges: int) -> void:
+	defensive_pips.set_charges(charges)
+
+func set_block_preview_broken(count: int) -> void:
+	defensive_pips.set_broken_block(count)
+
+###########################################################################
+#                          CLEAR PREVIEWED PIPS                           #
+###########################################################################
+
+func clear_preview_damage() -> void:
+	pending_damage = 0
+	blink = 0.0
+	queue_redraw()
+
+func clear_all_preview_pips() -> void:
+	defensive_pips.broken_block_count = 0
+	clear_preview_damage()

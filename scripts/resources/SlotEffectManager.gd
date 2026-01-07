@@ -6,7 +6,7 @@ static func apply(effect: Dictionary, player) -> void:
 	match id:
 		"Block":
 			player.block += int(effect.get("value", 0))
-			player.update_block()
+			player.update_player_pips_block()
 		"Dodge":
 			player.dodge += int(effect.get("value", 0))
 		"Feint":

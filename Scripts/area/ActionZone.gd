@@ -36,7 +36,7 @@ func add_card_to_action_zone(card) -> void:
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
 		if card.is_flipped:
-			EventBus.defense_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
+			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
 		else:
 			EventBus.opponent_incoming_damage_updated.emit()
 

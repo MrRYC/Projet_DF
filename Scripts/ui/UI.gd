@@ -24,7 +24,7 @@ func _ready() -> void:
 
 	timer.timeout.connect(_on_action_timer_timeout)
 
-	timer_label.text = str(int(timer_new_max_value))+":00" #Timer en secondes:millisecondes
+	timer_label.text = str(int(timer_new_max_value))+":00"
 
 	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_blue.png")
 
@@ -43,7 +43,6 @@ func update_max_timer_value(new_value : float):
 		timer_new_max_value = new_value
 
 func update_action_ui():
-	#version secondes et millisecondes
 	var time = timer.time_left
 	var seconds = int(time)
 	var milliseconds = round(int((time - seconds) * 100))

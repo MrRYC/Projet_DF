@@ -25,10 +25,9 @@ signal hovered_off()
 #signals from ActionZone to IntentMarker
 signal card_removed_from_action_zone(bool)
 
-#signals from ActionZone to Player
-signal defense_preview(type: String, charge: int)
-signal defense_preview_cleared()
-signal defense_committed(new_total_block: int)
+#signals from ActionZone to DefensivePips
+signal player_defensive_actions_preview(type: String, charge: int)
+signal player_defensive_actions_cleared(type: String, charge: int)
 
 #---------------------#
 #    INPUTMANAGER     #

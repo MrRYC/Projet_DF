@@ -2,15 +2,16 @@ extends Node2D
 class_name OPPONENT
 
 var data: OPPONENT_DATA
-var current_hp : int
-var extra_damage : int = 0
+var current_hp: int
+var extra_damage: int = 0
 var cards_played_counter: int = 0
-var attack_order : int = 0
-var attack_order_copy : int = 0
+var attack_order: int = 0
+var attack_order_copy: int = 0
 var action_type
-var action_performed = true
-var block : int = 0
-var is_dead : bool = false
+var is_action_performed: bool = true
+var block: int = 0
+var has_defensive_stance: bool = false
+var is_dead: bool = false
 
 func init_from_data(d: OPPONENT_DATA) -> void:
 	data = d
@@ -23,9 +24,8 @@ func init_from_data(d: OPPONENT_DATA) -> void:
 ###########################################################################
 
 func take_damage(amount) -> int:
-	
-	if self.block != 0:
-		defensive_action()
+	if self.block > 0:
+		block_action()
 		update_intent(self.block)
 	else:
 		current_hp -= amount
@@ -40,28 +40,38 @@ func take_damage(amount) -> int:
 	
 	return extra_damage
 
-func defensive_action() -> void:
+func block_action() -> void:
 	self.block -= 1
-	
+	update_opponent_pips_block()
+
 	if self.block == 0:
 		#Animation block lost
 		pass
 
+###########################################################################
+#                              PIPS MANAGEMENT                            #
+###########################################################################
+
 func update_health() -> void:
 	$HealthPips.set_health(current_hp, data.max_hp)
-	
+
 func set_pending_damage_preview(damage: int) -> void:
-	$HealthPips.set_preview_damage(damage)
+	var broken_block: int = min(block, damage)
+	var remaining_damage: int = max(0, damage - block)
+	$HealthPips.set_block_preview_broken(broken_block)
+	$HealthPips.set_preview_damage(remaining_damage)
+
+func consume_damage_preview(damage: int) -> void:
+	$HealthPips.consume_damage_preview(damage, self.block)
+
+func update_opponent_pips_block() -> void:
+	$HealthPips.set_block_charges(self.block)
 
 func clear_pending_damage_preview() -> void:
-	$HealthPips.clear_all_previews()
+	$HealthPips.clear_preview_damage()
 
-func set_block(value: int) -> void:
-	block = max(0, value)
-	$HealthPips.set_block_charges(block)
-
-func add_block(delta: int) -> void:
-	set_block(block + delta)
+func clear_all_preview_pips() -> void:
+	$HealthPips.clear_all_preview_pips()
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
@@ -90,17 +100,21 @@ func on_player_card_played():
 		return
 
 func set_defensive_action():
-	if self.action_performed:
+	if self.is_action_performed:
 		return
 	
 	match self.data.action_type.keys()[self.action_type]:
 		"SIMPLE_BLOCK": 
 			self.block = 1
-			self.action_performed = true
+			self.is_action_performed = true
 		"DOUBLE_BLOCK": 
 			self.block = 2
-			self.action_performed = true
+			self.is_action_performed = true
+		_:
+			# Intent non défensif => pas de block
+			pass
 
+	update_opponent_pips_block()
 	#Animaion block gain
 
 func perform_action() -> void:
@@ -118,7 +132,7 @@ func perform_action() -> void:
 			print(str(self.data.display_name)+" "+str(action_type)+" activé")
 			#Animation buff
 
-	self.action_performed = true
+	self.is_action_performed = true
 
 ###########################################################################
 #                            DIMM MANAGEMENT                              #

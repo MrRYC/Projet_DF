@@ -58,12 +58,12 @@ func threshold_actions(index)-> void:
 	for opponent in match_up:
 		if opponent.attack_order == 0: #on skip les opponents qui n'attaquent pas
 			continue
-		elif opponent.attack_order == index && !opponent.action_performed: #si c'est son tour, 
+		elif opponent.attack_order == index && !opponent.is_action_performed: #si c'est son tour, 
 			opponent.perform_action()
 
 func end_of_turn_actions()-> void:
 	for opponent in match_up:
-		if !opponent.action_performed:
+		if !opponent.is_action_performed:
 			opponent.perform_action()
 
 func notify_card_played()-> void:
@@ -125,9 +125,11 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 		#Reinitialisation des données du tour précédent
 		opponent.extra_damage = 0
 		opponent.cards_played_counter = 0
-		opponent.action_performed = false
+		opponent.is_action_performed = false
+		opponent.has_defensive_stance = false
 		opponent.block = 0
-		
+		opponent.clear_all_preview_pips()
+
 		#Génération de l'action du tour
 		opponent.data.init_action_list()
 		var action_number : int = randi_range(0, 3)
@@ -141,14 +143,11 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 		#Récupération de la valeur d'attaque pour le label des intentions
 		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK":
 			label_value = opponent.data.damage
+			incoming_attack.append(opponent)
 		
 		#Mise à jour du label des intentions
 		opponent.update_intent(label_value)
 
-		#Activation du marqeur si l'opponent est de type action après x cartes et que son action est une action
-		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK" : 
-			incoming_attack.append(opponent)
-	
 	if incoming_attack.size()>0:
 		action_zone.save_opponent_markers(incoming_attack)
 
@@ -219,6 +218,6 @@ func _on_incoming_damage()-> void:
 			dmg_by_opp[o] = prev + int(card.attack)
 
 	#Affichage des previews sur les opponents
-	for o in dmg_by_opp.keys():
-		if is_instance_valid(o):
-			o.set_pending_damage_preview(int(dmg_by_opp[o]))  # ou o.get_node("HealthPips").set_preview_damage(...)
+	for opponent in dmg_by_opp.keys():
+		if is_instance_valid(opponent):
+			opponent.set_pending_damage_preview(int(dmg_by_opp[opponent]))
