@@ -123,12 +123,7 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 	
 	for opponent in match_up:
 		#Reinitialisation des données du tour précédent
-		opponent.extra_damage = 0
-		opponent.cards_played_counter = 0
-		opponent.is_action_performed = false
-		opponent.has_defensive_stance = false
-		opponent.block = 0
-		opponent.clear_all_preview_pips()
+		opponent.reset_for_new_turn()
 
 		#Génération de l'action du tour
 		opponent.data.init_action_list()
@@ -138,7 +133,7 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 		#Activation des effets défensifs
 		if opponent.data.action_type.keys()[opponent.action_type] == "SIMPLE_BLOCK" || opponent.data.action_type.keys()[opponent.action_type] == "DOUBLE_BLOCK":
 			opponent.set_defensive_action()
-			label_value = opponent.block #Récupération de la valeur de défense pour le label des intentions
+			label_value = opponent.defense_controller.get_block() #Récupération de la valeur de défense pour le label des intentions
 
 		#Récupération de la valeur d'attaque pour le label des intentions
 		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK":

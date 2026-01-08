@@ -134,7 +134,7 @@ func apply_player_damage(amount)-> void:
 	player_ref.take_damage(amount)
 
 func apply_cancel_combo()-> void:
-	player_ref.check_evasive_action()
+	player_ref.check_evasion()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

@@ -1,10 +1,10 @@
 extends Node2D
 class_name PLAYER
 
+#variables du script
+@onready var defense_controller: DefenseController = $DefensiveActionsController
 var max_health : int = 0
 var current_health : int = 0
-var block : int = 0
-var dodge : int = 0
 
 func _ready() -> void:
 	EventBus.new_turn.connect(_on_new_turn)
@@ -12,7 +12,10 @@ func _ready() -> void:
 	EventBus.undim_player.connect(_on_undimmed_player)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
-	
+
+	defense_controller.block_changed.connect(_on_block_changed)
+	defense_controller.dodge_activated.connect(_on_dodge_changed)
+
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
@@ -23,13 +26,20 @@ func set_starting_health(health)-> void:
 	update_health()
 
 func take_damage(amount)-> void:
-	if self.dodge != 0:
-		evasive_action()
-	elif self.block != 0:
-		defensive_action()
-	else:
-		current_health -= amount
-		EventBus.combo_meter_cancelled.emit()
+	#if self.dodge != 0:
+		#evasive_action()
+	#elif self.block != 0:
+		#defense_controller()
+	#else:
+		#current_health -= amount
+		#EventBus.combo_meter_cancelled.emit()
+
+	if defense_controller.try_block_hit():
+		check_block()
+		return
+
+	current_health -= amount
+	EventBus.combo_meter_cancelled.emit()
 
 	if current_health < 0:
 		current_health = 0
@@ -39,24 +49,14 @@ func take_damage(amount)-> void:
 	if current_health <= 0:
 		die()
 
-func defensive_action()-> void:
-	self.block -= 1
-	update_player_pips_block()
-	
-	if self.block == 0:
-		#Animation block lost
+func check_block()-> void:
+	if defense_controller.get_block() == 0:
+		# Animation de perte du blocage
 		pass
 
-func evasive_action()-> void:
-	self.dodge -= 1
-	
-	if self.dodge == 0:
-		#Animation block lost
-		pass
-
-func check_evasive_action()-> void:
-	if self.dodge != 0:
-		evasive_action()
+func check_evasion()-> void:
+	if defense_controller.get_dodge():
+		return
 	else:
 		EventBus.drop_combo_cards.emit()
 
@@ -68,7 +68,7 @@ func update_health()-> void:
 	$HealthPips.set_health(current_health, max_health)
 
 func update_player_pips_block() -> void:
-	$HealthPips.set_block_charges(self.block)
+	$HealthPips.set_block_charges(defense_controller.get_block())
 
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
@@ -83,8 +83,7 @@ func die()-> void:
 ###########################################################################
 
 func _on_new_turn(_new_hand_size, _is_first_turn)-> void:
-	self.block = 0
-	self.dodge = 0
+	defense_controller.reset_for_new_turn()
 	update_player_pips_block()
 	
 func _on_dimmed_player()-> void:
@@ -98,3 +97,10 @@ func _on_card_removed_from_action_zone(_removed)-> void:
 
 func _on_incoming_damage(amount)-> void:
 	$HealthPips.set_preview_damage(amount)
+
+func _on_block_changed(_value) -> void:
+	defense_controller.get_block()
+	update_player_pips_block()
+	
+func _on_dodge_changed(_status) -> void:
+	defense_controller.get_dodge()

@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3vs7n1efdpym"]
+[gd_scene load_steps=8 format=3 uid="uid://b3vs7n1efdpym"]
 
 [ext_resource type="Script" uid="uid://bmpbet4eaqcvj" path="res://scripts/entities/Opponent.gd" id="1_kivkk"]
 [ext_resource type="Texture2D" uid="uid://djo4434jycemi" path="res://assets/entities/opponent/Opponent_1.png" id="2_fav6y"]
 [ext_resource type="Texture2D" uid="uid://chqk2rvicaewt" path="res://assets/resources/opponent ui/Attack_Threshold.png" id="3_1ucok"]
 [ext_resource type="Script" uid="uid://mtdmpxe7rr4a" path="res://scripts/ui/HealthPips.gd" id="4_8onbh"]
 [ext_resource type="Script" uid="uid://tpm67bm0t6x3" path="res://scripts/ui/DefensivePips.gd" id="5_w48xx"]
+[ext_resource type="Script" uid="uid://l6cge7ypwsoi" path="res://scripts/entities/DefensiveActionsController.gd" id="6_k51gv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gyqbi"]
 radius = 116.0
@@ -67,3 +68,6 @@ offset_bottom = -175.0
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DefensiveActionsController" type="Node" parent="."]
+script = ExtResource("6_k51gv")
