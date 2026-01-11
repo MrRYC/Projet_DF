@@ -62,6 +62,9 @@ func update_health()-> void:
 func update_player_pips_block() -> void:
 	$HealthPips.set_block_charges(defense_controller.get_block())
 
+func consume_damage_preview(damage: int) -> void:
+	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())
+
 ###########################################################################
 #                           DEATH MANAGEMENT                              #
 ###########################################################################

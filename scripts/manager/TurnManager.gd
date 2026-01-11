@@ -123,19 +123,20 @@ func action_card_played()-> void:
 func execute_ai_threshold_action(index)-> void:
 	opponent_manager_ref.threshold_actions(index)
 
-func execute_opponent_death_effect()-> void:
-	opponent_manager_ref.opponent_death()
-
 func apply_ai_end_turn_actions()-> void:
 	opponent_manager_ref.end_of_turn_actions()
 	action_zone_ref.clear_all_opponent_markers()
 
 func apply_player_damage(amount)-> void:
+	player_ref.consume_damage_preview(amount)
 	player_ref.take_damage(amount)
 
 func apply_cancel_combo()-> void:
 	player_ref.check_evasion()
 
+func execute_opponent_death_effect()-> void:
+	opponent_manager_ref.opponent_death()
+	
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
