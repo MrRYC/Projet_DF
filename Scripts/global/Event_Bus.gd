@@ -27,7 +27,7 @@ signal card_removed_from_action_zone(bool)
 
 #signals from ActionZone to DefensivePips
 signal player_defensive_actions_preview(type: String, charge: int)
-signal player_defensive_actions_cleared(type: String, charge: int)
+signal player_defensive_actions_cleared()
 
 #---------------------#
 #    INPUTMANAGER     #

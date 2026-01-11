@@ -21,6 +21,7 @@ var color_broken_block: Color = Color(0.549, 0.549, 0.549, 1.0)
 func _ready() -> void:
 	EventBus.processing.connect(_on_action_zone_resolving)
 	EventBus.player_defensive_actions_preview.connect(_on_player_defensive_action_preview)
+	EventBus.player_defensive_actions_cleared.connect(_on_defensive_actions_cleared)
 	custom_minimum_size = Vector2(0.0, pip_height)
 
 func set_charges(value: int) -> void:
@@ -103,11 +104,7 @@ func _on_player_defensive_action_preview(type, value)-> void:
 		charges = value
 		queue_redraw()
 
-func _on_opponent_defensive_action_preview(type, value)-> void:
-	entity = self.get_parent().get_parent()
-	if !(entity is OPPONENT):
-		return
-
-	if type == "Block":
-		charges = value
-		queue_redraw()
+func _on_defensive_actions_cleared() -> void:
+	charges = 0
+	broken_block_count = 0
+	queue_redraw()

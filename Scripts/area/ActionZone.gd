@@ -63,6 +63,7 @@ func return_card_to_hand(card) -> void:
 	
 	#Repositionnement des marqueurs d'intentions
 	EventBus.card_removed_from_action_zone.emit(true)
+	update_defensive_actions()
 	update_player_markers()
 	update_opponent_markers()
 	EventBus.card_removed_from_action_zone.emit(false)
@@ -77,6 +78,7 @@ func empty_action_zone() -> void:
 			card_manager_ref.flip_card_in_hand(card)
 		card_manager_ref.return_card_to_hand(card)
 
+	EventBus.player_defensive_actions_cleared.emit()
 	action_zone.clear()
 	refresh_previews_from_action_zone()
 
@@ -140,6 +142,11 @@ func save_player_marker(card) -> void:
 	add_child(m)
 	player_markers.append(m)
 	
+func update_defensive_actions() -> void:
+	for card in action_zone:
+		if card.is_flipped:
+			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
+
 func update_player_markers() -> void:
 	clear_all_player_markers()
 	for card in action_zone:

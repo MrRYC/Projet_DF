@@ -89,6 +89,7 @@ func _on_undimmed_player()-> void:
 
 func _on_card_removed_from_action_zone(_removed)-> void:
 	_on_undimmed_player()
+	update_player_pips_block()
 
 func _on_incoming_damage(amount)-> void:
 	$HealthPips.set_preview_damage(amount)
