@@ -6,7 +6,7 @@ extends Node
 var match_up: Array = [] # instances Opponent en jeu
 var incoming_attack: Array = [] # liste des opponent qui attaquent ce tour
 var current_hovered_opponent : Node = null
-var dimmed_opponents := [] # array of opponents currently dimmed
+var dimmed_opponents: Array = [] # array of opponents currently dimmed
 
 func _ready()-> void:
 	EventBus.new_turn.connect(_on_new_turn)
@@ -189,30 +189,44 @@ func _on_player_marker_hovered_off()-> void:
 func _on_card_removed_from_action_zone(_removed)-> void:
 	undim_all()
 
-func _on_incoming_damage()-> void:
-	#Reset des preview sur tous les opponents
+func _on_incoming_damage() -> void:
+	# Reset complet des previews (HP + block)
 	for opponent in match_up:
 		if is_instance_valid(opponent):
-			opponent.clear_pending_damage_preview()
+			opponent.clear_all_previewed_incoming_damage()
 
-	#Cumul les dégâts des cartes en action zone par opponent
-	var dmg_by_opp: Dictionary = {} # key: OPPONENT, value: int
+	var blocks_left_by_opp: Dictionary = {}
+	var broken_by_opp: Dictionary = {}
+	var hp_by_opp: Dictionary = {}
 
-	for card in action_zone.action_zone:
-		if card == null:
-			continue
-		if card.is_flipped:
-			continue # flipped = slots/defense, pas une attaque
-		if card.target == null:
-			continue
-		if card.target is OPPONENT:
-			var o: OPPONENT = card.target
-			var prev: int = 0
-			if dmg_by_opp.has(o):
-				prev = int(dmg_by_opp[o])
-			dmg_by_opp[o] = prev + int(card.attack)
+	for i in range(action_zone.action_zone.size()-1, -1, -1):
+		var card = action_zone.action_zone[i]
+		
+		if card == null: continue
+		if card.is_flipped: continue
+		if card.target == null: continue
+		if !(card.target is OPPONENT): continue
 
-	#Affichage des previews sur les opponents
-	for opponent in dmg_by_opp.keys():
-		if is_instance_valid(opponent):
-			opponent.set_pending_damage_preview(int(dmg_by_opp[opponent]))
+		var o: OPPONENT = card.target
+		var dmg := int(card.attack)
+		if dmg <= 0: continue
+
+		if !blocks_left_by_opp.has(o):
+			blocks_left_by_opp[o] = o.defense_controller.get_block()
+			broken_by_opp[o] = 0
+			hp_by_opp[o] = 0
+
+		var blocks_left: int = int(blocks_left_by_opp[o])
+
+		# 1 carte = 1 hit ; 1 block annule le hit entier
+		if blocks_left > 0:
+			blocks_left -= 1
+			blocks_left_by_opp[o] = blocks_left
+			broken_by_opp[o] = int(broken_by_opp[o]) + 1
+		else:
+			hp_by_opp[o] = int(hp_by_opp[o]) + dmg
+
+	# Applique la preview (SET)
+	for o in blocks_left_by_opp.keys():
+		if is_instance_valid(o):
+			o.set_incoming_preview(int(broken_by_opp[o]), int(hp_by_opp[o]))

@@ -140,7 +140,7 @@ func apply_cancel_combo()-> void:
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_phase_button_pressed() -> void:
+func _on_fight_button_pressed() -> void:
 	await execute_action_phase()
 	new_turn()
 	

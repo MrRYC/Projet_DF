@@ -68,10 +68,10 @@ func _on_turn_increased(turn):
 
 func _on_processing(processing):
 	if processing:
-		$ActionButton.disabled = true
+		$FightButton.disabled = true
 		$EmptyActionZoneButton.disabled = true
 	else:
-		$ActionButton.disabled = false
+		$FightButton.disabled = false
 		$EmptyActionZoneButton.disabled = false
 
 func _on_action_time():
@@ -91,7 +91,7 @@ func _on_action_timer_timeout():
 	$EmptyActionZoneButton.disabled = true
 	EventBus.action_timer_timeout.emit(true)
 
-func _on_action_button_pressed() -> void:
+func _on_fight_button_pressed() -> void:
 	timer.stop()
 	$EmptyActionZoneButton.disabled = true
 	EventBus.action_timer_timeout.emit(true)

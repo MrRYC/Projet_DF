@@ -19,7 +19,7 @@ var broken_block_count: int = 0
 var color_broken_block: Color = Color(0.549, 0.549, 0.549, 1.0)
 
 func _ready() -> void:
-	EventBus.processing.connect(_on_processing)
+	EventBus.processing.connect(_on_action_zone_resolving)
 	EventBus.player_defensive_actions_preview.connect(_on_player_defensive_action_preview)
 	custom_minimum_size = Vector2(0.0, pip_height)
 
@@ -88,7 +88,7 @@ func _draw() -> void:
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_processing(processing)-> void:
+func _on_action_zone_resolving(processing)-> void:
 	if processing:
 		is_resolving_action_zone = true
 	else:

@@ -12,6 +12,8 @@ var attack_order_copy: int = 0
 var action_type
 var is_action_performed: bool = true
 var is_dead: bool = false
+var preview_block_reserved: int = 0
+var preview_hp_damage: int = 0
 
 func init_from_data(d: OPPONENT_DATA) -> void:
 	data = d
@@ -28,13 +30,6 @@ func init_from_data(d: OPPONENT_DATA) -> void:
 ###########################################################################
 
 func take_damage(amount) -> int:
-	#if self.block > 0:
-		#block_action()
-		#update_intent(self.block)
-	#else:
-		#current_hp -= amount
-		#EventBus.combo_meter_increased.emit()
-		
 	if defense_controller.try_block_hit():
 		check_block()
 		update_intent(defense_controller.get_block())
@@ -63,24 +58,21 @@ func check_block() -> void:
 func update_health() -> void:
 	$HealthPips.set_health(current_hp, data.max_hp)
 
-func set_pending_damage_preview(damage: int) -> void:
-	var block_charges: int = defense_controller.get_block()
-	var broken_block: int = min(block_charges, damage)
-	var remaining_damage: int = max(0, damage - block_charges)
-	$HealthPips.set_block_preview_broken(broken_block)
-	$HealthPips.set_preview_damage(remaining_damage)
+func set_incoming_preview(broken_blocks: int, hp_damage: int) -> void:
+	$HealthPips.set_block_preview_broken(max(0, broken_blocks))
+	$HealthPips.set_preview_damage(max(0, hp_damage))
 
 func consume_damage_preview(damage: int) -> void:
-	$HealthPips.consume_damage_preview(damage, defense_controller.get_block())
+	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())
 
 func update_opponent_pips_block() -> void:
 	$HealthPips.set_block_charges(defense_controller.get_block())
 
-func clear_pending_damage_preview() -> void:
-	$HealthPips.clear_preview_damage()
+func clear_preview_damage() -> void:
+	$HealthPips.clear_previewed_hp_damage()
 
-func clear_all_preview_pips() -> void:
-	$HealthPips.clear_all_preview_pips()
+func clear_all_previewed_incoming_damage() -> void:
+	$HealthPips.clear_all_previewed_damage()
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
@@ -185,7 +177,7 @@ func reset_for_new_turn()-> void:
 	cards_played_counter = 0
 	is_action_performed = false
 	defense_controller.reset_for_new_turn()  # reset defensive charges
-	clear_all_preview_pips()
+	clear_all_previewed_incoming_damage()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

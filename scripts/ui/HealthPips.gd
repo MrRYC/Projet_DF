@@ -17,13 +17,14 @@ var color_empty: Color = Color(1, 1, 1, 0.2)
 #variables des dégats
 var preview_damage: int = 0
 var pending_damage: int = 0
+var preview_anchor_hp: int = -1
 var color_damage: Color = Color(0.8, 0.1, 0, 1)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
 var blink_min_alpha: float = 0.25 # intensité minimale
 var blink: float = 0.0
 
 func _process(delta: float) -> void:
-	#Animation de blinl si on a une preview
+	#Animation de blink si on a une preview
 	if pending_damage > 0:
 		blink += delta * blink_speed
 		queue_redraw()
@@ -69,12 +70,16 @@ func _draw() -> void:
 	var y: float = (height - pip_height) * 0.5
 	
 	# Calcule combien de pips seront "marqués" en preview (sur les derniers HP)
-	var damage_preview: int = pending_damage
-	if damage_preview > current_hp:
-		damage_preview = current_hp
+	var base_hp: int = current_hp
+	if preview_anchor_hp >= 0:
+		base_hp = preview_anchor_hp
 	
-	var preview_start: int = current_hp - damage_preview
-	var preview_end: int = current_hp - 1
+	var damage_preview: int = pending_damage
+	damage_preview = min(damage_preview, base_hp)
+	base_hp = clampi(base_hp, 0, max_hp)
+	
+	var preview_start: int = base_hp - damage_preview
+	var preview_end: int = base_hp - 1
 
 	#Scientillement des dégats
 	var preview_alpha: float = 1.0
@@ -92,7 +97,7 @@ func _draw() -> void:
 		else :
 			c = color_empty
 
-		if i >= preview_start and i <= preview_end:
+		if pending_damage > 0 and i >= preview_start and i <= preview_end:
 			c = Color(color_damage.r, color_damage.g, color_damage.b, preview_alpha)
 
 		draw_rect(rect, c, true)
@@ -107,20 +112,30 @@ func _draw() -> void:
 func set_preview_damage(dmg: int) -> void:
 	var old: int = pending_damage
 	pending_damage = max(0, dmg)
+	
 	if old == 0 and pending_damage > 0:
+		preview_anchor_hp = current_hp
 		blink = 0.0
 
 	if pending_damage == 0:
 		blink = 0.0
+		preview_anchor_hp = -1
 
 	queue_redraw()
 
-func consume_damage_preview(damage: int, block: int) -> void:
+func consume_damage_preview(damage: int, has_block: bool) -> void:
 	if pending_damage <= 0:
 		return
 
-	if block < 0:
-		pending_damage = max(0, pending_damage - max(damage, 0))
+	if has_block:
+		blink = 0.0
+		preview_anchor_hp = -1
+	else:
+		var hp_damage :int = max(0, damage)
+		if hp_damage <= 0:
+			return
+		
+		pending_damage = max(0, pending_damage - hp_damage)
 
 	queue_redraw()
 
@@ -138,11 +153,11 @@ func set_block_preview_broken(count: int) -> void:
 #                          CLEAR PREVIEWED PIPS                           #
 ###########################################################################
 
-func clear_preview_damage() -> void:
-	pending_damage = 0
-	blink = 0.0
-	queue_redraw()
+func clear_previewed_hp_damage() -> void:
+		pending_damage = 0
+		blink = 0.0
+		queue_redraw()
 
-func clear_all_preview_pips() -> void:
-	defensive_pips.broken_block_count = 0
-	clear_preview_damage()
+func clear_all_previewed_damage() -> void:
+		defensive_pips.set_broken_block(0)
+		clear_previewed_hp_damage()

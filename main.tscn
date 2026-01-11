@@ -434,7 +434,7 @@ metadata/_edit_use_anchors_ = true
 [node name="UserInterface" type="Node" parent="."]
 script = ExtResource("9_3uw2j")
 
-[node name="ActionButton" type="Button" parent="UserInterface"]
+[node name="FightButton" type="Button" parent="UserInterface"]
 offset_left = 1651.0
 offset_top = 660.0
 offset_right = 1782.0
@@ -559,7 +559,7 @@ script = ExtResource("19_2gh4u")
 [node name="SoundManager" type="Node" parent="."]
 script = ExtResource("19_5tuhn")
 
-[connection signal="pressed" from="UserInterface/ActionButton" to="TurnManager" method="_on_phase_button_pressed"]
-[connection signal="pressed" from="UserInterface/ActionButton" to="UserInterface" method="_on_action_button_pressed"]
+[connection signal="pressed" from="UserInterface/FightButton" to="TurnManager" method="_on_fight_button_pressed"]
+[connection signal="pressed" from="UserInterface/FightButton" to="UserInterface" method="_on_fight_button_pressed"]
 [connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="OpponentManager" method="_on_empty_action_zone_button_pressed"]
 [connection signal="pressed" from="UserInterface/EmptyActionZoneButton" to="ActionZone" method="_on_empty_action_zone_button_pressed"]

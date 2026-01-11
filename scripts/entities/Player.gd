@@ -26,14 +26,6 @@ func set_starting_health(health)-> void:
 	update_health()
 
 func take_damage(amount)-> void:
-	#if self.dodge != 0:
-		#evasive_action()
-	#elif self.block != 0:
-		#defense_controller()
-	#else:
-		#current_health -= amount
-		#EventBus.combo_meter_cancelled.emit()
-
 	if defense_controller.try_block_hit():
 		check_block()
 		return
