@@ -176,8 +176,11 @@ func reset_for_new_turn()-> void:
 	extra_damage = 0
 	cards_played_counter = 0
 	is_action_performed = false
-	defense_controller.reset_for_new_turn()  # reset defensive charges
+	reset_defensive_controller_variables()
 	clear_all_previewed_incoming_damage()
+	
+func reset_defensive_controller_variables()-> void:
+	defense_controller.reset_for_new_turn()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

@@ -35,10 +35,11 @@ func add_card_to_action_zone(card) -> void:
 		card.current_area = card.board_area.IN_ACTION_ZONE
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
+		
 		if card.is_flipped:
 			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
-		else:
-			EventBus.opponent_incoming_damage_updated.emit()
+			
+		refresh_previews_from_action_zone()
 
 func return_card_to_hand(card) -> void:
 	var action_zone_copy = action_zone.duplicate()
@@ -58,7 +59,7 @@ func return_card_to_hand(card) -> void:
 	
 	#Remise à zero des marqueurs de tour des ennemis
 	reset_end_turn_opponent_action_turn()
-	EventBus.opponent_incoming_damage_updated.emit()
+	refresh_previews_from_action_zone()
 	
 	#Repositionnement des marqueurs d'intentions
 	EventBus.card_removed_from_action_zone.emit(true)
@@ -77,6 +78,9 @@ func empty_action_zone() -> void:
 		card_manager_ref.return_card_to_hand(card)
 
 	action_zone.clear()
+	refresh_previews_from_action_zone()
+
+func refresh_previews_from_action_zone() -> void:
 	EventBus.opponent_incoming_damage_updated.emit()
 
 ###########################################################################
