@@ -128,8 +128,8 @@ func apply_ai_end_turn_actions()-> void:
 	action_zone_ref.clear_all_opponent_markers()
 
 func apply_player_damage(amount)-> void:
-	player_ref.consume_damage_preview(amount)
 	player_ref.take_damage(amount)
+	player_ref.consume_damage_preview(amount)
 
 func apply_cancel_combo()-> void:
 	player_ref.check_evasion()

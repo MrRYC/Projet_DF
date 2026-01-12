@@ -15,9 +15,7 @@ var color_full: Color = Color(0, 0.7, 0.7, 1.0)
 var color_empty: Color = Color(1, 1, 1, 0.2)
 
 #variables des dégats
-var preview_damage: int = 0
 var pending_damage: int = 0
-var preview_anchor_hp: int = -1
 var color_damage: Color = Color(0.8, 0.1, 0, 1)
 var blink_speed: float = 2.0      # plus grand = clignote plus vite
 var blink_min_alpha: float = 0.25 # intensité minimale
@@ -32,7 +30,8 @@ func _process(delta: float) -> void:
 func set_health(new_current: int, new_max: int = -1) -> void:
 	if new_max >= 0:
 		max_hp = max(0, new_max)
-	current_hp = clampi(new_current, 0, max_hp)
+	#current_hp = clampi(new_current, 0, max_hp)
+	current_hp = new_current
 	queue_redraw()
 
 ###########################################################################
@@ -40,9 +39,6 @@ func set_health(new_current: int, new_max: int = -1) -> void:
 ###########################################################################
 
 func _draw() -> void:
-	if max_hp <= 0:
-		return
-	
 	#calcul dynamique de la taille des pips de point de vie
 	var width : float = size.x
 	var height : float = size.y
@@ -70,14 +66,8 @@ func _draw() -> void:
 	var y: float = (height - pip_height) * 0.5
 	
 	# Calcule combien de pips seront "marqués" en preview (sur les derniers HP)
-	var base_hp: int = current_hp
-	if preview_anchor_hp >= 0:
-		base_hp = preview_anchor_hp
-	
-	var damage_preview: int = pending_damage
-	damage_preview = min(damage_preview, base_hp)
-	base_hp = clampi(base_hp, 0, max_hp)
-	
+	var base_hp: int = clampi(current_hp, 0, max_hp)
+	var damage_preview = clampi(pending_damage, 0, base_hp)
 	var preview_start: int = base_hp - damage_preview
 	var preview_end: int = base_hp - 1
 
@@ -92,12 +82,12 @@ func _draw() -> void:
 		var rect := Rect2(x, y, pip_w, pip_height)
 
 		var c: Color 
-		if i < current_hp:
+		if i < base_hp:
 			c = color_full
 		else :
 			c = color_empty
 
-		if pending_damage > 0 and i >= preview_start and i <= preview_end:
+		if damage_preview > 0 and i >= preview_start and i <= preview_end and i < base_hp:
 			c = Color(color_damage.r, color_damage.g, color_damage.b, preview_alpha)
 
 		draw_rect(rect, c, true)
@@ -109,18 +99,9 @@ func _draw() -> void:
 #                          HEALTH PIPS MANAGEMENT                         #
 ###########################################################################
 
-func set_preview_damage(dmg: int) -> void:
-	var old: int = pending_damage
-	pending_damage = max(0, dmg)
-	
-	if old == 0 and pending_damage > 0:
-		preview_anchor_hp = current_hp
-		blink = 0.0
-
-	if pending_damage == 0:
-		blink = 0.0
-		preview_anchor_hp = -1
-
+func set_preview_damage(damage: int) -> void:
+	pending_damage = max(0, damage)
+	blink = 0.0
 	queue_redraw()
 
 func consume_damage_preview(damage: int, has_block: bool) -> void:
@@ -129,7 +110,6 @@ func consume_damage_preview(damage: int, has_block: bool) -> void:
 
 	if has_block:
 		blink = 0.0
-		preview_anchor_hp = -1
 	else:
 		var hp_damage :int = max(0, damage)
 		if hp_damage <= 0:

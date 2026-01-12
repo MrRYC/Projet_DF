@@ -6,11 +6,9 @@
 [resource]
 script = ExtResource("1_x4i2f")
 display_name = "Deb"
-max_hp = 3
+max_hp = 5
 overkill_limit = 3
 image = ExtResource("2_jw7sd")
 damage = 1
-action_1 = 3
-action_2 = 3
-action_3 = 3
+action_3 = 2
 action_4 = 3
