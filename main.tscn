@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://dut6bo1el3xs8"]
+[gd_scene load_steps=34 format=4 uid="uid://duvp7va2xsjwc"]
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]

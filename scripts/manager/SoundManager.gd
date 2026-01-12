@@ -1,6 +1,5 @@
 extends Node
 
-
 #variables du script
 var bg_music_dir: String = "res://assets/audio/background/" # dossier des background soundtracks
 var allowed_extensions: PackedStringArray = ["ogg", "wav", "mp3"] #formats audio autorisés
@@ -10,6 +9,7 @@ var bg_music_player: AudioStreamPlayer #nom du background music player
 var tracks: Array[String] = []          # tableau des background soundtracks
 var playlist: Array[String] = []        # copie shuffle
 var last_played: String = ""
+var is_playlist_ended: bool = false
 
 # Called when the node enters the scene tree for the first time.
 
@@ -20,8 +20,7 @@ func _ready() -> void:
 
 	bg_music_player.finished.connect(_on_track_finished)
 
-	reloadtracks()
-	play_random()
+	load_and_start()
 
 func reloadtracks() -> void:
 	tracks.clear()
@@ -51,6 +50,7 @@ func reloadtracks() -> void:
 	buildplaylist()
 
 func buildplaylist() -> void:
+	is_playlist_ended = false
 	playlist = tracks.duplicate()
 	playlist.shuffle()
 
@@ -61,14 +61,13 @@ func buildplaylist() -> void:
 		playlist[1] = tmp
 
 func play_random() -> void:
-	if tracks.is_empty():
-		reloadtracks()
-		if tracks.is_empty():
-			return
-
 	# Si playlist vide -> on reshuffle
 	if playlist.is_empty():
 		buildplaylist()
+
+	if playlist.size() == 1:
+		is_playlist_ended = true
+		
 
 	var next_path: String = playlist.pop_front()
 	play_path(next_path)
@@ -96,16 +95,17 @@ func track_name(path: String) -> String:
 	var file := path.get_file()
 	return file.get_basename()  
 
-#func stop() -> void:
-	#bg_music_player.stop()
+func stop() -> void:
+	bg_music_player.stop()
+
+func load_and_start() -> void:
+	reloadtracks()
+	stop()
+	play_random()
+
 #
 #func set_volume_db(db: float) -> void:
 	#bg_music_player.volume_db = db
-#
-#func reload_and_restart() -> void:
-	#reloadtracks()
-	#bg_music_player.stop()
-	#play_random()
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
@@ -114,4 +114,8 @@ func track_name(path: String) -> String:
 func _on_track_finished() -> void:
 	if gap_seconds > 0.0:
 		await get_tree().create_timer(gap_seconds).timeout
-	play_random()
+	
+	if is_playlist_ended :
+		load_and_start()
+	else:
+		play_random()
