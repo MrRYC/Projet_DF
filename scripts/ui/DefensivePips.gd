@@ -63,14 +63,6 @@ func _draw() -> void:
 
 	var y: float = (height - pip_height) * 0.5
 
-	#gestion de la couleur de preview pour le player
-	var c:Color
-	if entity is PLAYER && !is_resolving_action_zone:
-		c = color_block_activated
-		entity = null
-	else:
-		c = color_block_activated
-
 	#gestion des pips grisés
 	var broken:int = clamp(broken_pips_count, 0, charges)
 	
@@ -79,7 +71,7 @@ func _draw() -> void:
 		var rect := Rect2(x, y, pip_w, pip_height)
 
 		# Si tu veux casser les pips "de gauche à droite"
-		c = color_broken_pip if i < broken else color_block_activated
+		var c:Color = color_broken_pip if i < broken else color_block_activated
 		
 		draw_rect(rect, c, true)
 
