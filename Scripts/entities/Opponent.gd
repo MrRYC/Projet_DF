@@ -22,15 +22,13 @@ func init_from_data(d: OPPONENT_DATA) -> void:
 	update_health()
 
 	defense_controller = $DefensiveActionsController
-	defense_controller.block_changed.connect(_on_block_changed)
-	defense_controller.dodge_activated.connect(_on_dodge_set)
 
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
 ###########################################################################
 
 func take_damage(amount) -> int:
-	if defense_controller.try_block_hit():
+	if defense_controller.try_to_block():
 		check_block()
 		update_intent(defense_controller.get_block())
 		return 0
@@ -50,29 +48,6 @@ func check_block() -> void:
 	if defense_controller.get_block() == 0:
 		# Animation block lost (last charge consumed)
 		pass
-
-###########################################################################
-#                              PIPS MANAGEMENT                            #
-###########################################################################
-
-func update_health() -> void:
-	$HealthPips.set_health(current_hp, data.max_hp)
-
-func set_incoming_preview(broken_blocks: int, hp_damage: int) -> void:
-	$HealthPips.set_block_preview_broken(max(0, broken_blocks))
-	$HealthPips.set_preview_damage(max(0, hp_damage))
-
-func consume_damage_preview(damage: int) -> void:
-	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())
-
-func update_opponent_pips_block() -> void:
-	$HealthPips.set_block_charges(defense_controller.get_block())
-
-func clear_preview_damage() -> void:
-	$HealthPips.clear_previewed_hp_damage()
-
-func clear_previewed_damage() -> void:
-	$HealthPips.clear_previewed_damage()
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
@@ -136,6 +111,29 @@ func perform_action() -> void:
 	self.is_action_performed = true
 
 ###########################################################################
+#                              PIPS MANAGEMENT                            #
+###########################################################################
+
+func update_health() -> void:
+	$HealthPips.set_health(current_hp, data.max_hp)
+
+func set_incoming_preview(broken_blocks: int, hp_damage: int) -> void:
+	$HealthPips.set_block_preview_broken(max(0, broken_blocks))
+	$HealthPips.set_preview_damage(max(0, hp_damage))
+
+func consume_damage_preview(damage: int) -> void:
+	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())
+
+func update_opponent_pips_block() -> void:
+	$HealthPips.set_block_charges(defense_controller.get_block())
+
+func clear_preview_damage() -> void:
+	$HealthPips.clear_previewed_hp_damage()
+
+func clear_previewed_damage() -> void:
+	$HealthPips.clear_previewed_damage()
+
+###########################################################################
 #                            DIMM MANAGEMENT                              #
 ###########################################################################
 
@@ -186,9 +184,6 @@ func reset_defensive_controller_variables()-> void:
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_block_changed(_value) -> void:
-	defense_controller.get_block()
-	update_opponent_pips_block()
-	
-func _on_dodge_set(_status) -> void:
-	defense_controller.get_dodge()
+#func _on_block_changed(_value) -> void:
+	#defense_controller.get_block()
+	#update_opponent_pips_block()

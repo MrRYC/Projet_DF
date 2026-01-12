@@ -17,7 +17,7 @@ func _ready()-> void:
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 	EventBus.opponent_incoming_damage_updated.connect(_on_incoming_damage)
 	
-	spawn_random_opponent_set(0,0)
+	spawn_random_opponent_set(0,5)
 
 ###########################################################################
 #                           OPPONENT CREATION                             #

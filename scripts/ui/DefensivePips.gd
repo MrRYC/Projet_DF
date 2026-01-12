@@ -11,12 +11,14 @@ var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
 var pip_gap: float = 1.0
 var outline: bool = true
+var broken_pips_count: int = 0
 
-#variables spécifiques pour les blocks
-var color_preview_block: Color = Color(0.279, 0.496, 1.0, 0.353)
-var color_active_block: Color = Color(0, 0.2, 0.9, 1)
-var broken_block_count: int = 0
-var color_broken_block: Color = Color(0.549, 0.549, 0.549, 1.0)
+var color_block_activated: Color = Color(0, 0.2, 0.9, 1)
+var color_dodge_activated: Color = Color(0.5, 0.4, 0.8, 1.0)
+var color_feint_activated: Color = Color(0.86, 0.312, 0.103, 1.0)
+var color_broken_pip: Color = Color(0.5, 0.5, 0.5, 1.0)
+
+var defensive_action_queue: Array[Dictionary] = []
 
 func _ready() -> void:
 	EventBus.processing.connect(_on_action_zone_resolving)
@@ -28,7 +30,7 @@ func set_charges(value: int) -> void:
 	queue_redraw()
 
 func set_broken_block(count: int) -> void:
-	broken_block_count = max(count, 0)
+	broken_pips_count = max(count, 0)
 	queue_redraw()
 
 func clear() -> void:
@@ -64,20 +66,20 @@ func _draw() -> void:
 	#gestion de la couleur de preview pour le player
 	var c:Color
 	if entity is PLAYER && !is_resolving_action_zone:
-		c = color_preview_block
+		c = color_block_activated
 		entity = null
 	else:
-		c = color_active_block
+		c = color_block_activated
 
 	#gestion des pips grisés
-	var broken:int = clamp(broken_block_count, 0, charges)
+	var broken:int = clamp(broken_pips_count, 0, charges)
 	
 	for i in range(charges):
 		var x: float = start_x + float(i) * (pip_w + pip_gap)
 		var rect := Rect2(x, y, pip_w, pip_height)
 
 		# Si tu veux casser les pips "de gauche à droite"
-		c = color_broken_block if i < broken else color_active_block
+		c = color_broken_pip if i < broken else color_block_activated
 		
 		draw_rect(rect, c, true)
 
@@ -100,5 +102,5 @@ func _on_player_defensive_action_preview(type, value)-> void:
 		return
 
 	if type == "Block":
-		charges = value
+		charges += value
 		queue_redraw()

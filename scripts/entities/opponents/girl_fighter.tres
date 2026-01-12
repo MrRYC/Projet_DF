@@ -10,5 +10,6 @@ max_hp = 5
 overkill_limit = 3
 image = ExtResource("2_jw7sd")
 damage = 1
+action_2 = 1
 action_3 = 2
-action_4 = 3
+action_4 = 2

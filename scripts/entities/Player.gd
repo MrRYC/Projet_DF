@@ -14,7 +14,8 @@ func _ready() -> void:
 	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
 
 	defense_controller.block_changed.connect(_on_block_changed)
-	defense_controller.dodge_activated.connect(_on_dodge_changed)
+	defense_controller.dodge_changed.connect(_on_dodge_changed)
+	defense_controller.feint_changed.connect(_on_feint_changed)
 
 ###########################################################################
 #                             HEALTH MANAGEMENT                           #
@@ -26,7 +27,7 @@ func set_starting_health(health)-> void:
 	update_health()
 
 func take_damage(amount)-> void:
-	if defense_controller.try_block_hit():
+	if defense_controller.try_to_block():
 		check_block()
 		return
 
@@ -98,5 +99,10 @@ func _on_block_changed(_value) -> void:
 	defense_controller.get_block()
 	update_player_pips_block()
 	
-func _on_dodge_changed(_status) -> void:
+func _on_dodge_changed(_value) -> void:
 	defense_controller.get_dodge()
+	update_player_pips_block()
+
+func _on_feint_changed(_value) -> void:
+	defense_controller.get_feint()
+	update_player_pips_block()

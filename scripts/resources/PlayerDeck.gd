@@ -88,6 +88,20 @@ const CARDS = {
 				0 : "Block_Augment",
 			}
 	}, 
+	"Power_Cross_Card_02":{
+		"title" : "P-Cross",
+		"id" : "Power_Cross_Card_02",
+		"description" : "Coup de poing faisant 1 dégât à 2 ennemis aléatoires",
+		"card_class" : 0,
+		"image" : "res://assets/fighting_style/boxing/P-Cross_Card.png",
+		"animation_time" : 1.0,
+		"attack" : 2,
+		"reach" : 2,
+		"slot_number" : 1,
+		"effect_per_slot" : {
+				0 : "Block_Augment",
+			}
+	}, 
 	"Hook_Card_01":{
 		"title" : "Hook",
 		"id" : "Hook_Card_01",
