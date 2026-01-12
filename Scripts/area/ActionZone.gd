@@ -39,7 +39,7 @@ func add_card_to_action_zone(card) -> void:
 		if card.is_flipped:
 			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
 			
-		refresh_previews_from_action_zone()
+		update_opponent_defensive_actions()
 
 func return_card_to_hand(card) -> void:
 	var action_zone_copy = action_zone.duplicate()
@@ -56,14 +56,16 @@ func return_card_to_hand(card) -> void:
 	#Mise à jour des marqueurs d'intention
 	if opponent_markers == null:
 		return
+
+	#Mise à jours des pips défensif
+	update_player_defensive_actions()
+	update_opponent_defensive_actions()
 	
 	#Remise à zero des marqueurs de tour des ennemis
 	reset_end_turn_opponent_action_turn()
-	refresh_previews_from_action_zone()
-	
+
 	#Repositionnement des marqueurs d'intentions
 	EventBus.card_removed_from_action_zone.emit(true)
-	update_defensive_actions()
 	update_player_markers()
 	update_opponent_markers()
 	EventBus.card_removed_from_action_zone.emit(false)
@@ -78,11 +80,12 @@ func empty_action_zone() -> void:
 			card_manager_ref.flip_card_in_hand(card)
 		card_manager_ref.return_card_to_hand(card)
 
-	EventBus.player_defensive_actions_cleared.emit()
+	update_opponent_defensive_actions()
+	update_player_defensive_actions()
+	EventBus.card_removed_from_action_zone.emit(true)
 	action_zone.clear()
-	refresh_previews_from_action_zone()
 
-func refresh_previews_from_action_zone() -> void:
+func update_opponent_defensive_actions() -> void:
 	EventBus.opponent_incoming_damage_updated.emit()
 
 ###########################################################################
@@ -142,7 +145,7 @@ func save_player_marker(card) -> void:
 	add_child(m)
 	player_markers.append(m)
 	
-func update_defensive_actions() -> void:
+func update_player_defensive_actions() -> void:
 	for card in action_zone:
 		if card.is_flipped:
 			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])

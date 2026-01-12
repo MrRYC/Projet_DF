@@ -153,11 +153,8 @@ func set_block_preview_broken(count: int) -> void:
 #                          CLEAR PREVIEWED PIPS                           #
 ###########################################################################
 
-func clear_previewed_hp_damage() -> void:
+func clear_previewed_damage() -> void:
+		defensive_pips.set_broken_block(0)
 		pending_damage = 0
 		blink = 0.0
 		queue_redraw()
-
-func clear_all_previewed_damage() -> void:
-		defensive_pips.set_broken_block(0)
-		clear_previewed_hp_damage()

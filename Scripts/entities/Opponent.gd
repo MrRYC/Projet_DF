@@ -71,8 +71,8 @@ func update_opponent_pips_block() -> void:
 func clear_preview_damage() -> void:
 	$HealthPips.clear_previewed_hp_damage()
 
-func clear_all_previewed_incoming_damage() -> void:
-	$HealthPips.clear_all_previewed_damage()
+func clear_previewed_damage() -> void:
+	$HealthPips.clear_previewed_damage()
 
 ###########################################################################
 #                             ACTIONS MANAGEMENT                          #
@@ -177,7 +177,7 @@ func reset_for_new_turn()-> void:
 	cards_played_counter = 0
 	is_action_performed = false
 	reset_defensive_controller_variables()
-	clear_all_previewed_incoming_damage()
+	clear_previewed_damage()
 	
 func reset_defensive_controller_variables()-> void:
 	defense_controller.reset_for_new_turn()

@@ -193,7 +193,7 @@ func _on_incoming_damage() -> void:
 	# Reset complet des previews (HP + block)
 	for opponent in match_up:
 		if is_instance_valid(opponent):
-			opponent.clear_all_previewed_incoming_damage()
+			opponent.clear_previewed_damage()
 
 	var blocks_left_by_opp: Dictionary = {}
 	var broken_by_opp: Dictionary = {}
