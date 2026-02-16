@@ -23,6 +23,7 @@ var defensive_action_queue: Array[Dictionary] = []
 func _ready() -> void:
 	EventBus.processing.connect(_on_action_zone_resolving)
 	EventBus.player_defensive_actions_preview.connect(_on_player_defensive_action_preview)
+
 	custom_minimum_size = Vector2(0.0, pip_height)
 
 func set_charges(value: int) -> void:

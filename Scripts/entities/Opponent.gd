@@ -127,9 +127,6 @@ func consume_damage_preview(damage: int) -> void:
 func update_opponent_pips_block() -> void:
 	$HealthPips.set_block_charges(defense_controller.get_block())
 
-func clear_preview_damage() -> void:
-	$HealthPips.clear_previewed_hp_damage()
-
 func clear_previewed_damage() -> void:
 	$HealthPips.clear_previewed_damage()
 
@@ -174,15 +171,15 @@ func reset_for_new_turn()-> void:
 	extra_damage = 0
 	cards_played_counter = 0
 	is_action_performed = false
-	reset_defensive_controller_variables()
 	clear_previewed_damage()
-	
-func reset_defensive_controller_variables()-> void:
 	defense_controller.reset_for_new_turn()
+	$HealthPips.set_block_charges(defense_controller.get_block())
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
+
+
 
 #func _on_block_changed(_value) -> void:
 	#defense_controller.get_block()
