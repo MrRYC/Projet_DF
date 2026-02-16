@@ -120,11 +120,11 @@ func consume_damage_preview(damage: int, has_block: bool) -> void:
 	queue_redraw()
 
 ###########################################################################
-#                          BLOCK PIPS MANAGEMENT                         #
+#                        DEFENSIVE PIPS MANAGEMENT                        #
 ###########################################################################
 
-func set_block_charges(charges: int) -> void:
-	defensive_pips.set_charges(charges)
+func set_charges(block: int, dodge : int, feint : int) -> void:
+	defensive_pips.set_charges(block, dodge, feint)
 
 func set_block_preview_broken(count: int) -> void:
 	defensive_pips.set_broken_block(count)

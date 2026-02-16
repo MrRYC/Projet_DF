@@ -5,7 +5,9 @@ class_name DefensivePips
 var entity: Node = null
 var is_new_card_in_action_zone: bool = false
 var is_resolving_action_zone: bool = false
-var charges: int = 0
+var block_charges: int = 0
+var dodge_charges: int = 0
+var feint_charges: int = 0
 var pip_height: float = 6.0
 var min_pip_width: float = 4.0
 var max_pip_width: float = 20.0
@@ -23,11 +25,17 @@ var defensive_action_queue: Array[Dictionary] = []
 func _ready() -> void:
 	EventBus.processing.connect(_on_action_zone_resolving)
 	EventBus.player_defensive_actions_preview.connect(_on_player_defensive_action_preview)
+	EventBus.player_defensive_actions_removed.connect(_on_player_defensive_action_removed)
 
 	custom_minimum_size = Vector2(0.0, pip_height)
 
-func set_charges(value: int) -> void:
-	charges = value
+func get_total_charges() -> int:
+	return block_charges + dodge_charges + feint_charges
+	
+func set_charges(block: int, dodge : int, feint : int) -> void:
+	block_charges = block
+	dodge_charges = dodge
+	feint_charges = feint
 	queue_redraw()
 
 func set_broken_block(count: int) -> void:
@@ -35,11 +43,14 @@ func set_broken_block(count: int) -> void:
 	queue_redraw()
 
 func clear() -> void:
-	charges = 0
+	block_charges = 0
+	dodge_charges = 0
+	feint_charges = 0
 	queue_redraw()
 
 func _draw() -> void:
-	if charges <= 0:
+	var total_charges := get_total_charges()
+	if total_charges <= 0:
 		return
 
 	var width: float = size.x
@@ -47,17 +58,17 @@ func _draw() -> void:
 	if width <= 1.0 or height <= 1.0:
 		return
 
-	var total_gap: float = float(charges - 1) * pip_gap
+	var total_gap: float = float(total_charges - 1) * pip_gap
 	if width <= total_gap:
 		return
 
-	var pip_w: float = (width - total_gap) / float(charges)
+	var pip_w: float = (width - total_gap) / float(total_charges)
 	if pip_w < min_pip_width:
 		pip_w = min_pip_width
 	elif pip_w > max_pip_width:
 		pip_w = max_pip_width
 
-	var total_w: float = float(charges) * pip_w + total_gap
+	var total_w: float = float(total_charges) * pip_w + total_gap
 	var start_x: float = (width - total_w) * 0.5
 	if start_x < 0.0:
 		start_x = 0.0
@@ -65,15 +76,22 @@ func _draw() -> void:
 	var y: float = (height - pip_height) * 0.5
 
 	#gestion des pips grisés
-	var broken:int = clamp(broken_pips_count, 0, charges)
+	var broken:int = clamp(broken_pips_count, 0, total_charges)
 	
-	for i in range(charges):
+	for i in range(total_charges):
 		var x: float = start_x + float(i) * (pip_w + pip_gap)
 		var rect := Rect2(x, y, pip_w, pip_height)
 
-		# Si tu veux casser les pips "de gauche à droite"
-		var c:Color = color_broken_pip if i < broken else color_block_activated
-		
+		var c: Color
+		if i < block_charges:
+			c = color_broken_pip if i < broken else color_block_activated
+		elif i < block_charges + dodge_charges:
+			# esquive
+			c = color_dodge_activated
+		else:
+			# feinte
+			c = color_feint_activated
+
 		draw_rect(rect, c, true)
 
 		if outline:
@@ -95,5 +113,24 @@ func _on_player_defensive_action_preview(type, value)-> void:
 		return
 
 	if type == "Block":
-		charges += value
-		queue_redraw()
+		block_charges += value
+	elif type == "Dodge":
+		dodge_charges += value
+	elif type == "Feint":
+		feint_charges += value
+	
+	queue_redraw()
+
+func _on_player_defensive_action_removed(type, value)-> void:
+	entity = self.get_parent().get_parent()
+	if !(entity is PLAYER):
+		return
+
+	if type == "Block":
+		block_charges -= value
+	elif type == "Dodge":
+		dodge_charges -= value
+	elif type == "Feint":
+		feint_charges -= value
+	
+	queue_redraw()

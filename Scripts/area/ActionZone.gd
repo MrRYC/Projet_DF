@@ -49,17 +49,17 @@ func return_card_to_hand(card) -> void:
 		var c = action_zone_copy[i]
 		c.target = null
 		if c.is_flipped:
+			EventBus.player_defensive_actions_removed.emit(c["effect_per_slot"][0]["id"], c["effect_per_slot"][0]["value"])
 			card_manager_ref.flip_card_in_hand(c)
 		card_manager_ref.return_card_to_hand(c)
 		remove_card_from_action_zone(c)
 	
+	#Mise à jours des pips défensif des ennemis
+	update_opponent_defensive_actions()
+
 	#Mise à jour des marqueurs d'intention
 	if opponent_markers == null:
 		return
-
-	#Mise à jours des pips défensif
-	update_player_defensive_actions()
-	update_opponent_defensive_actions()
 	
 	#Remise à zero des marqueurs de tour des ennemis
 	reset_end_turn_opponent_action_turn()
@@ -77,11 +77,12 @@ func empty_action_zone() -> void:
 	var action_zone_copy = action_zone.duplicate()
 	for card in action_zone_copy:
 		if card.is_flipped:
+			EventBus.player_defensive_actions_removed.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
 			card_manager_ref.flip_card_in_hand(card)
 		card_manager_ref.return_card_to_hand(card)
 
+	#Mise à jours des pips défensif des ennemis
 	update_opponent_defensive_actions()
-	update_player_defensive_actions()
 	EventBus.card_removed_from_action_zone.emit(true)
 	action_zone.clear()
 
@@ -144,11 +145,6 @@ func save_player_marker(card) -> void:
 	m.toggle_player_border()
 	add_child(m)
 	player_markers.append(m)
-	
-func update_player_defensive_actions() -> void:
-	for card in action_zone:
-		if card.is_flipped:
-			EventBus.player_defensive_actions_preview.emit(card["effect_per_slot"][0]["id"], card["effect_per_slot"][0]["value"])
 
 func update_player_markers() -> void:
 	clear_all_player_markers()

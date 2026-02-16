@@ -70,7 +70,7 @@ func update_health()-> void:
 	$HealthPips.set_health(current_health, max_health)
 
 func update_player_pips_block() -> void:
-	$HealthPips.set_block_charges(defense_controller.get_block())
+	$HealthPips.set_charges(defense_controller.get_block(),defense_controller.get_dodge(),defense_controller.get_feint())
 
 func consume_damage_preview(damage: int) -> void:
 	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())

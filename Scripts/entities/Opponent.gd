@@ -125,7 +125,7 @@ func consume_damage_preview(damage: int) -> void:
 	$HealthPips.consume_damage_preview(damage, defense_controller.has_block())
 
 func update_opponent_pips_block() -> void:
-	$HealthPips.set_block_charges(defense_controller.get_block())
+	$HealthPips.set_charges(defense_controller.get_block(),defense_controller.get_dodge(),defense_controller.get_feint())
 
 func clear_previewed_damage() -> void:
 	$HealthPips.clear_previewed_damage()
@@ -173,7 +173,7 @@ func reset_for_new_turn()-> void:
 	is_action_performed = false
 	clear_previewed_damage()
 	defense_controller.reset_for_new_turn()
-	$HealthPips.set_block_charges(defense_controller.get_block())
+	$HealthPips.set_charges(0,0,0)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
