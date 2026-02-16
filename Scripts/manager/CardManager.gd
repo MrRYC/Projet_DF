@@ -29,6 +29,7 @@ func _ready() -> void:
 	EventBus.hovered.connect(_on_hovered_over_card)
 	EventBus.hovered_off.connect(_on_hovered_off_card)
 	EventBus.new_turn.connect(_on_new_turn)
+	EventBus.fracture_a_random_card.connect(_on_card_used_as_defense)
 
 func _process(_delta: float) -> void:
 	if card_being_dragged:
@@ -281,3 +282,19 @@ func _on_hovered_off_card(card)-> void:
 
 func _on_new_turn(new_hand_size, _is_first_turn)-> void:
 	new_turn(new_hand_size)
+
+func _on_card_used_as_defense()->void:
+	var p_hand = player_hand_ref.player_hand
+	var i := randi_range(0, p_hand.size() - 1)
+	var removed_card = p_hand[i]
+	
+	if removed_card.status==0: #si statut intact
+		removed_card.status = 1 #statut fractured
+		removed_card.apply_status_visuals()
+		send_card_to_discard(removed_card)
+		removed_card.queue_free()
+	elif removed_card.status==1: #si statut fractured
+		removed_card.status = 2 #statut broken
+		removed_card.apply_status_visuals()
+		send_card_to_wound(removed_card)
+		removed_card.queue_free()

@@ -50,6 +50,7 @@ func build_card_from_dictionaries(card_id):
 	#Sauvegarde des datas modifiables des cartes
 	var card_data_snapshot := {
 		"id":card_data["id"],
+		"status":card_data["status"],
 		"slot_number":card_data["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
 		"effect_per_slot":{}
 	}
@@ -106,9 +107,8 @@ func draw():
 
 	##lancement de l'animation de la carte lors de la pioche
 	card_node.get_node("CardDrawFlipAnimation").play("card_flip")
-
 	await get_tree().create_timer(Global.HAND_DRAW_INTERVAL).timeout
-
+	
 	player_deck.erase(card)
 	update_label(player_deck.size())
 
@@ -120,11 +120,14 @@ func create_card_in_hand(card_data):
 	var orignal_data: Dictionary = PLAYERDECK.CARDS[card_id]
 	var updated_data: Dictionary = orignal_data.duplicate(true)
 
+	#Récupération puis mise à jour du statut de la carte
+	updated_data["status"] = card_data["status"]
+	
 	#Récupération puis mise à jour des données sauvegardées de la carte
 	if updated_data.has("effect_per_slot"):
 		var card_augment := {}
 		for slot_index in updated_data["effect_per_slot"].keys():
-			var slot_effect = card_data.effect_per_slot[slot_index]
+			var slot_effect = card_data["effect_per_slot"][slot_index]
 			var augment_id = updated_data["effect_per_slot"][slot_index]
 
 			if AUGMENTDB.AUGMENTS.has(augment_id):
@@ -133,7 +136,7 @@ func create_card_in_hand(card_data):
 				
 				#Check si l'effet est encore actif
 				if slot_effect["uses"]==0 && slot_effect["side_effect"]=="inactivate":
-					effect_inactive =true
+					effect_inactive = true
 				else:
 					effect_inactive = false
 				
@@ -149,12 +152,13 @@ func create_card_in_hand(card_data):
 	#Instanciation de la carte
 	var card: CARD_DATA = CARD_SCENE.instantiate()
 	card.setup_card(updated_data)
-
+	
 	#Ajout de l'image
 	if effect_inactive:
 		card.get_node("CardFrontImage").texture = load("res://assets/fighting_style/Inactive_Augment_Card.png")
 	elif updated_data.has("image"):
 		card.get_node("CardFrontImage").texture = load(updated_data["image"])
+		card.apply_status_visuals()
 
 	return card
 

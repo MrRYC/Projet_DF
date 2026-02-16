@@ -1,7 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://cn1b036qd1fce"]
+[gd_scene format=3 uid="uid://cn1b036qd1fce"]
 
 [ext_resource type="Script" uid="uid://ctw76x2p8isvs" path="res://scripts/resources/CardData.gd" id="1_0nb81"]
-[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/Deck.png" id="3_lot17"]
+[ext_resource type="Texture2D" uid="uid://su31nwdnhwny" path="res://assets/resources/piles/Deck.png" id="3_lot17"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nx35t"]
 size = Vector2(160, 240)
@@ -366,27 +366,30 @@ _data = {
 &"fade_to_black_180": SubResource("Animation_tgmmg")
 }
 
-[node name="Card" type="Node2D"]
+[node name="Card" type="Node2D" unique_id=229118109]
 position = Vector2(150, 950)
 script = ExtResource("1_0nb81")
 
-[node name="CardFrontImage" type="Sprite2D" parent="."]
+[node name="CardFrontImage" type="Sprite2D" parent="." unique_id=1014894063]
 z_index = -1
 position = Vector2(0, 55)
 scale = Vector2(0.1, 1)
 
-[node name="CardBackImage" type="Sprite2D" parent="."]
+[node name="CardBackImage" type="Sprite2D" parent="." unique_id=1371818372]
 visible = false
 position = Vector2(0, 54)
 texture = ExtResource("3_lot17")
 
-[node name="CardArea2D" type="Area2D" parent="."]
+[node name="CardStatusImage" type="Sprite2D" parent="." unique_id=1459883678]
+visible = false
+
+[node name="CardArea2D" type="Area2D" parent="." unique_id=478767792]
 scale = Vector2(1.1, 1.1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CardArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CardArea2D" unique_id=2078536573]
 shape = SubResource("RectangleShape2D_nx35t")
 
-[node name="Name" type="RichTextLabel" parent="."]
+[node name="Name" type="RichTextLabel" parent="." unique_id=488243297]
 modulate = Color(1, 1, 1, 0)
 offset_left = -21.000004
 offset_top = -110.99994
@@ -399,7 +402,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Time" type="RichTextLabel" parent="."]
+[node name="Time" type="RichTextLabel" parent="." unique_id=545822488]
 modulate = Color(1, 1, 1, 0)
 offset_left = -68.0
 offset_top = -57.0
@@ -411,7 +414,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Attack" type="RichTextLabel" parent="."]
+[node name="Attack" type="RichTextLabel" parent="." unique_id=414200265]
 modulate = Color(1, 1, 1, 0)
 offset_left = -68.0
 offset_top = -101.0
@@ -423,7 +426,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="RichTextLabel" parent="."]
+[node name="Description" type="RichTextLabel" parent="." unique_id=1396961396]
 offset_left = -49.0
 offset_top = -11.0
 offset_right = 39.0
@@ -432,7 +435,7 @@ theme_override_font_sizes/normal_font_size = 11
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot_1_Description" type="RichTextLabel" parent="."]
+[node name="Slot_1_Description" type="RichTextLabel" parent="." unique_id=929038985]
 visible = false
 offset_left = 40.0
 offset_top = 88.0
@@ -442,22 +445,16 @@ rotation = 3.1415927
 theme_override_font_sizes/normal_font_size = 10
 vertical_alignment = 1
 
-[node name="CardDrawFlipAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_c5yfh")
-}
+[node name="CardDrawFlipAnimation" type="AnimationPlayer" parent="." unique_id=1520304411]
+libraries/ = SubResource("AnimationLibrary_c5yfh")
 
-[node name="CardErrorAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_40ytf")
-}
+[node name="CardErrorAnimation" type="AnimationPlayer" parent="." unique_id=148340896]
+libraries/ = SubResource("AnimationLibrary_40ytf")
 
-[node name="CardFadeInAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_1356y")
-}
+[node name="CardFadeInAnimation" type="AnimationPlayer" parent="." unique_id=1220924103]
+libraries/ = SubResource("AnimationLibrary_1356y")
 
-[node name="CardFadeInColorRect" type="ColorRect" parent="."]
+[node name="CardFadeInColorRect" type="ColorRect" parent="." unique_id=1666199425]
 modulate = Color(1, 1, 1, 0.784314)
 z_index = 2
 offset_left = -80.0

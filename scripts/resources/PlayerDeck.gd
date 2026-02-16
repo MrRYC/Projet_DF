@@ -5,6 +5,7 @@ const CARDS = {
 	"Jab_Card_01":{
 		"title" : "Jab",
 		"id" : "Jab_Card_01",
+		"status": 0,
 		"description" : "Coup de poing",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
@@ -17,6 +18,7 @@ const CARDS = {
 	"Jab_Card_02":{
 		"title" : "Jab",
 		"id" : "Jab_Card_02",
+		"status": 0,
 		"description" : "Coup de poing",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
@@ -29,6 +31,7 @@ const CARDS = {
 	"Jab_Card_03":{
 		"title" : "Jab",
 		"id" : "Jab_Card_03",
+		"status": 0,
 		"description" : "Coup de poing",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
@@ -41,6 +44,7 @@ const CARDS = {
 	"Jab_Card_04":{
 		"title" : "Jab",
 		"id" : "Jab_Card_04",
+		"status": 0,
 		"description" : "Coup de poing",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
@@ -53,6 +57,7 @@ const CARDS = {
 	"Cross_Card_01":{
 		"title" : "Cross",
 		"id" : "Cross_Card_01",
+		"status": 0,
 		"description" : "Coup de poing bras faible",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
@@ -65,6 +70,7 @@ const CARDS = {
 	"Cross_Card_02":{
 		"title" : "Cross",
 		"id" : "Cross_Card_02",
+		"status": 0,
 		"description" : "Coup de poing bras faible",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
@@ -77,6 +83,7 @@ const CARDS = {
 	"Power_Cross_Card_01":{
 		"title" : "P-Cross",
 		"id" : "Power_Cross_Card_01",
+		"status": 0,
 		"description" : "Coup de poing faisant 1 dégât à 2 ennemis aléatoires",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/P-Cross_Card.png",
@@ -91,6 +98,7 @@ const CARDS = {
 	"Power_Cross_Card_02":{
 		"title" : "P-Cross",
 		"id" : "Power_Cross_Card_02",
+		"status": 0,
 		"description" : "Coup de poing faisant 1 dégât à 2 ennemis aléatoires",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/P-Cross_Card.png",
@@ -105,6 +113,7 @@ const CARDS = {
 	"Hook_Card_01":{
 		"title" : "Hook",
 		"id" : "Hook_Card_01",
+		"status": 0,
 		"description" : "Crochet simple",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Hook_Card.png",
@@ -119,6 +128,7 @@ const CARDS = {
 	"Uppercut_Card_01":{
 		"title" : "Uppercut",
 		"id" : "Uppercut_Card_01",
+		"status": 0,
 		"description" : "Uppercut simple",
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Uppercut_Card.png",

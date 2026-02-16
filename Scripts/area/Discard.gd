@@ -21,6 +21,7 @@ func add_card_to_pile(card):
 	#Sauvegarde des données des slots de la carte
 	var card_data_snapshot := {
 		"id":card_data,
+		"status":card["status"],
 		"slot_number":card["slot_number"], #attention, il faudra bloquer les slots des augment qui s'inactivent après x utilisation
 		"effect_per_slot":{}
 	}

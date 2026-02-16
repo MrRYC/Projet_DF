@@ -18,7 +18,9 @@ var reach : attack_reach
 var target : Node2D
 var slot_number : int = 0
 var effect_per_slot : Dictionary = {}
-var is_flipped = false
+var is_flipped : bool = false
+enum card_status { INTACT, FRACTURED, BROKEN }
+var status : card_status
 
 ###########################################################################
 #                          CARD CONFIGURATION                             #
@@ -30,6 +32,9 @@ func setup_card(data: Dictionary):
 
 	if data.has("id"):
 		id = data["id"]
+
+	if data.has("status"):
+		status = data["status"]
 
 	if data.has("description"):
 		$Description.text = data["description"]
@@ -70,6 +75,15 @@ func set_augment_text(slot1):
 	$Slot_1_Description.text = slot1
 	#$Slot_2_Description.text = slot2
 	#$Slot_3_Description.text = slot3
+
+func apply_status_visuals() -> void:
+	if status != card_status.INTACT:
+		if status == card_status.FRACTURED:
+			$CardStatusImage.texture = load("res://assets/fighting_style/Fractured_card.png")
+		else:
+			$CardStatusImage.texture = load("res://assets/fighting_style/Broken_card.png")
+
+		$CardStatusImage.visible = true
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #

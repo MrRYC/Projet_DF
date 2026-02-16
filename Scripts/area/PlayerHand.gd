@@ -13,6 +13,7 @@ var hand_x_position_min : float = 0.0
 var hand_x_position_max : float = 0.0
 
 func _ready() -> void:
+	EventBus.get_cards_in_hand.connect(_on_player_damage)
 	EventBus.drop_combo_cards.connect(_on_drop_combo_cards)
 
 ###########################################################################
@@ -93,6 +94,9 @@ func animate_card_to_position(card, new_position) -> void:
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
+
+func _on_player_damage() -> void:
+	EventBus.cards_in_hand.emit(player_hand.size())
 
 func _on_drop_combo_cards() -> void:
 	if combo_cards.size() == 0:

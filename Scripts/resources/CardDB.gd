@@ -5,6 +5,7 @@ const CARDS = {
 	"Jab_Card":{
 		"title" : "Jab",
 		"description" : "Coup de poing",
+		"status": 0,
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Jab_Card.png",
 		"animation_time" : 1.0,
@@ -16,6 +17,7 @@ const CARDS = {
 	"Cross_Card":{
 		"title" : "Cross",
 		"description" : "Coup de poing bras faible",
+		"status": 0,
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Cross_Card.png",
 		"animation_time" : 1.0,
@@ -27,6 +29,7 @@ const CARDS = {
 	"Hook_Card":{
 		"title" : "Hook",
 		"description" : "Crochet simple",
+		"status": 0,
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Hook_Card.png",
 		"animation_time" : 1.2,
@@ -38,6 +41,7 @@ const CARDS = {
 	"Uppercut_Card":{
 		"title" : "Uppercut",
 		"description" : "Uppercut simple",
+		"status": 0,
 		"card_class" : 0,
 		"image" : "res://assets/fighting_style/boxing/Uppercut_Card.png",
 		"animation_time" : 1.5,

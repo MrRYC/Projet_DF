@@ -32,7 +32,8 @@ func has_block() -> bool:
 func try_to_block() -> bool:
 	if !has_block():
 		return false
-	set_block(block_charges - 1)
+	else:
+		set_block(block_charges - 1)
 	return true
 
 ###########################################################################

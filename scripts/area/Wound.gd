@@ -11,9 +11,10 @@ var wound_pile : Array = []
 ###########################################################################
 
 func add_card_to_pile(card):
-	#Sauvegarde de l'id de la carte
+	#Sauvegarde de l'id et du statut de la carte
 	var card_data_snapshot := {
-		"id":card["id"]
+		"id":card["id"],
+		"status":card["status"]
 	}
 
 	wound_pile.append(card_data_snapshot)

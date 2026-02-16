@@ -5,12 +5,14 @@ class_name PLAYER
 @onready var defense_controller: DefenseController = $DefensiveActionsController
 var max_health : int = 0
 var current_health : int = 0
+var cards_in_hand : int = 0
 
 func _ready() -> void:
 	EventBus.new_turn.connect(_on_new_turn)
 	EventBus.dim_player.connect(_on_dimmed_player)
 	EventBus.undim_player.connect(_on_undimmed_player)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
+	EventBus.cards_in_hand.connect(_on_player_hand_signal)
 	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
 
 	defense_controller.block_changed.connect(_on_block_changed)
@@ -27,10 +29,17 @@ func set_starting_health(health)-> void:
 	update_health()
 
 func take_damage(amount)-> void:
+	#check if player has defense
 	if defense_controller.try_to_block():
 		check_block()
 		return
-
+	
+	#if no defense,check if player has a card in hand
+	EventBus.get_cards_in_hand.emit()
+	if cards_in_hand > 0:
+		EventBus.fracture_a_random_card.emit()
+		return
+	
 	current_health -= amount
 	EventBus.combo_meter_cancelled.emit()
 
@@ -106,3 +115,6 @@ func _on_dodge_changed(_value) -> void:
 func _on_feint_changed(_value) -> void:
 	defense_controller.get_feint()
 	update_player_pips_block()
+	
+func _on_player_hand_signal(value)->void:
+	cards_in_hand = value
