@@ -4,7 +4,8 @@ extends Node
 @onready var action_zone: Node = $"../ActionZone"
 
 var match_up: Array = [] # instances Opponent en jeu
-var incoming_attack: Array = [] # liste des opponent qui attaquent ce tour
+var attackers: Array = [] # liste des opponents qui attaquent ce tour (markers)
+var incoming_hits: Array = [] #liste séquencée des coups à venir
 var current_hovered_opponent : Node = null
 var dimmed_opponents: Array = [] # array of opponents currently dimmed
 
@@ -118,8 +119,12 @@ func opponent_death()-> void:
 func _on_new_turn(_deck_size, _is_first_turn)-> void:
 	action_zone.clear_all_player_markers()
 	action_zone.clear_all_opponent_markers()
-	incoming_attack.clear()
+	
+	attackers.clear()
+	incoming_hits.clear()
+	
 	var label_value : int = 0
+	var hit_order: int = 0 
 	
 	for opponent in match_up:
 		#Reinitialisation des données du tour précédent
@@ -138,17 +143,31 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 		#Récupération de la valeur d'attaque pour le label des intentions
 		if opponent.data.action_type.keys()[opponent.action_type] == "ATTACK":
 			label_value = opponent.data.damage
-			incoming_attack.append(opponent)
+			attackers.append(opponent)
+			
+			var hit_count := 1
+			# Optionnel (si plus tard du multi-hit)
+			#if "hit_count" in opponent.data:
+				#hit_count = opponent.data.hit_count
+
+			for hit_i in range(hit_count):
+				incoming_hits.append({
+					"order": hit_order,
+					"opponent": opponent,
+					"damage": opponent.data.damage,
+					"hit_index": hit_i
+				})
+				hit_order += 1
 		
 		#Mise à jour du label des intentions
 		opponent.update_intent(label_value)
 
-	if incoming_attack.size()>0:
-		action_zone.save_opponent_markers(incoming_attack)
+	if attackers.size()>0:
+		action_zone.save_opponent_markers(attackers)
 
 	var total_incoming: int = 0
-	for opp in incoming_attack:
-		total_incoming += opp.data.damage
+	for hit in incoming_hits:
+		total_incoming += hit["damage"]
 	EventBus.player_incoming_damage_updated.emit(total_incoming)
 	
 	#Initialisation des marqueurs d'intention des opponent
