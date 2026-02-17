@@ -273,6 +273,18 @@ _data = {
 &"tilt_error": SubResource("Animation_4dx8l")
 }
 
+[sub_resource type="Animation" id="Animation_40ytf"]
+resource_name = "RESET"
+
+[sub_resource type="Animation" id="Animation_5273u"]
+resource_name = "status_previewed"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qbjcq"]
+_data = {
+&"RESET": SubResource("Animation_40ytf"),
+&"status_previewed": SubResource("Animation_5273u")
+}
+
 [sub_resource type="Animation" id="Animation_2rulx"]
 length = 0.001
 step = 0.1
@@ -450,6 +462,9 @@ libraries/ = SubResource("AnimationLibrary_c5yfh")
 
 [node name="CardErrorAnimation" type="AnimationPlayer" parent="." unique_id=148340896]
 libraries/ = SubResource("AnimationLibrary_40ytf")
+
+[node name="StatusAnimationPlayer" type="AnimationPlayer" parent="." unique_id=2016558820]
+libraries/ = SubResource("AnimationLibrary_qbjcq")
 
 [node name="CardFadeInAnimation" type="AnimationPlayer" parent="." unique_id=1220924103]
 libraries/ = SubResource("AnimationLibrary_1356y")

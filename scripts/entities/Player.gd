@@ -13,7 +13,6 @@ func _ready() -> void:
 	EventBus.undim_player.connect(_on_undimmed_player)
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
 	EventBus.cards_in_hand.connect(_on_player_hand_signal)
-	EventBus.player_incoming_damage_updated.connect(_on_incoming_damage)
 
 	defense_controller.block_changed.connect(_on_block_changed)
 	defense_controller.dodge_changed.connect(_on_dodge_changed)
@@ -69,6 +68,9 @@ func check_evasion()-> void:
 func update_health()-> void:
 	$HealthPips.set_health(current_health, max_health)
 
+func update_preview(amount)-> void:
+	$HealthPips.set_preview_damage(amount)
+
 func update_player_pips_block() -> void:
 	$HealthPips.set_charges(defense_controller.get_block(),defense_controller.get_dodge(),defense_controller.get_feint())
 
@@ -100,9 +102,6 @@ func _on_undimmed_player()-> void:
 func _on_card_removed_from_action_zone(_removed)-> void:
 	_on_undimmed_player()
 	update_player_pips_block()
-
-func _on_incoming_damage(amount)-> void:
-	$HealthPips.set_preview_damage(amount)
 
 func _on_block_changed(_value) -> void:
 	defense_controller.get_block()

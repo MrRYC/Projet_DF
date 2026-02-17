@@ -21,6 +21,7 @@ var effect_per_slot : Dictionary = {}
 var is_flipped : bool = false
 enum card_status { INTACT, FRACTURED, BROKEN }
 var status : card_status
+var status_preview_tween: Tween
 
 ###########################################################################
 #                          CARD CONFIGURATION                             #
@@ -75,6 +76,25 @@ func set_augment_text(slot1):
 	$Slot_1_Description.text = slot1
 	#$Slot_2_Description.text = slot2
 	#$Slot_3_Description.text = slot3
+
+func set_incoming_hit_preview() -> void:
+	if status == card_status.INTACT:
+		$CardStatusImage.texture = load("res://assets/fighting_style/Fractured_card.png")
+	else:
+		$CardStatusImage.texture = load("res://assets/fighting_style/Broken_card.png")
+
+	$CardStatusImage.visible = true
+	status_preview_tween = create_tween()
+	status_preview_tween.set_loops()
+
+	status_preview_tween.tween_property(self, "modulate:a", 0.75, 1.1)
+	status_preview_tween.tween_property(self, "modulate:a", 1.0, 1.1)
+
+func cancel_incoming_hit_preview() -> void:
+	if status_preview_tween and status_preview_tween.is_valid():
+		$CardStatusImage.texture = null
+		$CardStatusImage.visible = false
+		status_preview_tween.kill()
 
 func apply_status_visuals() -> void:
 	if status != card_status.INTACT:

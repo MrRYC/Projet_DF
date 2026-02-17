@@ -15,6 +15,7 @@ var hand_x_position_max : float = 0.0
 func _ready() -> void:
 	EventBus.get_cards_in_hand.connect(_on_player_damage)
 	EventBus.drop_combo_cards.connect(_on_drop_combo_cards)
+	EventBus.card_preview_hits_requested.connect(_on_incoming_hits)
 
 ###########################################################################
 #                              HAND MANAGEMENT                            #
@@ -91,12 +92,32 @@ func animate_card_to_position(card, new_position) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, speed)
 
+func clear_all_previews(hand: Array) -> void:
+	for card in hand:
+		card.cancel_incoming_hit_preview()
+
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
 func _on_player_damage() -> void:
 	EventBus.cards_in_hand.emit(player_hand.size())
+
+func _on_incoming_hits(hit_count: int) -> void:
+	var preview_shuffled_hand: Array = player_hand.duplicate() #on duplique la main
+	preview_shuffled_hand.shuffle()
+
+	clear_all_previews(preview_shuffled_hand)
+	
+	if hit_count == 0:
+		preview_shuffled_hand.clear()
+		return
+
+	for card_index in range(preview_shuffled_hand.size()):
+		if card_index >= hit_count:
+			break
+
+		preview_shuffled_hand[card_index].set_incoming_hit_preview()
 
 func _on_drop_combo_cards() -> void:
 	if combo_cards.size() == 0:

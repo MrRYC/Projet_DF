@@ -11,6 +11,7 @@ var dimmed_opponents: Array = [] # array of opponents currently dimmed
 
 func _ready()-> void:
 	EventBus.new_turn.connect(_on_new_turn)
+	EventBus.processing.connect(_on_fight_started)
 	EventBus.opponent_marker_hovered.connect(_on_opponent_marker_hovered)
 	EventBus.opponent_marker_hovered_off.connect(_on_opponent_marker_hovered_off)
 	EventBus.player_marker_hovered.connect(_on_player_marker_hovered)
@@ -164,16 +165,15 @@ func _on_new_turn(_deck_size, _is_first_turn)-> void:
 
 	if attackers.size()>0:
 		action_zone.save_opponent_markers(attackers)
-
-	var total_incoming: int = 0
-	for hit in incoming_hits:
-		total_incoming += hit["damage"]
-	EventBus.player_incoming_damage_updated.emit(total_incoming)
 	
 	#Initialisation des marqueurs d'intention des opponent
 	action_zone.remove_null_markers()
 	action_zone.init_opponent_action_turn()
 	action_zone.init_markers_position()
+
+func _on_fight_started(active:bool) -> void:
+	if !active && incoming_hits!=null:
+		EventBus.player_incoming_hits_updated.emit(incoming_hits)
 
 func _on_empty_action_zone_button_pressed() -> void:
 	for opponent in match_up:

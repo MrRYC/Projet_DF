@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://17qy153xupy2" path="res://scripts/manager/InputManager.gd" id="1_kdgm2"]
 [ext_resource type="Script" uid="uid://by1kcxcyrg0dt" path="res://scripts/manager/CardManager.gd" id="2_b2kfh"]
+[ext_resource type="Script" uid="uid://dwsw2qfiim0ai" path="res://scripts/manager/DamagePreviewManager.gd" id="2_d13ii"]
 [ext_resource type="Script" uid="uid://l8hcmukuyrxp" path="res://scripts/area/PlayerHand.gd" id="3_o0gpq"]
 [ext_resource type="Script" uid="uid://bgivc6ermhj22" path="res://scripts/area/Deck.gd" id="4_07t4f"]
 [ext_resource type="Script" uid="uid://cob3gcksry37a" path="res://scripts/manager/OpponentManager.gd" id="6_sc1dx"]
@@ -305,6 +306,9 @@ bg_color = Color(0.622903, 0.0662068, 0.261057, 1)
 
 [node name="Player" parent="." unique_id=1639080392 instance=ExtResource("11_5vvyt")]
 position = Vector2(625, 605)
+
+[node name="DamagePreviewManager" type="Node" parent="Player" unique_id=836522126]
+script = ExtResource("2_d13ii")
 
 [node name="TurnManager" type="Node" parent="." unique_id=1240672082]
 script = ExtResource("7_ralk2")

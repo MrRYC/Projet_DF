@@ -89,8 +89,8 @@ signal get_cards_in_hand()
 #signals from Player to CardManager
 signal fracture_a_random_card()
 
-#signals between Player and Opponents
-signal player_incoming_damage_updated(amount: int)
+#signals from DamagePreviewManager to PlayerHand
+signal card_preview_hits_requested(int)
 
 #---------------------#
 #       OPPONENT      #
@@ -101,6 +101,9 @@ signal matchup_over()
 #signals from Opponent_Manager to Player
 signal dim_player()
 signal undim_player()
+
+#signals from Opponent_Manager to Player's DamagePreviewManager
+signal player_incoming_hits_updated(list_of_hits:Array)
 
 #signals from Opponent to TurnManager
 signal ai_attack_performed(int)
