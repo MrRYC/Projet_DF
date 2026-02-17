@@ -79,14 +79,14 @@ func set_augment_text(slot1):
 
 func set_incoming_hit_preview() -> void:
 	if status == card_status.INTACT:
-		$CardStatusImage.texture = load("res://assets/fighting_style/Fractured_card.png")
+		$CardStatusImage.texture = load("res://assets/fighting_style/Preview_fractured_card.png")
 	else:
 		$CardStatusImage.texture = load("res://assets/fighting_style/Broken_card.png")
 
 	$CardStatusImage.visible = true
 	status_preview_tween = create_tween()
 	status_preview_tween.set_loops()
-
+	
 	status_preview_tween.tween_property(self, "modulate:a", 0.75, 1.1)
 	status_preview_tween.tween_property(self, "modulate:a", 1.0, 1.1)
 
