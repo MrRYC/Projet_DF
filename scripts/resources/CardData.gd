@@ -21,6 +21,7 @@ var effect_per_slot : Dictionary = {}
 var is_flipped : bool = false
 enum card_status { INTACT, FRACTURED, BROKEN }
 var status : card_status
+var is_card_targeted: bool = false
 var status_preview_tween: Tween
 
 ###########################################################################
@@ -59,6 +60,13 @@ func setup_card(data: Dictionary):
 		effect_per_slot = data["effect_per_slot"]
 
 ###########################################################################
+#                                NEW TURN                                 #
+###########################################################################
+
+func on_new_turn() -> void:
+	is_card_targeted = false
+
+###########################################################################
 #                              CARD FUNCTIONS                             #
 ###########################################################################
 
@@ -84,6 +92,7 @@ func set_incoming_hit_preview() -> void:
 		$CardStatusImage.texture = load("res://assets/fighting_style/Broken_card.png")
 
 	$CardStatusImage.visible = true
+	is_card_targeted = true
 	status_preview_tween = create_tween()
 	status_preview_tween.set_loops()
 	
@@ -95,6 +104,10 @@ func cancel_incoming_hit_preview() -> void:
 		$CardStatusImage.texture = null
 		$CardStatusImage.visible = false
 		status_preview_tween.kill()
+		
+func check_status() -> void:
+	if is_card_targeted:
+		set_incoming_hit_preview()
 
 func apply_status_visuals() -> void:
 	if status != card_status.INTACT:

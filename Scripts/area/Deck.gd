@@ -8,6 +8,7 @@ const CARD_SCENE = preload("res://scenes/Card.tscn")
 @onready var player_hand_ref: Node2D = $"../../PlayerHand"
 
 #variables du script
+var player_deck_prepared : Array[CARD_DATA] = []
 var player_deck : Array = []
 var deck_size : int = 0
 var nb_turn : int = 1
@@ -108,8 +109,7 @@ func draw():
 	##lancement de l'animation de la carte lors de la pioche
 	card_node.get_node("CardDrawFlipAnimation").play("card_flip")
 	await get_tree().create_timer(Global.HAND_DRAW_INTERVAL).timeout
-	
-	player_deck.erase(card)
+
 	update_label(player_deck.size())
 
 func create_card_in_hand(card_data):

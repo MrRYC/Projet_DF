@@ -45,6 +45,7 @@ func _process(_delta: float) -> void:
 
 func return_card_to_hand(card)-> void:
 	card.target = null
+	card.check_status()
 	player_hand_ref.add_card_to_hand(card)
 	update_card_size(card)
 	
@@ -64,12 +65,14 @@ func new_turn(_max_hand_size)-> void:
 	if action_zone_ref.action_zone.size() > 0:
 		for card in action_zone_ref.action_zone.duplicate():
 			check_destination_pile(card)
+			card.on_new_turn()
 			card.queue_free()
 		action_zone_ref.action_zone.clear()
 
 	if player_hand_ref.player_hand.size() > 0:
 		for card in player_hand_ref.player_hand.duplicate():
 			send_card_to_discard(card)
+			card.on_new_turn()
 			card.queue_free()
 		player_hand_ref.player_hand.clear()
 

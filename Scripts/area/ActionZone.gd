@@ -33,6 +33,7 @@ func add_card_to_action_zone(card) -> void:
 	if card not in action_zone:
 		action_zone.insert(0,card)
 		card.current_area = card.board_area.IN_ACTION_ZONE
+		card.cancel_incoming_hit_preview()
 		card_manager_ref.update_card_size(card)
 		update_action_zone_positions()
 		

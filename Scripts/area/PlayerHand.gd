@@ -8,6 +8,7 @@ const HAND_Y_POSITION = 950 #hauteur de la zone des cartes en main
 @onready var center_screen_x = get_viewport().size.x / 2
 var speed = Global.HAND_DRAW_INTERVAL
 var player_hand : Array = []
+var preview_shuffled_hand : Array = []
 var combo_cards : Array = []
 var hand_x_position_min : float = 0.0
 var hand_x_position_max : float = 0.0
@@ -104,7 +105,7 @@ func _on_player_damage() -> void:
 	EventBus.cards_in_hand.emit(player_hand.size())
 
 func _on_incoming_hits(hit_count: int) -> void:
-	var preview_shuffled_hand: Array = player_hand.duplicate() #on duplique la main
+	preview_shuffled_hand = player_hand.duplicate() #on duplique la main
 	preview_shuffled_hand.shuffle()
 
 	clear_all_previews(preview_shuffled_hand)
