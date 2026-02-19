@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bi25g7d886dmv"
+path="res://.godot/imported/Backbeat Baptism.mp3-1f902bc363331c1dbbc61b4cb0a2f121.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/background/Backbeat Baptism.mp3"
+dest_files=["res://.godot/imported/Backbeat Baptism.mp3-1f902bc363331c1dbbc61b4cb0a2f121.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
