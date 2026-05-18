@@ -27,9 +27,7 @@ buses/default_bus_layout="uid://pvc24juvyyk2"
 
 Global="*res://scripts/global/_Global.gd"
 EventBus="*res://scripts/global/Event_Bus.gd"
-Signal_Debugger="*res://addons/SignalVisualizer/Debugger/SignalDebugger.gd"
 SignalLens="*uid://85rkx60vm7a7"
-Conductor="*uid://c5rvmkaorxynb"
 
 [debug]
 
@@ -48,4 +46,4 @@ project/assembly_name="Daily Fighters"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AnimatedShape2D/plugin.cfg", "res://addons/Conductor/plugin.cfg", "res://addons/SignalVisualizer/plugin.cfg", "res://addons/signal_lens/plugin.cfg")
+enabled=PackedStringArray("res://addons/Signal_Lens/plugin.cfg", "res://addons/signal_lens/plugin.cfg")
