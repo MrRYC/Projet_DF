@@ -28,7 +28,7 @@
 size = Vector2(106, 158)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fpfj3"]
-radius = 38.078865
+radius = 38.0789
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hf4xv"]
 size = Vector2(104, 155)
@@ -113,32 +113,32 @@ cache/0/20/0/underline_thickness = 1.0
 cache/0/20/0/scale = 1.0
 cache/0/20/0/textures/0/offsets = PackedInt32Array(94, 0, 162, 23)
 cache/0/20/0/textures/0/image = SubResource("Image_3b0ty")
-cache/0/20/0/glyphs/43/advance = Vector2(8.765625, 22.21875)
+cache/0/20/0/glyphs/43/advance = Vector2(8.76563, 22.2188)
 cache/0/20/0/glyphs/43/offset = Vector2(-2, -15)
 cache/0/20/0/glyphs/43/size = Vector2(17, 21)
 cache/0/20/0/glyphs/43/uv_rect = Rect2(1, 1, 17, 21)
 cache/0/20/0/glyphs/43/texture_idx = 0
-cache/0/20/0/glyphs/46/advance = Vector2(4.09375, 22.21875)
+cache/0/20/0/glyphs/46/advance = Vector2(4.09375, 22.2188)
 cache/0/20/0/glyphs/46/offset = Vector2(-2, -15)
 cache/0/20/0/glyphs/46/size = Vector2(9, 17)
 cache/0/20/0/glyphs/46/uv_rect = Rect2(20, 1, 9, 17)
 cache/0/20/0/glyphs/46/texture_idx = 0
-cache/0/20/0/glyphs/44/advance = Vector2(9.140625, 22.21875)
+cache/0/20/0/glyphs/44/advance = Vector2(9.14063, 22.2188)
 cache/0/20/0/glyphs/44/offset = Vector2(-2, -14)
 cache/0/20/0/glyphs/44/size = Vector2(13, 16)
 cache/0/20/0/glyphs/44/uv_rect = Rect2(31, 1, 13, 16)
 cache/0/20/0/glyphs/44/texture_idx = 0
-cache/0/20/0/glyphs/45/advance = Vector2(9.6875, 22.21875)
+cache/0/20/0/glyphs/45/advance = Vector2(9.6875, 22.2188)
 cache/0/20/0/glyphs/45/offset = Vector2(-2, -15)
 cache/0/20/0/glyphs/45/size = Vector2(15, 18)
 cache/0/20/0/glyphs/45/uv_rect = Rect2(46, 1, 15, 18)
 cache/0/20/0/glyphs/45/texture_idx = 0
-cache/0/20/0/glyphs/57/advance = Vector2(4.15625, 22.21875)
+cache/0/20/0/glyphs/57/advance = Vector2(4.15625, 22.2188)
 cache/0/20/0/glyphs/57/offset = Vector2(-3, -16)
 cache/0/20/0/glyphs/57/size = Vector2(14, 17)
 cache/0/20/0/glyphs/57/uv_rect = Rect2(63, 1, 14, 17)
 cache/0/20/0/glyphs/57/texture_idx = 0
-cache/0/20/0/glyphs/134217785/advance = Vector2(4.15625, 22.21875)
+cache/0/20/0/glyphs/134217785/advance = Vector2(4.15625, 22.2188)
 cache/0/20/0/glyphs/134217785/offset = Vector2(-2, -16)
 cache/0/20/0/glyphs/134217785/size = Vector2(14, 17)
 cache/0/20/0/glyphs/134217785/uv_rect = Rect2(79, 1, 14, 17)
@@ -173,7 +173,7 @@ cache/0/50/0/glyphs/68/texture_idx = 0
 cache/0/21/0/ascent = 19.0
 cache/0/21/0/descent = 5.0
 cache/0/21/0/underline_position = 3.15625
-cache/0/21/0/underline_thickness = 1.046875
+cache/0/21/0/underline_thickness = 1.04688
 cache/0/21/0/scale = 1.0
 cache/0/21/0/textures/0/offsets = PackedInt32Array(80, 0, 176, 24)
 cache/0/21/0/textures/0/image = SubResource("Image_bg4s2")
@@ -204,7 +204,7 @@ cache/0/21/0/glyphs/57/uv_rect = Rect2(64, 1, 15, 18)
 cache/0/21/0/glyphs/57/texture_idx = 0
 cache/0/22/0/ascent = 20.0
 cache/0/22/0/descent = 6.0
-cache/0/22/0/underline_position = 3.296875
+cache/0/22/0/underline_position = 3.29688
 cache/0/22/0/underline_thickness = 1.09375
 cache/0/22/0/scale = 1.0
 cache/0/22/0/textures/0/offsets = PackedInt32Array(83, 0, 173, 26)
@@ -236,7 +236,7 @@ cache/0/22/0/glyphs/57/uv_rect = Rect2(67, 1, 15, 19)
 cache/0/22/0/glyphs/57/texture_idx = 0
 cache/0/23/0/ascent = 21.0
 cache/0/23/0/descent = 6.0
-cache/0/23/0/underline_position = 3.453125
+cache/0/23/0/underline_position = 3.45313
 cache/0/23/0/underline_thickness = 1.15625
 cache/0/23/0/scale = 1.0
 cache/0/23/0/textures/0/offsets = PackedInt32Array(86, 0, 170, 26)
@@ -269,7 +269,7 @@ cache/0/23/0/glyphs/57/texture_idx = 0
 cache/0/24/0/ascent = 22.0
 cache/0/24/0/descent = 6.0
 cache/0/24/0/underline_position = 3.59375
-cache/0/24/0/underline_thickness = 1.203125
+cache/0/24/0/underline_thickness = 1.20313
 cache/0/24/0/scale = 1.0
 cache/0/24/0/textures/0/offsets = PackedInt32Array(88, 0, 168, 27)
 cache/0/24/0/textures/0/image = SubResource("Image_xrxkg")
@@ -302,56 +302,56 @@ cache/0/24/0/glyphs/57/texture_idx = 0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bcfpu"]
 bg_color = Color(0.622903, 0.0662068, 0.261057, 1)
 
-[node name="Main" type="Node2D" unique_id=970572869]
+[node name="Main" type="Node2D" unique_id=685160622]
 
-[node name="Player" parent="." unique_id=1639080392 instance=ExtResource("11_5vvyt")]
+[node name="Player" parent="." unique_id=1130267534 instance=ExtResource("11_5vvyt")]
 position = Vector2(625, 605)
 
-[node name="DamagePreviewManager" type="Node" parent="Player" unique_id=836522126]
+[node name="DamagePreviewManager" type="Node" parent="Player" unique_id=1788566712]
 script = ExtResource("2_d13ii")
 
-[node name="TurnManager" type="Node" parent="." unique_id=1240672082]
+[node name="TurnManager" type="Node" parent="." unique_id=1938908250]
 script = ExtResource("7_ralk2")
 
-[node name="SlotEffectManager" type="Node" parent="TurnManager" unique_id=297609179]
+[node name="SlotEffectManager" type="Node" parent="TurnManager" unique_id=1147037724]
 script = ExtResource("21_devvj")
 
-[node name="InputManager" type="Node2D" parent="." unique_id=1667285353]
+[node name="InputManager" type="Node2D" parent="." unique_id=108879435]
 script = ExtResource("1_kdgm2")
 
-[node name="CardManager" type="Node2D" parent="." unique_id=1714467942]
+[node name="CardManager" type="Node2D" parent="." unique_id=1946578983]
 script = ExtResource("2_b2kfh")
 
-[node name="OpponentManager" type="Node2D" parent="." unique_id=1514344335]
+[node name="OpponentManager" type="Node2D" parent="." unique_id=937997703]
 script = ExtResource("6_sc1dx")
 
-[node name="PlayerHand" type="Node2D" parent="." unique_id=654796370]
+[node name="PlayerHand" type="Node2D" parent="." unique_id=473588980]
 script = ExtResource("3_o0gpq")
 
-[node name="ActionZone" type="Node" parent="." unique_id=827311889]
+[node name="ActionZone" type="Node" parent="." unique_id=676985968]
 script = ExtResource("10_65qkc")
 
-[node name="Piles" type="Node2D" parent="." unique_id=1409117614]
+[node name="Piles" type="Node2D" parent="." unique_id=781224981]
 position = Vector2(150, 950)
 
-[node name="DeckPile" type="Node2D" parent="Piles" unique_id=1817040861]
+[node name="DeckPile" type="Node2D" parent="Piles" unique_id=1231720552]
 z_index = -2
 script = ExtResource("4_07t4f")
 
-[node name="DeckArea2D" type="Area2D" parent="Piles/DeckPile" unique_id=1565156792]
+[node name="DeckArea2D" type="Area2D" parent="Piles/DeckPile" unique_id=1783818387]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/DeckPile/DeckArea2D" unique_id=2130650430]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/DeckPile/DeckArea2D" unique_id=1724802646]
 position = Vector2(-25, 40)
 shape = SubResource("RectangleShape2D_lgb7f")
 
-[node name="Sprite2D" type="Sprite2D" parent="Piles/DeckPile" unique_id=1860196916]
+[node name="Sprite2D" type="Sprite2D" parent="Piles/DeckPile" unique_id=1132218029]
 position = Vector2(-25, 40)
 scale = Vector2(0.6625, 0.6625)
 texture = ExtResource("9_yaehf")
 
-[node name="DeckCardCountLabel" type="RichTextLabel" parent="Piles/DeckPile" unique_id=1052289617]
+[node name="DeckCardCountLabel" type="RichTextLabel" parent="Piles/DeckPile" unique_id=695915670]
 offset_left = -77.0
 offset_top = 16.0
 offset_right = -25.0
@@ -360,25 +360,25 @@ scale = Vector2(2, 2)
 text = "0"
 horizontal_alignment = 1
 
-[node name="WoundPile" type="Node2D" parent="Piles" unique_id=1291955365]
+[node name="WoundPile" type="Node2D" parent="Piles" unique_id=2073837211]
 z_index = -2
 position = Vector2(0, -140)
 script = ExtResource("7_fpfj3")
 
-[node name="DeckArea2D" type="Area2D" parent="Piles/WoundPile" unique_id=1557921295]
+[node name="DeckArea2D" type="Area2D" parent="Piles/WoundPile" unique_id=146794977]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/WoundPile/DeckArea2D" unique_id=662792635]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/WoundPile/DeckArea2D" unique_id=1084693129]
 position = Vector2(-25, 44)
 shape = SubResource("CircleShape2D_fpfj3")
 
-[node name="Sprite2D" type="Sprite2D" parent="Piles/WoundPile" unique_id=1821655416]
+[node name="Sprite2D" type="Sprite2D" parent="Piles/WoundPile" unique_id=1176009951]
 position = Vector2(-25, 45)
 scale = Vector2(0.12, 0.12)
 texture = ExtResource("11_2cqfq")
 
-[node name="WoundCardCountLabel" type="RichTextLabel" parent="Piles/WoundPile" unique_id=669931134]
+[node name="WoundCardCountLabel" type="RichTextLabel" parent="Piles/WoundPile" unique_id=1062811639]
 offset_left = -65.0
 offset_top = 16.0
 offset_right = -25.0
@@ -388,26 +388,26 @@ text = "0"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="DiscardPile" type="Node2D" parent="Piles" unique_id=425188118]
+[node name="DiscardPile" type="Node2D" parent="Piles" unique_id=904487550]
 z_index = -1
 position = Vector2(1625, 0)
 script = ExtResource("6_x6f8x")
 
-[node name="DiscardArea2D" type="Area2D" parent="Piles/DiscardPile" unique_id=604315628]
+[node name="DiscardArea2D" type="Area2D" parent="Piles/DiscardPile" unique_id=1260785472]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/DiscardPile/DiscardArea2D" unique_id=1607896400]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/DiscardPile/DiscardArea2D" unique_id=309608871]
 position = Vector2(25, 39.5)
 shape = SubResource("RectangleShape2D_hf4xv")
 
-[node name="Sprite2D" type="Sprite2D" parent="Piles/DiscardPile" unique_id=1313118412]
+[node name="Sprite2D" type="Sprite2D" parent="Piles/DiscardPile" unique_id=990642869]
 z_index = -2
 position = Vector2(25, 40)
 scale = Vector2(0.65625, 0.658333)
 texture = ExtResource("9_yaehf")
 
-[node name="DiscardCardCountLabel" type="RichTextLabel" parent="Piles/DiscardPile" unique_id=1735943903]
+[node name="DiscardCardCountLabel" type="RichTextLabel" parent="Piles/DiscardPile" unique_id=917601261]
 offset_left = -27.0
 offset_top = 15.0
 offset_right = 25.0
@@ -416,25 +416,25 @@ scale = Vector2(2, 2)
 text = "0"
 horizontal_alignment = 1
 
-[node name="ExhaustPile" type="Node2D" parent="Piles" unique_id=801140528]
+[node name="ExhaustPile" type="Node2D" parent="Piles" unique_id=1233133709]
 z_index = -2
 position = Vector2(1672, -140)
 script = ExtResource("10_sc1dx")
 
-[node name="DeckArea2D" type="Area2D" parent="Piles/ExhaustPile" unique_id=799920237]
+[node name="DeckArea2D" type="Area2D" parent="Piles/ExhaustPile" unique_id=988219720]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/ExhaustPile/DeckArea2D" unique_id=1836601934]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piles/ExhaustPile/DeckArea2D" unique_id=800016204]
 position = Vector2(-25, 44)
 shape = SubResource("CircleShape2D_fpfj3")
 
-[node name="Sprite2D" type="Sprite2D" parent="Piles/ExhaustPile" unique_id=1457957173]
+[node name="Sprite2D" type="Sprite2D" parent="Piles/ExhaustPile" unique_id=285080705]
 position = Vector2(-25, 45)
 scale = Vector2(0.12, 0.12)
 texture = ExtResource("14_yaehf")
 
-[node name="BanishCardCountLabel" type="RichTextLabel" parent="Piles/ExhaustPile" unique_id=1571143694]
+[node name="BanishCardCountLabel" type="RichTextLabel" parent="Piles/ExhaustPile" unique_id=1774655439]
 offset_left = -64.0
 offset_top = 17.0
 offset_right = -24.0
@@ -444,10 +444,10 @@ text = "0"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="UserInterface" type="Node" parent="." unique_id=510306923]
+[node name="UserInterface" type="Node" parent="." unique_id=600729180]
 script = ExtResource("9_3uw2j")
 
-[node name="FightButton" type="Button" parent="UserInterface" unique_id=137563646]
+[node name="FightButton" type="Button" parent="UserInterface" unique_id=129747816]
 offset_left = 1651.0
 offset_top = 660.0
 offset_right = 1782.0
@@ -468,16 +468,16 @@ theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_bcfpu")
 theme_override_styles/focus = SubResource("StyleBoxFlat_bcfpu")
 text = "FIGHT"
 
-[node name="EmptyActionZoneButton" type="Button" parent="UserInterface" unique_id=793506418]
+[node name="EmptyActionZoneButton" type="Button" parent="UserInterface" unique_id=1318010466]
 offset_left = 125.0
 offset_top = 31.0
 offset_right = 225.0
 offset_bottom = 69.0
 text = "Cancel"
 
-[node name="BattleHUD" type="Node" parent="UserInterface" unique_id=1068032176]
+[node name="BattleHUD" type="Node" parent="UserInterface" unique_id=1793302821]
 
-[node name="BackgroundImage" type="Sprite2D" parent="UserInterface/BattleHUD" unique_id=1284321840]
+[node name="BackgroundImage" type="Sprite2D" parent="UserInterface/BattleHUD" unique_id=48619965]
 self_modulate = Color(0.817521, 0.817521, 0.817521, 1)
 z_index = -5
 position = Vector2(1.00012, -5.99994)
@@ -486,7 +486,7 @@ texture = ExtResource("8_vtuuf")
 centered = false
 metadata/_edit_lock_ = true
 
-[node name="ActionTimer" type="TextureProgressBar" parent="UserInterface/BattleHUD" unique_id=1037603091]
+[node name="ActionTimer" type="TextureProgressBar" parent="UserInterface/BattleHUD" unique_id=1397294429]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -506,11 +506,11 @@ fill_mode = 5
 texture_under = ExtResource("17_074og")
 texture_progress = ExtResource("18_cegan")
 
-[node name="FightingTimer" type="Timer" parent="UserInterface/BattleHUD/ActionTimer" unique_id=1257151087]
+[node name="FightingTimer" type="Timer" parent="UserInterface/BattleHUD/ActionTimer" unique_id=38688720]
 wait_time = 15.0
 one_shot = true
 
-[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/BattleHUD/ActionTimer" unique_id=1419317419]
+[node name="TimerLabel" type="RichTextLabel" parent="UserInterface/BattleHUD/ActionTimer" unique_id=1410896030]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 112.0
@@ -524,7 +524,7 @@ text = "15 : 00
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ComboMeter" type="RichTextLabel" parent="UserInterface/BattleHUD" unique_id=2026722596]
+[node name="ComboMeter" type="RichTextLabel" parent="UserInterface/BattleHUD" unique_id=2025118938]
 offset_left = 1636.0
 offset_top = 89.0
 offset_right = 1870.0
@@ -534,7 +534,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnLabel" type="RichTextLabel" parent="UserInterface/BattleHUD" unique_id=42927630]
+[node name="TurnLabel" type="RichTextLabel" parent="UserInterface/BattleHUD" unique_id=1847865879]
 offset_left = 1723.0
 offset_top = 715.0
 offset_right = 1793.0
@@ -542,9 +542,9 @@ offset_bottom = 739.0
 scale = Vector2(1.2, 1.2)
 text = "Turn 1"
 
-[node name="TrackHUD" type="Node" parent="UserInterface" unique_id=1660656252]
+[node name="TrackHUD" type="Node" parent="UserInterface" unique_id=582593975]
 
-[node name="TrackLabel" type="Label" parent="UserInterface/TrackHUD" unique_id=393892317]
+[node name="TrackLabel" type="Label" parent="UserInterface/TrackHUD" unique_id=2140952447]
 offset_left = 1637.0
 offset_top = 5.0
 offset_right = 1891.0
@@ -555,7 +555,7 @@ text = "track_name"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="MiniEqualizer" type="HBoxContainer" parent="UserInterface/TrackHUD" unique_id=455044613]
+[node name="MiniEqualizer" type="HBoxContainer" parent="UserInterface/TrackHUD" unique_id=587063086]
 custom_minimum_size = Vector2(24, 18)
 anchors_preset = 1
 anchor_left = 1.0
@@ -565,11 +565,11 @@ offset_bottom = 18.0
 grow_horizontal = 0
 alignment = 1
 
-[node name="MiniEqualizer" type="Control" parent="UserInterface/TrackHUD/MiniEqualizer" unique_id=1593434063]
+[node name="MiniEqualizer" type="Control" parent="UserInterface/TrackHUD/MiniEqualizer" unique_id=1746488208]
 layout_mode = 2
 script = ExtResource("19_2gh4u")
 
-[node name="SoundManager" type="Node" parent="." unique_id=424148179]
+[node name="SoundManager" type="Node" parent="." unique_id=1711715384]
 script = ExtResource("19_5tuhn")
 
 [connection signal="pressed" from="UserInterface/FightButton" to="TurnManager" method="_on_fight_button_pressed"]
