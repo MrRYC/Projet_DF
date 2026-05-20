@@ -5,6 +5,10 @@ extends Node
 #---------------------#
 #signals from UserInterface to Playerhand and ActionZone
 signal action_timer_timeout(bool)
+#signals from UserInterface to TurnManager
+signal fight_button_pressed()
+#signals from UserInterface to ActionZone and OpponentManager
+signal action_zone_button_pressed()
 
 #---------------------#
 #    SOUNDMANAGER     #

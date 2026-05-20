@@ -83,7 +83,7 @@ func _on_action_time():
 	timer.start()
 	$EmptyActionZoneButton.disabled = false
 	EventBus.action_timer_timeout.emit(false)
-	
+
 func _on_action_timer_timeout():
 	timer_label.text = "Fight"
 	ring_progress_bar.texture_under = load("res://assets/resources/ui/timer_ring_red.png")
@@ -94,7 +94,11 @@ func _on_action_timer_timeout():
 func _on_fight_button_pressed() -> void:
 	timer.stop()
 	$EmptyActionZoneButton.disabled = true
+	EventBus.fight_button_pressed.emit()
 	EventBus.action_timer_timeout.emit(true)
+
+func _on_empty_action_zone_button_pressed() -> void:
+	EventBus.action_zone_button_pressed.emit()
 
 func _on_combo_meter_cancelled():
 	combo_meter = 0

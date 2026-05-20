@@ -22,6 +22,7 @@ func _ready() -> void:
 	EventBus.card_played.connect(_on_card_played)
 	EventBus.ai_attack_performed.connect(_on_ai_attack_performed)
 	EventBus.ai_cancel_combo_performed.connect(_on_cancel_combo_performed)
+	EventBus.fight_button_pressed.connect(_on_fight_button_pressed)
 	EventBus.matchup_over.connect(_on_matchup_over)
 
 ###########################################################################
