@@ -24,6 +24,7 @@ var solo_attacker : bool = false
 
 func _ready() -> void:
 	EventBus.card_removed_from_action_zone.connect(_on_card_removed_from_action_zone)
+	EventBus.action_zone_button_pressed.connect(_on_action_zone_button_pressed)
 
 ###########################################################################
 #                          ACTION ZONE MANAGEMENT                         #
@@ -455,7 +456,7 @@ func reset_end_turn_opponent_action_turn() -> void:
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
 
-func _on_empty_action_zone_button_pressed() -> void:
+func _on_action_zone_button_pressed() -> void:
 	if action_zone.size() > 0:
 		empty_action_zone()
 		clear_all_player_markers()

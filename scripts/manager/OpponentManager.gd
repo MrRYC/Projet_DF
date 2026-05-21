@@ -12,6 +12,7 @@ var dimmed_opponents: Array = [] # array of opponents currently dimmed
 func _ready()-> void:
 	EventBus.new_turn.connect(_on_new_turn)
 	EventBus.processing.connect(_on_fight_started)
+	EventBus.action_zone_button_pressed.connect(_on_action_zone_button_pressed)
 	EventBus.opponent_marker_hovered.connect(_on_opponent_marker_hovered)
 	EventBus.opponent_marker_hovered_off.connect(_on_opponent_marker_hovered_off)
 	EventBus.player_marker_hovered.connect(_on_player_marker_hovered)
@@ -175,7 +176,7 @@ func _on_fight_started(active:bool) -> void:
 	if !active && incoming_hits!=null:
 		EventBus.player_incoming_hits_updated.emit(incoming_hits)
 
-func _on_empty_action_zone_button_pressed() -> void:
+func _on_action_zone_button_pressed() -> void:
 	for opponent in match_up:
 		opponent.cards_played_counter = 0
 
