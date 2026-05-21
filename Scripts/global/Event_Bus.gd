@@ -20,8 +20,8 @@ signal track_played(String)
 #      CARDDATA       #
 #---------------------#
 #signals from CardData to CardManager
-signal hovered()
-signal hovered_off()
+signal hovered(card)
+signal hovered_off(card)
 
 #---------------------#
 #     ACTIONZONE      #
@@ -62,8 +62,8 @@ signal player_health_updated(int)
 #     CARDMANAGER     #
 #---------------------#
 #signals from CardManager to CardTargetSelector
-signal aim_started()
-signal aim_ended()
+signal aim_started(card)
+signal aim_ended(card)
 
 #signals from CardManager to TurnManager
 signal card_played()
