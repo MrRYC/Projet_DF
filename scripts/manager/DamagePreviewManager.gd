@@ -10,7 +10,6 @@ var incoming_hits: Array = []
 func _ready() -> void:
 	EventBus.player_incoming_hits_updated.connect(_on_incoming_hits)
 
-
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
 ###########################################################################
