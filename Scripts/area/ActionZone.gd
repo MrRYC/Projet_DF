@@ -98,64 +98,6 @@ func update_opponent_defensive_actions() -> void:
 	EventBus.opponent_incoming_damage_updated.emit()
 
 ###########################################################################
-#                          SEQUENCE REORDERING                            #
-###########################################################################
-
-#Détermination de l'index d'insertion d'une carte relachée dans l'action zone
-func get_drop_index(drop_position : Vector2, dragged_card) -> int:
-	#La crte relachée doit rester dans l'espace horizontale des deux colonnes de l'action zone
-	if drop_position.x < ACTION_LANE1_ZONE_X_POSITION - ACTION_ZONE_DROP_TOLERANCE_X:
-		return -1
-	if drop_position.x > ACTION_LANE2_ZONE_X_POSITION + ACTION_ZONE_DROP_TOLERANCE_X:
-		return -1
-	
-	var total_size : int = action_zone.size()
-	
-	#Délimitation de la borne verticale basse : une rangée sous la carte la plus basse (hors carte déplacée)
-	var bottom_position : float = ACTION_ZONE_TOP_Y_POSITION
-	for card in action_zone:
-		if card == dragged_card:
-			continue
-		bottom_position = maxf(bottom_position, card.starting_position.y)
-	
-	if drop_position.y < ACTION_ZONE_TOP_Y_POSITION - ACTION_ZONE_DROP_TOLERANCE_Y:
-		return -1
-	if drop_position.y > bottom_position + ACTION_LANE_ZONE_Y_OFFSET + ACTION_ZONE_DROP_TOLERANCE_Y:
-		return -1
-	
-	#Position chronologique cible : avant la première carte (ordre d'exécution)
-	var execution_position : int = total_size - 1
-	var remaining_count : int = 0
-	
-	#Lecture du tableau en sens inverse (ordre chronologique d'exécution)
-	for i in range(total_size-1, -1, -1):
-		var card = action_zone[i]
-		if card == dragged_card:
-			continue
-		remaining_count += 1
-		
-		if drop_position.y < card.starting_position.y:
-			execution_position = remaining_count - 1
-			break
-
-	return total_size - 1 - execution_position
-
-#Réordonnacement des cartes dane l'action_zone
-func move_card_to_index(card, new_index : int) -> void:
-	var old_index : int = action_zone.find(card)
-	
-	if old_index == -1 or new_index < 0 or new_index == old_index:
-		update_action_zone_positions()
-		return
-	
-	action_zone.erase(card)
-	action_zone.insert(clampi(new_index, 0, action_zone.size()), card)
-	update_action_zone_positions()
-	
-	#Actualisation des marqueurs de préviews des dégâts
-	update_opponent_defensive_actions()
-
-###########################################################################
 #                              CARDS POSITION                             #
 ###########################################################################
 
@@ -243,6 +185,64 @@ func stop_all_card_layout_animations() -> void:
 		if tween and tween.is_valid():
 			tween.kill()
 	card_layout_tweens.clear()
+
+###########################################################################
+#                            CARDS REORDERING                             #
+###########################################################################
+
+#Détermination de l'index d'insertion d'une carte relachée dans l'action zone
+func get_drop_index(drop_position : Vector2, dragged_card) -> int:
+	#La carte relachée doit rester dans l'espace horizontale des deux colonnes de l'action zone
+	if drop_position.x < ACTION_LANE1_ZONE_X_POSITION - ACTION_ZONE_DROP_TOLERANCE_X:
+		return -1
+	if drop_position.x > ACTION_LANE2_ZONE_X_POSITION + ACTION_ZONE_DROP_TOLERANCE_X:
+		return -1
+	
+	var total_size : int = action_zone.size()
+	
+	#Délimitation de la borne verticale basse : une rangée sous la carte la plus basse (hors carte déplacée)
+	var bottom_position : float = ACTION_ZONE_TOP_Y_POSITION
+	for card in action_zone:
+		if card == dragged_card:
+			continue
+		bottom_position = maxf(bottom_position, card.starting_position.y)
+	
+	if drop_position.y < ACTION_ZONE_TOP_Y_POSITION - ACTION_ZONE_DROP_TOLERANCE_Y:
+		return -1
+	if drop_position.y > bottom_position + ACTION_LANE_ZONE_Y_OFFSET + ACTION_ZONE_DROP_TOLERANCE_Y:
+		return -1
+	
+	#Position chronologique cible : avant la première carte (ordre d'exécution)
+	var execution_position : int = total_size - 1
+	var remaining_count : int = 0
+	
+	#Lecture du tableau en sens inverse (ordre chronologique d'exécution)
+	for i in range(total_size-1, -1, -1):
+		var card = action_zone[i]
+		if card == dragged_card:
+			continue
+		remaining_count += 1
+		
+		if drop_position.y < card.starting_position.y:
+			execution_position = remaining_count - 1
+			break
+
+	return total_size - 1 - execution_position
+
+#Réordonnacement des cartes dane l'action_zone
+func move_card_to_index(card, new_index : int) -> void:
+	var old_index : int = action_zone.find(card)
+	
+	if old_index == -1 or new_index < 0 or new_index == old_index:
+		update_action_zone_positions()
+		return
+	
+	action_zone.erase(card)
+	action_zone.insert(clampi(new_index, 0, action_zone.size()), card)
+	update_action_zone_positions()
+	
+	#Actualisation des marqueurs de préviews des dégâts
+	update_opponent_defensive_actions()
 
 ###########################################################################
 #                          PLAYER INTENT MARKER                           #
