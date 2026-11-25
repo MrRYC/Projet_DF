@@ -53,9 +53,14 @@ func execute_action_phase()-> void:
 		await wait_before_action(action_zone_copy[card], action_zone_copy[card].animation_time)
 		apply_player_actions(action_zone_copy[card], action_zone_copy[card].target)
 		execute_ai_threshold_action(index)
+		
+		#Expiration de l'esquive non consommée à la fin de l'action
+		if index < action_zone_copy.size():
+			expire_player_dodge()
 
 	execute_opponent_death_effect()
 	apply_ai_end_turn_actions()
+	expire_player_dodge()
 	
 	EventBus.processing.emit(false)
 
@@ -88,6 +93,11 @@ func check_slots_effect(card)-> void:
 
 func apply_slots_effect(slot_effect: Dictionary) -> void:
 	$SlotEffectManager.apply(slot_effect, player_ref)
+
+#fermeture de la fenêtre d'esquive du joueur : le dodge n'esquive qu'une seule
+#frappe et ne confère aucune invulnérabilité au-delà du créneau de son action
+func expire_player_dodge()-> void:
+	player_ref.expire_dodge()
 
 func wait_before_action(card, time)-> void:
 	#détermination de la vitesse de l'animation Fade In

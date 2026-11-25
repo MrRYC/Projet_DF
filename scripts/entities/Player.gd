@@ -28,8 +28,13 @@ func set_starting_health(health)-> void:
 	update_health()
 
 func take_damage(amount)-> void:
+	#check if player has an active dodge (armed by the dodge action executed in the current sequence slot)
+	if defense_controller.try_to_evade():
+		return
+	
 	#check if player has defense
 	if defense_controller.try_to_block():
+		EventBus.combo_meter_cancelled.emit()
 		check_block()
 		return
 	
@@ -52,16 +57,18 @@ func take_damage(amount)-> void:
 
 func check_block()-> void:
 	if defense_controller.get_block() == 0:
-		#EventBus.combo_meter_cancelled.emit()
 		# Animation de perte du blocage
 		pass
 
 func check_evasion()-> void:
-	if defense_controller.get_dodge():
+	if defense_controller.try_to_evade():
 		return
 	else:
-		EventBus.combo_meter_cancelled.emit()
 		EventBus.drop_combo_cards.emit()
+
+#Expiration de l'esquive non consommée à la fin de l'action
+func expire_dodge()-> void:
+	defense_controller.expire_dodge()
 
 ###########################################################################
 #                              PIPS MANAGEMENT                            #

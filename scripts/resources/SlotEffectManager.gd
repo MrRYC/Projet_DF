@@ -8,7 +8,8 @@ static func apply(effect: Dictionary, player) -> void:
 			player.defense_controller.add_block(int(effect.get("value", 0)))
 			player.update_player_pips_block()
 		"Dodge":
-			player.defense_controller.add_block(int(effect.get("value", 0)))
+			player.defense_controller.add_dodge(int(effect.get("value", 0)))
+			player.update_player_pips_block()
 		"Feint":
 			print("Feinte executée")
 		_:

@@ -81,6 +81,10 @@ Main (Node2D)
 5. `Fight` → `TurnManager.execute_action_phase()` : résolution des cartes en ordre chronologique
    (attaque directe ou effet d'augment via `SlotEffectManager`), actions IA à seuil intercalées,
    puis morts (overkill si `extra_damage >= overkill_limit`) et actions IA de fin de tour.
+   Une carte retournée **Dodge** arme une fenêtre d'esquive limitée à **son créneau** dans la
+   séquence : la première frappe hostile de ce créneau (action à seuil du même index, ou de fin
+   de tour si c'est la dernière carte jouée) est intégralement annulée et le pip consommé ;
+   toute esquive non utilisée expire à la fin du créneau (le dodge n'est jamais stocké).
 6. `new_turn` : les cartes quittent main/action zone vers discard (ou exhaust/wound selon
    `side_effect` + `uses`), block/dodge/feint reset, re-pioche. Deck vide → reshuffle discard.
 7. Matchup vide → `matchup_over` → print du score + quit. Mort du joueur → quit.
@@ -152,6 +156,17 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
   annulation si dépôt hors zone). `action_zone` reste la source unique de l'ordre d'exécution —
   Fight lit le tableau inversé. Validé par banc avec souris simulée à travers les vrais
   InputManager/CardManager/ActionZone, y compris l'exécution d'une séquence réordonnée au Fight.
+- Mécanique **Dodge** opérationnelle : pip unique (max 1, non accumulable), fenêtre d'esquive
+  bornée au créneau de son action dans la séquence (positionnable/réordonnable au drag), esquive
+  intégrale de la première frappe du créneau (peu importe les dégâts) et du `CANCEL_COMBO`,
+  expiration automatique en fin de créneau, combo préservé. Validée par banc automatisé
+  (vrai flux `TurnManager`/`Player.tscn`/`EventBus`, 48 checks).
+- Règles du **combo_meter** (design de l'auteur, validé par banc) : incrémenté quand un ennemi
+  encaisse des dégâts HP (`Opponent.take_damage`) ; **reset à 0** quand le joueur bloque une
+  frappe (`take_damage`, branche block, *avant* `check_block()`) ou subit des dégâts HP ;
+  **préservé** par le dodge, par la fracture de carte et au passage au tour suivant ; un
+  `CANCEL_COMBO` non esquivé émet `drop_combo_cards` mais ne reset pas le combo. Les deux seuls
+  émetteurs de `combo_meter_cancelled` vivent dans `Player.take_damage`.
 - Audio : playlist aléatoire (mp3) sur bus `Music` (SpectrumAnalyzer présent), MiniEqualizer
   dessiné en `_draw`, label de track.
 
@@ -160,9 +175,7 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
   `PlayerHand.combo_cards` n'est jamais rempli ; `drop_combo_cards` ne fait rien ; les cartes des
   combos (Esquive, Feinte, Rear_Cross…) n'existent pas dans `PLAYERDECK`. `combo_meter` n'est
   qu'un compteur ; `multiplicator` (UI) inutilisé.
-- **Feint** : `SlotEffectManager` case `"Feint"` → simple print. `try_to_feint()` jamais appelé.
-- **Esquive incohérente** : `Player.check_evasion()` lit `get_dodge()` sans consommer la charge
-  (`try_to_evade()` jamais appelé).
+- **Feint non implémenté** : `SlotEffectManager` case `"Feint"` → simple print. `try_to_feint()` jamais appelé.
 - IA `BUFF` / `FAILED_ATTACK` → prints. Animations de combat → prints/commentaires à traiter.
 - Fin de partie : `get_tree().quit()` sans écran ; score seulement `print`.
 - `show_pile()` de toutes les piles → prints console (pas d'overlay).
@@ -174,21 +187,19 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
 - `DamagePreviewManager` : calcul de preview marqué « provisoire » ; `incoming_hits` « à voir si utile ».
 
 ### Bugs ouverts (priorité au gameplay)
-1. **`SlotEffectManager.gd`** : case `"Dodge"` appelle `add_block()` au lieu de `add_dodge()` →
-   l'augment Dodge donne un block (incohérent avec les pips affichés).
-2. **`ActionZone.check_attack_turn_order()`** : `elif` inatteignable (var locale réinitialisée à 0
+1. **`ActionZone.check_attack_turn_order()`** : `elif` inatteignable (var locale réinitialisée à 0
    à chaque appel) → retourne l'ordre du *dernier* marker au lieu du *max* → mauvais
    `attack_order` des attaquants de fin de tour quand plusieurs seuils coexistent.
-3. **`OpponentManager._ready`** : `spawn_random_opponent_set(0, 5)` alors que `SETS` a 7 clés →
+2. **`OpponentManager._ready`** : `spawn_random_opponent_set(0, 5)` alors que `SETS` a 7 clés →
    le set `"Trio_2"` n'est jamais tiré.
-4. **`Deck.draw()`** : si deck **et** discard vides (cartes en wound/exhaust), `pop_front()` sur
+3. **`Deck.draw()`** : si deck **et** discard vides (cartes en wound/exhaust), `pop_front()` sur
    array vide → `null` → crash dans `create_card_in_hand`.
-5. **`CardManager.finish_drag()`** : carte relâchée dans la main reste à `scale 1.05`
+4. **`CardManager.finish_drag()`** : carte relâchée dans la main reste à `scale 1.05`
    (pas de `update_card_size` sur le chemin `move_card_to_index`).
-6. **`project.godot`** : plugin déclaré 2× (`Signal_Lens` et `signal_lens`, casse différente).
-7. **`Discard.gd` / `Exhaust.gd` / `Wound.gd`** : constante inutilisée
+5. **`project.godot`** : plugin déclaré 2× (`Signal_Lens` et `signal_lens`, casse différente).
+6. **`Discard.gd` / `Exhaust.gd` / `Wound.gd`** : constante inutilisée
    `CARD_SCENE_PATH = "res://Scenes/Card.tscn"` — casse incorrecte, casserait sous Linux si utilisée.
-8. **`ActionZone.empty_action_zone()`** : émet `card_removed_from_action_zone(true)` sans le
+7. **`ActionZone.empty_action_zone()`** : émet `card_removed_from_action_zone(true)` sans le
    `false` de clôture (contrairement à `return_card_to_hand`) → le flag `card_removed` reste à
    `true` après un vidage et influence la branche choisie par `update_markers_position` au
    prochain ajout avec marqueurs ennemis présents.
@@ -197,6 +208,11 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
 > joueur lors d'ajouts successifs (marqueurs 1+2+3… créés, dont des orphelins à des positions
 > périmées) et erreur runtime « Nil into TypedArray[Vector2] » lors d'ajouts rapprochés (cartes
 > récentes sans `starting_position` au moment du recalcul des marqueurs ennemis).
+>
+> Corrigé le 25/11/2026 (implémentation du Dodge) : `SlotEffectManager` case `"Dodge"` appelait
+> `add_block()` (l'augment Dodge donnait un block) et `Player.check_evasion()` ne consommait
+> jamais le pip. La ressource dodge est désormais clampée à 1 (`MAX_DODGE_CHARGES`), consommée
+> par l'esquive (`try_to_evade`) et expirée en fin de créneau (`expire_dodge`).
 
 ### Hygiène repo
 - `UI.tscn` (1,5 Mo) : 6 images `sub_resource type="Image"` **embarquées en base64** → diffs git

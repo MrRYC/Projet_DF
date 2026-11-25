@@ -6,6 +6,9 @@ signal block_changed(value: int)
 signal dodge_changed(value: int)
 signal feint_changed(value: int)
 
+#constantes
+const MAX_DODGE_CHARGES : int = 1 #ressource dodge non accumulable
+
 #variables du script
 var block_charges: int = 0
 var dodge_charges: int = 0
@@ -48,7 +51,7 @@ func set_dodge(value: int) -> void:
 	dodge_changed.emit(dodge_charges)
 
 func add_dodge(value: int) -> void:
-	dodge_charges += value
+	dodge_charges = mini(dodge_charges + value, MAX_DODGE_CHARGES)
 	dodge_changed.emit(dodge_charges)
 
 func has_dodge() -> bool:
@@ -59,6 +62,11 @@ func try_to_evade() -> bool:
 		return false
 	set_dodge(dodge_charges - 1)
 	return true
+
+#Expiration de l'esquive non consommée à la fin de l'action
+func expire_dodge() -> void:
+	if dodge_charges > 0:
+		set_dodge(0)
 
 ###########################################################################
 #                          GESTION DES FEINTES                           #
