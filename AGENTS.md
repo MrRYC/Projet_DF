@@ -55,7 +55,7 @@ Main (Node2D)
 ├── CardManager                                # drag & drop, destinations de piles
 ├── OpponentManager                            # spawn des sets, IA, markers, dim, preview
 ├── PlayerHand                                 # positionnement de la main, drop index
-├── ActionZone                                 # cartes jouées + IntentMarkers (2 lanes, positions déterministes)
+├── ActionZone                                 # cartes jouées + IntentMarkers (2 lanes, positions déterministes, réordonnancement manuel au drag gauche)
 ├── Piles
 │   ├── DeckPile (Deck.gd)     # pioche + création des instances de Card.tscn
 │   ├── WoundPile (Wound.gd)   # cartes « broken »
@@ -72,7 +72,9 @@ Main (Node2D)
    **HP joueur = taille du deck** → `new_turn(true)`.
 2. Pioche de 6 cartes (`HAND_DRAW_INTERVAL`), puis `activate_action_timer` → UI lance le timer 15 s.
 3. Le joueur drag des cartes : sur un **adversaire** (attaque, carte face recto) ou sur **soi-même**
-   (clic droit = flip → augment). Retour en main possible (cascade au-dessus de la carte cliquée).
+   (clic droit = flip → augment). Une carte déjà en zone se **réordonne au clic gauche**
+   (drag & drop dans les lanes, dépôt hors zone = annulation) et est **renvoyée en main au clic
+   droit** (avec toutes les cartes jouées après elle, logique de cascade conservée).
 4. Les adversaires tirent une intent aléatoire parmi `action_1..4` (`OPPONENT_DATA`) ; les
    attaquants génèrent des `IntentMarker` positionnés dans les lanes de l'ActionZone selon leur
    `attack_threshold` (rouge) ou fin de tour (jaune).
@@ -145,6 +147,11 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
   dernière tween), car `update_markers_position` lit les positions réelles des cartes dans ses
   branches fin-de-tour. Comportement visuel validé à l'identique par comparaison de traces
   ancien/nouveau code (y compris « 2 attaquants fin de tour + carte déposée sur le sprite »).
+- Réordonnancement manuel de l'ActionZone : drag & drop au clic gauche sur une carte en zone
+  (insertion avant/après n'importe quelle carte, première/dernière positions incluses,
+  annulation si dépôt hors zone). `action_zone` reste la source unique de l'ordre d'exécution —
+  Fight lit le tableau inversé. Validé par banc avec souris simulée à travers les vrais
+  InputManager/CardManager/ActionZone, y compris l'exécution d'une séquence réordonnée au Fight.
 - Audio : playlist aléatoire (mp3) sur bus `Music` (SpectrumAnalyzer présent), MiniEqualizer
   dessiné en `_draw`, label de track.
 
@@ -213,6 +220,15 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
   **réelles** des cartes (`card.position`) dans ses branches fin-de-tour : ne jamais déclencher
   `update_opponent_markers` avant la fin de la cascade d'animations (d'où le rappel différé sur
   `finished` de la dernière tween dans `update_action_zone_positions`).
+- Convention `ActionZone.action_zone` : **index 0 = carte la plus récente** (convention
+  `insert(0)` conservée après audit des dépendances du 25/11/2026 — la retourner aurait imposé
+  de réécrire `update_markers_position`, la boucle de `return_card_to_hand` et l'itération de
+  `_on_incoming_damage`). Ordre d'exécution = lecture **inverse** du tableau (Fight fait
+  `.reverse()`), cascade visuelle = lecture inverse aussi → le haut de la zone est toujours la
+  première carte exécutée. Réordonner = manipuler les index du tableau (`get_drop_index` /
+  `move_card_to_index`).
+- Interactions sur une carte de l'action zone : **clic gauche = drag de réordonnancement**,
+  **clic droit = retour en main** (`return_card_to_hand`, multi-cartes par index).
 - L'ordre d'exécution des `_ready` de `main.tscn` (tree order : Player → TurnManager → … →
   DeckPile) est significatif : `deck_loaded` est émis par Deck **après** le spawn des opponents.
 - `execute_action_phase` résout les cartes en ordre **chronologique** (insertion à l'index 0 dans

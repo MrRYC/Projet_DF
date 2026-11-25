@@ -150,7 +150,16 @@ func start_drag(card) -> void:
 	card.scale = Vector2(1.0,1.0)
 	EventBus.aim_started.emit(card)
 
+func start_reorder_drag(card) -> void:
+	card_being_dragged = card
+	card.z_index = 3
+
 func finish_drag() -> void:
+	#Réordonnancement de la séquence
+	if card_being_dragged.current_area == card_being_dragged.board_area.IN_ACTION_ZONE:
+		finish_reorder_drag()
+		return
+	
 	card_being_dragged.scale = Vector2(1.05,1.05)
 	EventBus.aim_ended.emit(card_being_dragged)
 
@@ -169,6 +178,17 @@ func finish_drag() -> void:
 		return_card_to_hand(card_being_dragged)
 	
 	card_being_dragged = null
+
+#Réordonnancement de la carte relachée dans l'action zone 
+func finish_reorder_drag() -> void:
+	var card = card_being_dragged
+	card_being_dragged = null
+	
+	var new_index : int = action_zone_ref.get_drop_index(card.global_position, card)
+	action_zone_ref.move_card_to_index(card, new_index)
+	
+	#Rafraichissement visuel de la carte déplacée (échelle et z_index de l'action zone)
+	update_card_size(card)
 
 func flip_card_in_hand(card) -> void:
 	if !card.slot_number :

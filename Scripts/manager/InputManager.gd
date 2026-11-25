@@ -61,7 +61,7 @@ func raycast_at_cursor():
 			return
 		elif collider.collision_mask == COLLISION_MASK_CARD and left_mouse:
 			if card_found.current_area == 2:
-				card_manager_ref.remove_card_from_action_zone(card_found)
+				card_manager_ref.start_reorder_drag(card_found)
 			elif card_found:
 				card_manager_ref.start_drag(card_found)
 		elif collider.collision_mask == COLLISION_MASK_PILE and left_mouse:
@@ -72,6 +72,8 @@ func raycast_at_cursor():
 		elif collider.collision_mask == COLLISION_MASK_CARD and right_mouse:
 			if card_found.current_area == 1:
 				card_manager_ref.flip_card_in_hand(card_found)
+			elif card_found.current_area == 2:
+				card_manager_ref.remove_card_from_action_zone(card_found)
 
 ###########################################################################
 #                          SIGNALS INTERCEPTION                           #
