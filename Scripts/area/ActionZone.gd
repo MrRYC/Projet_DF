@@ -3,10 +3,11 @@ extends Node
 #constantes
 signal remove_card(bool)
 
-#constantes
 const ACTION_LANE1_ZONE_X_POSITION = 125
 const ACTION_LANE2_ZONE_X_POSITION = 235
 const ACTION_LANE_ZONE_Y_OFFSET = 71
+const ACTION_ZONE_TOP_Y_POSITION = 150
+const FLIPPED_CARD_Y_OFFSET = 1
 const MARKER_SCENE = preload("res://scenes/IntentMarker.tscn")
 
 #variables de référence
@@ -20,6 +21,7 @@ var end_turn_opponent : Array = []
 var card_removed : bool = false
 var processing : bool
 var solo_attacker : bool = false
+var card_layout_tweens : Dictionary = {} #animation d'agencement active par carte (une seule animation de position par carte)
 
 
 func _ready() -> void:
@@ -74,6 +76,7 @@ func return_card_to_hand(card) -> void:
 
 func remove_card_from_action_zone(card) -> void:
 	action_zone.erase(card)
+	stop_card_layout_animation(card)
 
 func empty_action_zone() -> void:
 	var action_zone_copy = action_zone.duplicate()
@@ -87,6 +90,7 @@ func empty_action_zone() -> void:
 	update_opponent_defensive_actions()
 	EventBus.card_removed_from_action_zone.emit(true)
 	action_zone.clear()
+	stop_all_card_layout_animations()
 
 func update_opponent_defensive_actions() -> void:
 	EventBus.opponent_incoming_damage_updated.emit()
@@ -95,46 +99,90 @@ func update_opponent_defensive_actions() -> void:
 #                              CARDS POSITION                             #
 ###########################################################################
 
+#Calcule déterministe des positions des cartes de l'action zone sont à partir de l'ordre actuel du tableau
 func update_action_zone_positions() -> void:
-	var action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
-	var action_zone_y_position = 150
-	var offset = 0
-
-	for i in range(action_zone.size()-1, -1, -1): #-1, -1, -1 permet de lire le tableau en sens inverse
-		var card = action_zone[i]
-		
-		if !card.is_flipped:
-			offset = 0
-		else:
-			offset = 1
-
-		#gestion du positionnement en cascade des cartes dans l'action zone
-		if (action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone pair et index de la carte pair --> lane 2
-			action_zone_x_position = ACTION_LANE2_ZONE_X_POSITION
-		elif (action_zone.size() % 2 == 0) && !(i % 2 == 0): #action zone pair et index de la carte impair --> lane 1
-			action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
-		elif !(action_zone.size() % 2 == 0) && (i % 2 == 0): #action zone impair et index de la carte pair --> lane 1
-			action_zone_x_position = ACTION_LANE1_ZONE_X_POSITION
-		else: #action zone impair et index de la carte impair --> lane 2
-			action_zone_x_position = ACTION_LANE2_ZONE_X_POSITION
-
-		var new_position = Vector2(action_zone_x_position, action_zone_y_position+offset)
-		card.starting_position = new_position
-		await animate_card_to_position(card, new_position) #pause afin que new_position contienne la position de la carte dans l'action zone 
-		save_player_marker(card)
-
-		#Gestion de l'espacement si la carte est inversée
-		if !card.is_flipped:
-			action_zone_y_position += ACTION_LANE_ZONE_Y_OFFSET
-		else:
-			action_zone_y_position += ACTION_LANE_ZONE_Y_OFFSET + 1
+	var card_positions := calculate_action_zone_positions()
 	
-	update_opponent_markers()
+	for card_position in card_positions:
+		card_position[0].starting_position = card_position[1]
+	
+	#animation de la carte après que la précédente se termine
+	var last_tween = animate_cards_to_positions(card_positions)
+	
+	update_player_markers()
+	
+	if last_tween:
+		last_tween.finished.connect(update_opponent_markers)
+	else:
+		update_opponent_markers()
 
-func animate_card_to_position(card, new_position) -> void:
-	var tween = get_tree().create_tween()
-	tween.tween_property(card, "position", new_position, Global.ACTION_ZONE_DRAW_INTERVAL)
-	await tween.finished
+#Renvoi des paires [carte, position] dans l'ordre de séquencement des actions, de la plus ancienne à la plus récente
+func calculate_action_zone_positions() -> Array:
+	var card_positions : Array = []
+	var y_position : int = ACTION_ZONE_TOP_Y_POSITION
+	
+	#Lecture du tableau en démarrabt par la carte la plus ancienne
+	for i in range(action_zone.size()-1, -1, -1):
+		var card = action_zone[i]
+		var flipped_offset : int = 0
+		
+		if card.is_flipped:
+			flipped_offset = FLIPPED_CARD_Y_OFFSET
+		
+		card_positions.append([card, Vector2(get_action_zone_lane_x_position(i), y_position + flipped_offset)])
+		
+		#Décalage de la carte si elle est jouée retournée depuis la main
+		if card.is_flipped:
+			y_position += ACTION_LANE_ZONE_Y_OFFSET + FLIPPED_CARD_Y_OFFSET
+		else:
+			y_position += ACTION_LANE_ZONE_Y_OFFSET
+	
+	return card_positions
+
+#Gestion de la position en quinquence des cartes dans l'action zone
+func get_action_zone_lane_x_position(card_index : int) -> int:
+	if card_index % 2 == action_zone.size() % 2:
+		return ACTION_LANE2_ZONE_X_POSITION
+	
+	return ACTION_LANE1_ZONE_X_POSITION
+
+#Animation de la carte vers sa position cible dans l'action zone
+func animate_cards_to_positions(card_positions : Array) -> Tween:
+	stop_all_card_layout_animations()
+	
+	var last_tween : Tween = null
+	
+	for i in range(card_positions.size()):
+		var card = card_positions[i][0]
+		var new_position : Vector2 = card_positions[i][1]
+		
+		#on ignore la carte, si elle a été retirée de l'action zone 
+		if card not in action_zone:
+			continue
+		
+		var tween = get_tree().create_tween()
+		var step = tween.tween_property(card, "position", new_position, Global.ACTION_ZONE_DRAW_INTERVAL)
+		step.set_delay(i * Global.ACTION_ZONE_DRAW_INTERVAL)
+		card_layout_tweens[card] = tween
+		last_tween = tween
+	
+	return last_tween
+
+#Arrêt de l'animation de la carte
+func stop_card_layout_animation(card) -> void:
+	if card_layout_tweens.has(card):
+		var tween = card_layout_tweens[card]
+		if tween and tween.is_valid():
+			tween.kill()
+		card_layout_tweens.erase(card)
+
+#Arrêt de toutes les animations des cartes
+func stop_all_card_layout_animations() -> void:
+	for card in card_layout_tweens.keys():
+		var tween = card_layout_tweens[card]
+		if tween and tween.is_valid():
+			tween.kill()
+	card_layout_tweens.clear()
 
 ###########################################################################
 #                          PLAYER INTENT MARKER                           #

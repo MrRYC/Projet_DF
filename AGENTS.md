@@ -55,7 +55,7 @@ Main (Node2D)
 ├── CardManager                                # drag & drop, destinations de piles
 ├── OpponentManager                            # spawn des sets, IA, markers, dim, preview
 ├── PlayerHand                                 # positionnement de la main, drop index
-├── ActionZone                                 # cartes jouées + IntentMarkers (2 lanes)
+├── ActionZone                                 # cartes jouées + IntentMarkers (2 lanes, positions déterministes)
 ├── Piles
 │   ├── DeckPile (Deck.gd)     # pioche + création des instances de Card.tscn
 │   ├── WoundPile (Wound.gd)   # cartes « broken »
@@ -138,6 +138,13 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
   cassés par les cartes visées, cartes de main ciblées par les coups entrants, dim/highlight
   entités au survol des markers.
 - Statuts de cartes INTACT/FRACTURED/BROKEN avec visuels + fracture aléatoire en cas de coup reçu.
+- Gestion des positions de l'ActionZone fiabilisée : `calculate_action_zone_positions()` (calcul
+  pur, déterministe depuis l'ordre du tableau `action_zone`), une seule tween d'agencement active
+  par carte (`card_layout_tweens`), marqueurs joueur reconstruits à chaque mise à jour.
+  Les marqueurs **ennemis** ne sont mis à jour qu'en fin de cascade (rappel sur `finished` de la
+  dernière tween), car `update_markers_position` lit les positions réelles des cartes dans ses
+  branches fin-de-tour. Comportement visuel validé à l'identique par comparaison de traces
+  ancien/nouveau code (y compris « 2 attaquants fin de tour + carte déposée sur le sprite »).
 - Audio : playlist aléatoire (mp3) sur bus `Music` (SpectrumAnalyzer présent), MiniEqualizer
   dessiné en `_draw`, label de track.
 
@@ -174,19 +181,38 @@ chaque pioche. Un augment épuisé avec `side_effect = "inactivate"` rend la car
 6. **`project.godot`** : plugin déclaré 2× (`Signal_Lens` et `signal_lens`, casse différente).
 7. **`Discard.gd` / `Exhaust.gd` / `Wound.gd`** : constante inutilisée
    `CARD_SCENE_PATH = "res://Scenes/Card.tscn"` — casse incorrecte, casserait sous Linux si utilisée.
+8. **`ActionZone.empty_action_zone()`** : émet `card_removed_from_action_zone(true)` sans le
+   `false` de clôture (contrairement à `return_card_to_hand`) → le flag `card_removed` reste à
+   `true` après un vidage et influence la branche choisie par `update_markers_position` au
+   prochain ajout avec marqueurs ennemis présents.
+
+> Corrigé le 25/11/2026 (restructuration des positions de l'ActionZone) : doublons de marqueurs
+> joueur lors d'ajouts successifs (marqueurs 1+2+3… créés, dont des orphelins à des positions
+> périmées) et erreur runtime « Nil into TypedArray[Vector2] » lors d'ajouts rapprochés (cartes
+> récentes sans `starting_position` au moment du recalcul des marqueurs ennemis).
 
 ### Hygiène repo
 - `UI.tscn` (1,5 Mo) : 6 images `sub_resource type="Image"` **embarquées en base64** → diffs git
   massives à chaque retouche d'UI. À externaliser en `.png`.
 - `Main.tscn9930065313.tmp` (1,6 Mo) à la racine : résidu d'arrêt brutal de l'éditeur, à supprimer.
 - `.gitignore` vide (0 Ko) — à remplir (`.godot/`, `*.tmp`, etc.).
-- Changements non commités au 24/11/2026 : `project.godot` (bump 4.6 → 4.7),
-  `DamagePreviewManager.gd` (1 ligne), `opencode.json` non suivi.
+- **Casse mixte dans l'historique git** (constaté le 25/11/2026) : `Scripts/area/ActionZone.gd`,
+  `Deck.gd`, `Discard.gd`, `PlayerHand.gd` et `Scripts/ui/UI.gd` sont **commités** avec un « S »
+  majuscule (vérifié via `git ls-tree HEAD`), tandis que leurs `.uid` et le reste du projet sont
+  en minuscules (`scripts/…`). Inoffensif sous Windows (FS insensible à la casse) mais fragile
+  sur Linux/CI — à renormaliser (`git mv` en casse seule) lors d'un commit de nettoyage.
+- Changements non commités au 25/11/2026 : `ActionZone.gd` (restructuration des positions),
+  plus expérimentations en cours de l'auteur dans `UI.gd` (timer d'action à 180 s) et
+  `Player.gd` (reset du combo dans `check_evasion`, version commentée dans `check_block`).
 
 ## 7. Points d'attention pour intervenir dans le code
 
 - Ne pas casser le flux de signaux : chaque système n'agit que sur `EventBus` ; vérifier
   `Event_Bus.gd` (le doc-block indique l'émetteur et le(s) récepteur(s)) avant d'ajouter un signal.
+- `ActionZone.update_markers_position` positionne les marqueurs ennemis à partir des positions
+  **réelles** des cartes (`card.position`) dans ses branches fin-de-tour : ne jamais déclencher
+  `update_opponent_markers` avant la fin de la cascade d'animations (d'où le rappel différé sur
+  `finished` de la dernière tween dans `update_action_zone_positions`).
 - L'ordre d'exécution des `_ready` de `main.tscn` (tree order : Player → TurnManager → … →
   DeckPile) est significatif : `deck_loaded` est émis par Deck **après** le spawn des opponents.
 - `execute_action_phase` résout les cartes en ordre **chronologique** (insertion à l'index 0 dans

@@ -1,6 +1,6 @@
 extends Node 
 
-const max_value : float = 15.0
+const max_value : float = 180.0
 
 #variables de référence vers un autre Node
 @onready var ring_progress_bar : TextureProgressBar = $BattleHUD/ActionTimer

@@ -52,6 +52,7 @@ func take_damage(amount)-> void:
 
 func check_block()-> void:
 	if defense_controller.get_block() == 0:
+		#EventBus.combo_meter_cancelled.emit()
 		# Animation de perte du blocage
 		pass
 
@@ -59,6 +60,7 @@ func check_evasion()-> void:
 	if defense_controller.get_dodge():
 		return
 	else:
+		EventBus.combo_meter_cancelled.emit()
 		EventBus.drop_combo_cards.emit()
 
 ###########################################################################
